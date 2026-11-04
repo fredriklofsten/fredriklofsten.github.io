@@ -478,6 +478,8 @@ table.plan td:hover .addhint{opacity:.6}
 .sigpad{position:relative;background:var(--paper);border:2px dashed var(--line);border-radius:12px;touch-action:none}
 .sigpad canvas{display:block;width:100%;height:auto;aspect-ratio:600/220;cursor:crosshair;touch-action:none}
 .sigpad .sigline{position:absolute;left:16px;right:16px;bottom:28px;border-top:1px solid var(--paper-line);font-size:11px;color:var(--paper-line);padding-top:2px;pointer-events:none}
+.crew{display:flex;flex-wrap:wrap;gap:6px}
+.crew .chipsel button{font-size:12px;font-weight:600}
 /* ---- overflow guards ---- */
 .sheetwrap,.sheet,.list,.stack,.days,.actions,.join{grid-template-columns:minmax(0,1fr)}
 .sheetwrap>*,.sheet>*,.list>*,.stack>*,.days>*,.obody>*,.panel>*{min-width:0}
@@ -494,7 +496,8 @@ table.plan td:hover .addhint{opacity:.6}
     <details id="demoHow">
       <summary>Så provar du demon</summary>
       <ol>
-        <li>Som <b>Eva</b>: öppna <b>Planering</b> och dra <i>Golvslipning hall</i> till en dag hos Sara. Överst på Ordrar ser du vem som jobbar just nu.</li>
+        <li>Som <b>Eva</b>: öppna <i>Renovering kök</i> där Kalle och Sara jobbar tillsammans. Under <b>Personal på ordern</b> lägger du till eller tar bort folk.</li>
+        <li>Öppna <b>Planering</b> och dra <i>Golvslipning hall</i> till en dag hos Sara. Överst på Ordrar ser du vem som jobbar just nu.</li>
         <li>Som <b>Eva (arbetsgivare)</b>: öppna <i>Byte av fönsterbleck</i>, titta på foton och tid, och tryck <b>Godkänn och skapa faktura</b>.</li>
         <li>På fakturan: kontrollera rader och priser, tryck <b>Markera som skickad</b> och prova <b>Ladda ner PDF</b>.</li>
         <li>Byt till <b>Kalle (anställd)</b>: öppna <i>Montering av köksluckor</i>, gå igenom checklistan och tryck <b>Skicka till arbetsgivaren</b>.</li>
@@ -508,7 +511,7 @@ table.plan td:hover .addhint{opacity:.6}
 </div>
 <script>
 (function(){
-  const KEY='pt-demo-v4', RKEY='pt-demo-role', PKEY='pt-demo-photos';
+  const KEY='pt-demo-v5', RKEY='pt-demo-role', PKEY='pt-demo-photos';
   const ls={get(k){try{return localStorage.getItem(k);}catch(_){return null;}},set(k,v){try{localStorage.setItem(k,v);return true;}catch(_){return false;}},del(k){try{localStorage.removeItem(k);}catch(_){}}};
   const PEOPLE={
     u_eva:{name:'Eva Lindqvist',color:'#1E63C4',role:'Arbetsgivare'},
@@ -587,6 +590,11 @@ table.plan td:hover .addhint{opacity:.6}
       {done:{p1:{by:'u_sara',at:day(-24,15)},p2:{by:'u_sara',at:day(-22,15)},p3:{by:'u_sara',at:day(-20,14)}},photos:{},notes:{},
        time:{t1:{by:'u_sara',at:day(-24,16),hours:6,date:ds(-24)},t2:{by:'u_sara',at:day(-23,16),hours:8,date:ds(-23)},t3:{by:'u_sara',at:day(-22,16),hours:8,date:ds(-22)},t4:{by:'u_sara',at:day(-20,16),hours:5,date:ds(-20)}},
        materials:{m1:{by:'u_sara',at:day(-23,8),name:'Kakelfix 15 kg',qty:3},m2:{by:'u_sara',at:day(-20,8),name:'Fog 5 kg',qty:1}},submittedAt:day(-20,15),submittedBy:'u_sara'});
+    // 8: två anställda tillsammans
+    order('dm8kx4',{title:'Renovering kök',customer:'Maria Holm',address:'Sjögatan 21, Exempelstad',description:'Riva gamla skåp, spackla och måla, montera nytt kök. Kalle målar, Sara monterar.',due:ds(9),start:ds(1),days:4,priority:'normal',priceTpl:'lopande',rot:true,
+      assignees:['u_kalle','u_sara'],assignee:'u_kalle',formerAssignees:[],shared:true,createdBy:'u_eva',createdAt:day(-1,15),
+      parts:parts(['Riva gamla skåp','Spackla och slipa väggar','Måla väggar och tak','Montera nytt kök','Slutstädning'])},
+      {done:{p1:{by:'u_sara',at:day(0,10)}},photos:{},notes:{n1:{by:'u_sara',at:day(0,10)+5*60e3,text:'Skåpen är rivna. Kalle kan börja spackla i morgon.',flag:false}},time:{t1:{by:'u_sara',at:day(0,12),hours:3,date:ds(0)}},materials:{}});
     // 7: godkänd igår, fakturautkast
     order('dm7k1g',{title:'Målning fasad, gavel',customer:'Anna Berg',address:'Björkvägen 3, Exempelstad',description:'Södra gaveln, ca 85 m².',due:ds(-1),priority:'normal',priceTpl:'kvadratmeter',rot:true,assignee:'u_kalle',createdBy:'u_eva',createdAt:day(-10,9),
       parts:parts(['Tvätta fasad','Skrapa och laga','Måla två strykningar']),approved:{by:'u_eva',at:day(-1,17)}},
@@ -595,8 +603,9 @@ table.plan td:hover .addhint{opacity:.6}
        materials:{m1:{by:'u_kalle',at:day(-6,8),name:'Fasadfärg 10 l',qty:3}},submittedAt:day(-3,16),submittedBy:'u_kalle'});
     O.forEach(([id,o,pr])=>{
       put('orders/'+id,o);
-      put(o.assignee?`assigned/${o.assignee}/orders/${id}`:`pool/${id}`,o);
-      put(o.assignee?`work/${o.assignee}/progress/${id}`:`progress/${id}`,pr);
+      const a=o.assignees||(o.assignee?[o.assignee]:[]);
+      if(a.length) a.forEach(u=>put(`assigned/${u}/orders/${id}`,o)); else put(`pool/${id}`,o);
+      put(!o.shared && a.length===1?`work/${a[0]}/progress/${id}`:`progress/${id}`,pr);
     });
     // ---- other time + weekly timesheets ----
     const wkOf=dstr=>{ const d=new Date(dstr+'T12:00:00'); d.setDate(d.getDate()+3-((d.getDay()+6)%7)); const y=d.getFullYear(), j4=new Date(y,0,4,12); const w=1+Math.round(((d-j4)/864e5-3+((j4.getDay()+6)%7))/7); return `${y}-v${String(w).padStart(2,'0')}`; };
@@ -992,7 +1001,7 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 let db = null, user = null, assets = null, meId = null, owner = false, canWrite = true;
 let view = 'worker', empFilter = 'all', workFilter = 'open';
 let orders = [], prog = {}, templates = [], loaded = false, names = {};
-let selectedAssignee = null, pendingDelete = null;
+let selectedAssignees = [], pendingDelete = null;
 let parts = [{id:null,text:''},{id:null,text:''}], editingId = null;
 let customers = [], prevVisit = Date.now();
 const expanded = new Set(), autoOpened = new Set(); let query = '', hideStart = false;
@@ -1014,8 +1023,12 @@ const invoicesOf = oid => invoices.filter(i=>i.orderId===oid && !i.creditOf).sor
 const invFor = oid => invoicesOf(oid)[0];
 const invById = id => invoices.find(i=>i.id===id);
 const findOrder = oid => orders.find(x=>x.id===oid);
-const progPath = o => o && o.assignee ? `work/${o.assignee}/progress/${o.id}` : `progress/${o?o.id:''}`;
-const copyPath = o => o.assignee ? `assigned/${o.assignee}/orders/${o.id}` : `pool/${o.id}`;
+const assigneesOf = o => !o ? [] : Array.isArray(o.assignees) ? o.assignees.filter(Boolean) : (o.assignee ? [o.assignee] : []);
+const formerOf = o => (o && o.formerAssignees) || [];
+const progPath = o => { const a=assigneesOf(o); return o && !o.shared && a.length===1 ? `work/${a[0]}/progress/${o.id}` : `progress/${o?o.id:''}`; };
+const copyPathsOf = o => { const a=assigneesOf(o); return [...(a.length ? a.map(u=>`assigned/${u}/orders/${o.id}`) : [`pool/${o.id}`]), ...formerOf(o).filter(u=>!a.includes(u)).map(u=>`assigned/${u}/orders/${o.id}`)]; };
+const isFormer = o => !owner && formerOf(o).includes(meId) && !assigneesOf(o).includes(meId);
+const teamNames = o => { const a=assigneesOf(o); return a.length ? a.map(nameOf).join(', ') : 'Alla anställda'; };
 const slug = s => (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,80);
 
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>t.hidden=true,2800); }
@@ -1048,8 +1061,8 @@ function stateOf(o){
   if(sub>0 && sub>ret) return 'review';
   return ret>0 ? 'returned' : 'ready';
 }
-const editable = o => canWrite && !o.approved && stateOf(o)!=='review';
-const tickable = o => canWrite && !o.approved;
+const editable = o => canWrite && !o.approved && stateOf(o)!=='review' && !isFormer(o);
+const tickable = o => canWrite && !o.approved && !isFormer(o);
 const lastReturnNote = o => notesOf(o.id).filter(n=>n.kind==='return').pop();
 function statusPill(o){
   const s=stats(o), st=stateOf(o); let h='';
@@ -1073,7 +1086,7 @@ function metaHtml(o, withAssignee){
   if(o.customer) rows.push(['Kund',o.customer]);
   if(o.address) rows.push(['Adress',o.address]);
   rows.push(['Klart senast',fmtDate(o.due)]);
-  if(withAssignee) rows.push(['Skickad till',nameOf(o.assignee)]);
+  rows.push([withAssignee?'Personal':'Arbetar på ordern',teamNames(o)]);
   return `<dl class="meta">${rows.map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`;
 }
 function thumbsHtml(o,p){ const ids=photosOf(o.id)[p.id]||[]; return ids.length?`<div class="thumbs">${ids.map(a=>`<button type="button" data-photo="${esc(a)}" aria-label="Visa foto"><img src="${esc(blobUrl(a))}" alt="Foto: ${esc(p.text)}" loading="lazy"></button>`).join('')}</div>`:''; }
@@ -1105,6 +1118,7 @@ function reviewSummary(o){
   return `<ul class="tmrows">${row(s.complete,`${s.n} av ${s.total} delmoment klara`)}${row(h>0, h>0?`${fmtNum(h)} h rapporterade`:'Ingen tid rapporterad')}${row(true, mats.length?`${mats.length} materialrad${mats.length>1?'er':''}: ${esc(mats.map(m=>m.name).join(', '))}`:'Inget material rapporterat')}${row(photos>0, photos?`${photos} foto${photos>1?'n':''}`:'Inga foton')}${row(!openFlag(o), openFlag(o)?'Det finns en öppen avvikelse':'Inga öppna avvikelser')}${(()=>{ const pa=atasOf(o.id).filter(a=>a.status==='pending').length; return pa?row(false,`${pa} ÄTA väntar på kundens godkännande`):''; })()}${row(!!signoffOf(o.id), signoffOf(o.id)?`Kunden ${esc(signoffOf(o.id).name)} har signerat`:'Ingen kundsignatur (valfritt)')}</ul>`;
 }
 function workerBanner(o){
+  if(isFormer(o)) return `<div class="note" style="margin:0">Du är inte längre med på den här ordern. Din rapporterade tid finns kvar i tidrapporten.</div>`;
   const st=stateOf(o);
   if(st==='ready' || st==='returned'){
     const n = st==='returned' ? lastReturnNote(o) : null;
@@ -1142,14 +1156,22 @@ function planSpan(o){ if(!o||!o.start) return []; const n=Math.max(1,Math.min(60
   while(out.length<n && g<200){ const wd=d.getDay(), ds=localDate(d); if(!(wd===0||wd===6) || ds===o.start) out.push(ds); d.setDate(d.getDate()+1); g++; } return out; }
 const plannedOn=(o,ds)=>planSpan(o).includes(ds);
 function planLabel(o){ const s=planSpan(o); if(!s.length) return ''; const f=x=>new Date(x+'T12:00:00').toLocaleDateString('sv-SE',{weekday:'short',day:'numeric',month:'short'}); return s.length===1?f(s[0]):`${f(s[0])} – ${f(s[s.length-1])}`; }
-function canReassign(o){ const p=prog[o.id]||{}; return !Object.values(p.done||{}).some(Boolean) && !Object.keys(p.time||{}).length && !Object.values(timers).some(t=>t&&t.oid===o.id); }
-async function reassignOrder(o, nu){
-  const old={...o}, moved={...o, assignee:nu||null}; const {id,...data}=moved;
-  const pref=db.doc(progPath(old)); const ps=await pref.get(); const pdata=ps.exists?(ps.data()||{}):{done:{},photos:{},notes:{}};
-  await db.doc('orders/'+o.id).update({assignee:nu||null});
-  await db.doc(copyPath(moved)).set(data);
-  await db.doc(progPath(moved)).set(pdata);
-  if(copyPath(old)!==copyPath(moved)){ await db.doc(copyPath(old)).delete(); await pref.delete(); }
+function hasActivity(o,u){ const p=prog[o.id]||{}, by=x=>x&&x.by===u;
+  return Object.values(p.done||{}).some(by)||Object.values(p.time||{}).some(by)||Object.values(p.materials||{}).some(by)||Object.values(p.notes||{}).some(by)||Object.values(p.atas||{}).some(by)||!!(timers[u]&&timers[u].oid===o.id); }
+/* Sets who works on an order. Removed people with reported work keep a read-only copy so their time stays in their time report. */
+async function setAssignees(o, list){
+  list=[...new Set((list||[]).filter(Boolean))];
+  const old=assigneesOf(o), removed=old.filter(u=>!list.includes(u));
+  const former=[...new Set([...formerOf(o).filter(u=>!list.includes(u)), ...removed.filter(u=>hasActivity(o,u))])];
+  const next={...o, assignees:list, assignee:list[0]||null, formerAssignees:former, shared:true};
+  const oldPP=progPath(o), newPP=progPath(next);
+  if(oldPP!==newPP){ const ps=await db.doc(oldPP).get(); await db.doc(newPP).set(ps.exists?(ps.data()||{}):{done:{},photos:{},notes:{}}); await db.doc(oldPP).delete(); }
+  const {id,...data}=next;
+  await db.doc('orders/'+o.id).set(data);
+  const want=copyPathsOf(next), had=copyPathsOf(o);
+  for(const p of want) await db.doc(p).set(data);
+  for(const p of had) if(!want.includes(p)) await db.doc(p).delete();
+  return next;
 }
 
 /* ---------- Timer (stämpelklocka) ---------- */
@@ -1243,12 +1265,25 @@ async function sigSave(decline){
 $('#sigOk').addEventListener('click',()=>sigSave(false));
 $('#sigDecline').addEventListener('click',()=>sigSave(true));
 
+function crewHtml(o){
+  if(!owner) return '';
+  const a=assigneesOf(o), fm=formerOf(o).filter(u=>!a.includes(u)), can=!o.approved;
+  const others=team().filter(x=>!a.includes(x.uid));
+  return `<div class="notes"><h4>Personal på ordern</h4>
+    <div class="crew">${a.length?a.map(u=>`<span class="chipsel">${avatarHtml(u)}<span>${esc(nameOf(u))}${hasActivity(o,u)?' · har rapporterat':''}</span>${can?`<button type="button" data-rmp="${o.id}|${esc(u)}" aria-label="Ta bort ${esc(nameOf(u))} från ordern">${keep.rmp===o.id+'|'+u?'Bekräfta':'×'}</button>`:''}</span>`).join(''):'<span class="hint">Skickad till alla anställda.</span>'}</div>
+    ${fm.length?`<span class="hint">Tidigare på ordern: ${esc(fm.map(nameOf).join(', '))} – deras tid finns kvar.</span>`:''}
+    ${can&&others.length?`<div class="tmin"><select id="addp-${o.id}" aria-label="Välj anställd" style="flex:1 1 180px">${others.map(x=>`<option value="${esc(x.uid)}">${esc(nameOf(x.uid))}</option>`).join('')}</select><button type="button" class="btn small primary" data-addp="${o.id}">Lägg till på ordern</button></div>`:''}
+    ${can&&a.length?`<span class="hint">Den som läggs till ser ordern direkt. Den som tas bort behåller sin rapporterade tid.</span>`:''}</div>`;
+}
+
 /* ---------- Writes: master order + employee copy; progress one at a time per order ---------- */
 async function writeOrder(o, patch){
   await db.doc('orders/'+o.id).update(patch);
-  const cref=db.doc(copyPath(o));
-  try{ await cref.update(patch); }
-  catch(err){ if(err && err.code==='invalid_argument'){ const cur=await cref.get(); if(!cur.exists){ const {id,...rest}={...o,...patch}; await cref.set(rest); return; } } throw err; }
+  for(const path of copyPathsOf({...o,...patch})){
+    const cref=db.doc(path);
+    try{ await cref.update(patch); }
+    catch(err){ if(err && err.code==='invalid_argument'){ const cur=await cref.get(); if(!cur.exists){ const {id,...rest}={...o,...patch}; await cref.set(rest); continue; } } throw err; }
+  }
 }
 function queued(oid, fn){ const p=(queues[oid]||Promise.resolve()).then(fn); queues[oid]=p.catch(()=>{}); return p; }
 async function writeProgress(oid, patch){
@@ -1306,29 +1341,29 @@ $('#delTpl').addEventListener('click', async e=>{
 /* ---------- Assignee picker ---------- */
 async function showMenu(q){
   const m=$('#pickMenu'), ql=(q||'').toLowerCase();
-  let hits=team().map(x=>({id:x.uid, name:nameOf(x.uid), avatarUrl:(names[x.uid]&&names[x.uid].avatarUrl)||''})).filter(h=>!ql||h.name.toLowerCase().includes(ql));
+  let hits=team().filter(x=>!selectedAssignees.includes(x.uid)).map(x=>({id:x.uid, name:nameOf(x.uid), avatarUrl:(names[x.uid]&&names[x.uid].avatarUrl)||''})).filter(h=>!ql||h.name.toLowerCase().includes(ql));
   if(!hits.length && !team().length && user && user.search){ const r=(await user.search(q)).filter(h=>h.id); r.forEach(h=>names[h.id]=h); hits=r; }
-  if(!hits.length){ m.hidden=true; $('#assignHint').innerHTML = team().length ? 'Ingen i teamet heter så. Utan vald person syns ordern för alla anställda.' : 'Inga anställda kopplade än. <a href="#anstallda">Bjud in anställda</a> – utan vald person syns ordern för alla.'; return; }
+  if(!hits.length){ m.hidden=true; $('#assignHint').innerHTML = team().length ? (selectedAssignees.length && !ql ? 'Alla i teamet är redan valda.' : 'Ingen i teamet heter så. Utan vald person syns ordern för alla anställda.') : 'Inga anställda kopplade än. <a href="#anstallda">Bjud in anställda</a> – utan vald person syns ordern för alla.'; return; }
   m.innerHTML=hits.map(h=>`<button type="button" data-id="${esc(h.id)}">${h.avatarUrl?`<img src="${esc(h.avatarUrl)}" alt="">`:''}<span>${esc(h.name)}${h.id===meId?' (du)':''}</span></button>`).join('');
   m.hidden=false;
 }
 $('#f-assignee').addEventListener('focus', ()=>showMenu(''));
 $('#f-assignee').addEventListener('input', e=>showMenu(e.target.value.trim()));
-$('#pickMenu').addEventListener('click', e=>{ const b=e.target.closest('button[data-id]'); if(!b) return; selectedAssignee=b.dataset.id; $('#f-assignee').value=''; $('#pickMenu').hidden=true; renderChip(); });
+$('#pickMenu').addEventListener('click', e=>{ const b=e.target.closest('button[data-id]'); if(!b) return; if(!selectedAssignees.includes(b.dataset.id)) selectedAssignees.push(b.dataset.id); $('#f-assignee').value=''; $('#pickMenu').hidden=true; renderChip(); });
 document.addEventListener('click', e=>{ if(!e.target.closest('#picker')) $('#pickMenu').hidden=true; });
 function renderChip(){
-  const c=$('#assigneeChip'), pk=$('#picker');
-  if(!selectedAssignee){ c.innerHTML=''; pk.hidden=false; return; }
-  const p=names[selectedAssignee]||{};
-  c.innerHTML=`<span class="chipsel"><img src="${esc(p.avatarUrl||'')}" alt=""><span>${esc(nameOf(selectedAssignee))}</span><button type="button" id="clearAssignee" aria-label="Ta bort mottagare">×</button></span>`;
-  pk.hidden=true; $('#clearAssignee').onclick=()=>{ selectedAssignee=null; renderChip(); };
+  const c=$('#assigneeChip');
+  c.innerHTML=selectedAssignees.map(u=>{ const p=names[u]||{}; return `<span class="chipsel">${p.avatarUrl?`<img src="${esc(p.avatarUrl)}" alt="">`:''}<span>${esc(nameOf(u))}</span><button type="button" data-unpick="${esc(u)}" aria-label="Ta bort ${esc(nameOf(u))}">×</button></span>`; }).join('');
+  $('#f-assignee').placeholder = selectedAssignees.length ? 'Lägg till fler…' : 'Sök anställd…';
+  if(!editingId) $('#assignHint').textContent = selectedAssignees.length ? `Ordern skickas till ${selectedAssignees.length} ${selectedAssignees.length>1?'personer':'person'}.` : 'Utan vald person syns ordern för alla anställda.';
 }
+$('#assigneeChip').addEventListener('click', e=>{ const b=e.target.closest('[data-unpick]'); if(!b) return; selectedAssignees=selectedAssignees.filter(u=>u!==b.dataset.unpick); renderChip(); });
 
 /* ---------- Send / edit order ---------- */
 function go(h){ if(location.hash==='#'+h) route(); else location.hash=h; }
 document.addEventListener('click', e=>{ if(e.target.closest('[data-new]')) resetForm(); }, true);
 function resetForm(){
-  $('#orderForm').reset(); parts=[{id:null,text:''},{id:null,text:''}]; renderPartsEditor(); selectedAssignee=null; renderChip(); $('#delTpl').hidden=true;
+  $('#orderForm').reset(); parts=[{id:null,text:''},{id:null,text:''}]; renderPartsEditor(); selectedAssignees=[]; editingId=null; renderChip(); $('#delTpl').hidden=true;
   editingId=null; $('#formTitle').textContent='Ny arbetsorder'; $('#sendBtn').textContent='Skicka arbetsorder'; $('#cancelEdit').hidden=true; $('#picker').hidden=false;
   $('#assignHint').textContent='Utan vald person syns ordern för alla anställda.';
   $('#newBack').href='#ordrar'; $('#newBack').textContent='← Alla ordrar';
@@ -1341,8 +1376,8 @@ function startEdit(o){
   parts=(o.parts||[]).map(p=>({id:p.id,text:p.text})); if(!parts.length) parts=[{id:null,text:''}]; renderPartsEditor();
   $('#formTitle').textContent='Ändra '+orderNo(o); $('#sendBtn').textContent='Spara ändringar'; $('#cancelEdit').hidden=false;
   $('#f-start').value=o.start||''; $('#f-days').value=o.days||1;
-  selectedAssignee=o.assignee||null; renderChip(); $('#picker').hidden=!!selectedAssignee;
-  $('#assignHint').textContent = canReassign(o) ? 'Du kan byta mottagare så länge ingen har börjat på ordern.' : `Mottagare: ${nameOf(o.assignee)}. Ordern är påbörjad, så mottagaren kan inte bytas.`;
+  selectedAssignees=[...assigneesOf(o)]; renderChip(); $('#picker').hidden=false;
+  $('#assignHint').textContent = 'Lägg till eller ta bort personal. Den som tas bort behåller sin rapporterade tid.';
   $('#newBack').href='#order-'+o.id; $('#newBack').textContent='← Tillbaka till ordern';
   go('ny-order');
 }
@@ -1372,19 +1407,16 @@ $('#orderForm').addEventListener('submit', async e=>{
   try{
     if(editingId){
       let o=findOrder(editingId); if(!o) throw new Error('missing');
-      if((selectedAssignee||null)!==(o.assignee||null)){
-        if(!canReassign(o)){ toast('Ordern är påbörjad – mottagaren kan inte bytas'); return; }
-        await reassignOrder(o, selectedAssignee||null); o={...o, assignee:selectedAssignee||null};
-      }
+      if(JSON.stringify([...assigneesOf(o)].sort())!==JSON.stringify([...selectedAssignees].sort())) o=await setAssignees(o, selectedAssignees);
       await writeOrder(o,{...fields, parts:clean.map(p=>({id:p.id||uid('p'),text:p.text})), editedAt:Date.now()});
       await db.doc('custpriv/'+o.id).set({email:ce, idno:ci});
       toast('Ordern är uppdaterad');
     } else {
       const ref=db.collection('orders').doc();
-      const data={...fields, assignee:selectedAssignee||null, createdBy:meId, createdAt:Date.now(), parts:clean.map((p,i)=>({id:'p'+(i+1),text:p.text}))};
+      const data={...fields, assignees:[...selectedAssignees], assignee:selectedAssignees[0]||null, formerAssignees:[], shared:true, createdBy:meId, createdAt:Date.now(), parts:clean.map((p,i)=>({id:'p'+(i+1),text:p.text}))};
       const o={id:ref.id,...data};
       await ref.set(data);
-      await db.doc(copyPath(o)).set(data);
+      for(const path of copyPathsOf(o)) await db.doc(path).set(data);
       await db.doc(progPath(o)).set({done:{},photos:{},notes:{}});
       if(ce||ci) await db.doc('custpriv/'+ref.id).set({email:ce, idno:ci});
       toast('Arbetsorder skickad');
@@ -1400,10 +1432,10 @@ let seq=0;
 async function render(){
   const my=++seq;
   const ids=new Set();
-  orders.forEach(o=>{ if(o.assignee) ids.add(o.assignee); Object.values(doneOf(o.id)).forEach(v=>v&&v.by&&ids.add(v.by)); notesOf(o.id).forEach(n=>n.by&&ids.add(n.by));
+  orders.forEach(o=>{ assigneesOf(o).forEach(u=>ids.add(u)); formerOf(o).forEach(u=>ids.add(u)); Object.values(doneOf(o.id)).forEach(v=>v&&v.by&&ids.add(v.by)); notesOf(o.id).forEach(n=>n.by&&ids.add(n.by));
     timeOf(o.id).forEach(t=>t.by&&ids.add(t.by)); matsOf(o.id).forEach(m=>m.by&&ids.add(m.by)); if(o.approved&&o.approved.by) ids.add(o.approved.by); const p=prog[o.id]; if(p&&p.submittedBy) ids.add(p.submittedBy); });
   if(meId) ids.add(meId); members.forEach(m=>ids.add(m.id));
-  if(selectedAssignee) ids.add(selectedAssignee);
+  selectedAssignees.forEach(u=>ids.add(u));
   if(user && ids.size){ const ps=await user.profiles([...ids]); if(my!==seq) return; Object.assign(names,ps); }
   VIEWS.forEach(v=>{ $('#v-'+v).hidden = view!==v; });
   { const t=!owner&&myTimer(), c=$('#timerChip'); c.hidden=!t; if(t){ const o=findOrder(t.oid); c.href='#order-'+t.oid; c.title='Tiden går'+(o?' på '+o.title:''); c.innerHTML=ic('clock',16)+timerLive(t); } }
@@ -1416,7 +1448,7 @@ async function render(){
   else if(view==='plan') renderPlan();
   else if(view==='timesheet') renderTimesheet(); else if(view==='sheets') renderSheets(); else if(view==='profile') renderProfile(); else if(view==='person') renderPerson();
   if(fid){ const n=document.getElementById(fid); if(n && n!==a){ n.focus(); try{ n.setSelectionRange(s1,s2); }catch(_){} } }
-  if(selectedAssignee) renderChip();
+  if(selectedAssignees.length && view==='new') renderChip();
 }
 const emptyBox = (h,sub) => `<div class="empty"><strong>${h}</strong>${sub}</div>`;
 const VIEWS=['employer','new','order','invoices','invoice','prices','company','history','worker','more','team','join','timesheet','sheets','profile','person','plan'];
@@ -1544,11 +1576,11 @@ function renderEmployer(){
   if(q) list=orders.filter(o=>[o.title,o.customer,o.address,orderNo(o)].join(' ').toLowerCase().includes(q));
   if(!list.length){ el.innerHTML = q ? emptyBox('Inga träffar',`Inget matchar ”${esc(query.trim())}”.`) : emptyBox(active.length?'Inga ordrar här':'Inga aktiva arbetsordrar', active.length?'Välj Alla aktiva för att se alla.':'Tryck på + Ny arbetsorder för att skicka en.'); return; }
   el.innerHTML=list.map(o=>`<article class="order${o.priority==='urgent'?' urgent':''}">
-      <div class="ticket"><span class="no">${orderNo(o)}</span>${newPill(o,true)}${o.priority==='urgent'?'<span class="pill hot">Brådskande</span>':''}${statusPill(o)}<span class="right"><span class="who-chip">${avatarHtml(o.assignee)}${esc(nameOf(o.assignee))}</span></span></div>
+      <div class="ticket"><span class="no">${orderNo(o)}</span>${newPill(o,true)}${o.priority==='urgent'?'<span class="pill hot">Brådskande</span>':''}${statusPill(o)}<span class="right"><span class="who-chip">${assigneesOf(o).slice(0,3).map(avatarHtml).join('')}${esc(teamNames(o))}</span></span></div>
       ${summaryHtml(o)}</article>`).join('');
 }
 
-const myOrders = () => orders.filter(o=>!o.assignee || o.assignee===meId);
+const myOrders = () => orders.filter(o=>{ const a=assigneesOf(o); return !a.length || a.includes(meId); });
 function renderToday(active){
   const el=$('#workToday');
   if(owner){ el.innerHTML=''; return; }
@@ -1604,7 +1636,7 @@ function renderTeam(){
     const status = iv.revoked ? '<span class="pill">Borttagen</span>' : m ? '<span class="pill ok">Kopplad</span>' : '<span class="pill go">Inbjuden – väntar</span>';
     const ini=(iv.name||'?').split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
     const av = p&&p.avatarUrl ? `<img src="${esc(p.avatarUrl)}" alt="">` : esc(ini);
-    const active = uid ? orders.filter(o=>o.assignee===uid && !o.approved).length : 0;
+    const active = uid ? orders.filter(o=>assigneesOf(o).includes(uid) && !o.approved).length : 0;
     const confirm = teamConfirm===iv.id;
     let actions='';
     if(iv.revoked) actions=`<button type="button" class="btn small primary" data-reinvite="${esc(iv.id)}">Bjud in igen</button><button type="button" class="btn small" data-delinv="${esc(iv.id)}" style="background:transparent;color:var(--muted)">${confirm?'Bekräfta radering':'Radera'}</button>`;
@@ -1679,53 +1711,59 @@ $('#joinBox').addEventListener('submit', async e=>{
 });
 
 /* ---------- Planning board ---------- */
-let planWeek=null, planSel=null;
+let planWeek=null, planSel=null, planAdd=false;
 function renderPlan(){
   const el=$('#planBody'); if(!planWeek) planWeek=weekKey(todayStr());
   const key=planWeek, days=weekDays(key), cur=weekKey(todayStr()), td=todayStr();
   const rows=[...team().map(x=>({uid:x.uid,label:nameOf(x.uid)})), {uid:'',label:'Alla anställda'}];
   const chipCls=o=>{ if(o.approved) return 'ok'; const st=stateOf(o); if(st==='review') return 'hot'; if(stats(o).n>0) return 'go'; return ''; };
-  const chip=o=>`<button type="button" class="pchip ${chipCls(o)}${planSel===o.id?' sel':''}" draggable="${o.approved?'false':'true'}" data-pchip="${o.id}" title="${esc(o.title)}${o.customer?' – '+esc(o.customer):''}"><b>${esc(o.title)}</b><span>${esc(o.customer||o.address||'')}</span></button>`;
+  const chip=(o,row)=>`<button type="button" class="pchip ${chipCls(o)}${planSel&&planSel.oid===o.id&&planSel.from===row?' sel':''}" draggable="${o.approved?'false':'true'}" data-pchip="${o.id}" data-prow="${esc(row)}" title="${esc(o.title)}${o.customer?' – '+esc(o.customer):''}"><b>${esc(o.title)}</b><span>${esc(o.customer||o.address||'')}</span></button>`;
   const unplanned=orders.filter(o=>!o.approved && !o.start);
-  const sel=planSel&&findOrder(planSel);
-  const hrsPlanned=uid=>orders.filter(o=>(o.assignee||'')===uid && planSpan(o).some(d=>days.includes(d))).length;
-  el.innerHTML=`<div class="lhead"><div><h2>Planering</h2><p class="hint" style="margin:2px 0 0">Dra en order till en dag och person – eller tryck på ordern och sedan på dagen. Tryck på en tom ruta för att skapa en ny order där.</p></div><a class="btn primary" href="#ny-order" data-new>+ Ny arbetsorder</a></div>
+  const sel=planSel&&findOrder(planSel.oid);
+  const inRow=(o,uid)=>uid ? assigneesOf(o).includes(uid) : !assigneesOf(o).length;
+  const hrsPlanned=uid=>orders.filter(o=>inRow(o,uid) && planSpan(o).some(d=>days.includes(d))).length;
+  el.innerHTML=`<div class="lhead"><div><h2>Planering</h2><p class="hint" style="margin:2px 0 0">Dra en order till en dag och person – eller tryck på ordern och sedan på dagen. Håll Alt (eller kryssa i rutan) för att lägga till en person i stället för att flytta. Tryck på en tom ruta för att skapa en ny order där.</p></div><a class="btn primary" href="#ny-order" data-new>+ Ny arbetsorder</a></div>
     <div class="weeknav"><button type="button" class="wbtn" data-pw="-1" aria-label="Föregående vecka">‹</button><span class="wl">Vecka ${Number(key.slice(6))}<small>${esc(weekLabel(key))}</small></span><button type="button" class="wbtn" data-pw="1" aria-label="Nästa vecka">›</button>${key!==cur?'<button type="button" class="btn small" data-pw="0" style="background:var(--chip);color:var(--ink)">Denna vecka</button>':''}</div>
-    ${sel?`<div class="planbar">Flyttar: ${esc(sel.title)} – tryck på en dag i tavlan. <a href="#order-${sel.id}">Öppna ordern</a><button type="button" data-plan-cancel>Avbryt</button></div>`:''}
+    ${sel?`<div class="planbar">${planAdd?'Lägger till person på':'Flyttar'}: ${esc(sel.title)} – tryck på en dag i tavlan. <label style="display:inline-flex;gap:6px;align-items:center;font-weight:500"><input type="checkbox" id="planAdd" ${planAdd?'checked':''}> Lägg till personen i stället för att flytta</label><a href="#order-${sel.id}">Öppna ordern</a><button type="button" data-plan-cancel>Avbryt</button></div>`:''}
     ${!team().length?`<div class="statusbox wait" style="margin-bottom:10px"><b>Inga anställda kopplade än</b><p>Bjud in dem under <a href="#anstallda">Anställda</a> så får var och en en egen rad här.</p></div>`:''}
     <div class="plan-wrap"><table class="plan"><thead><tr><th>Person</th>${days.map(d=>{ const dt=new Date(d+'T12:00:00'); return `<th class="${d===td?'today':''}"><span>${esc(dt.toLocaleDateString('sv-SE',{weekday:'short'}))}${d===td?' · idag':''}</span>${dt.getDate()}/${dt.getMonth()+1}</th>`; }).join('')}</tr></thead>
-      <tbody>${rows.map(r=>`<tr><th>${avatarHtml(r.uid)}${esc(r.label)}<small>${hrsPlanned(r.uid)} ordrar v.${Number(key.slice(6))}${r.uid&&timers[r.uid]?' · jobbar nu':''}</small></th>${days.map(d=>{ const dt=new Date(d+'T12:00:00'), we=dt.getDay()===0||dt.getDay()===6; const list=orders.filter(o=>(o.assignee||'')===r.uid && plannedOn(o,d));
-        return `<td data-cell="${r.uid}|${d}" class="${d===td?'today':''}${we?' we':''}">${list.map(chip).join('')}${list.length?'':'<span class="addhint" aria-hidden="true">+</span>'}</td>`; }).join('')}</tr>`).join('')}</tbody></table></div>
+      <tbody>${rows.map(r=>`<tr><th>${avatarHtml(r.uid)}${esc(r.label)}<small>${hrsPlanned(r.uid)} ordrar v.${Number(key.slice(6))}${r.uid&&timers[r.uid]?' · jobbar nu':''}</small></th>${days.map(d=>{ const dt=new Date(d+'T12:00:00'), we=dt.getDay()===0||dt.getDay()===6; const list=orders.filter(o=>inRow(o,r.uid) && plannedOn(o,d));
+        return `<td data-cell="${r.uid}|${d}" class="${d===td?'today':''}${we?' we':''}">${list.map(o=>chip(o,r.uid)).join('')}${list.length?'':'<span class="addhint" aria-hidden="true">+</span>'}</td>`; }).join('')}</tr>`).join('')}</tbody></table></div>
     <div class="legend"><span><i style="background:var(--accent)"></i>Ej påbörjad</span><span><i style="background:var(--signal)"></i>Pågår</span><span><i style="background:var(--warn)"></i>Väntar på granskning</span><span><i style="background:var(--ok)"></i>Godkänd</span></div>
     <h3 class="sect">Ej planerade${unplanned.length?` (${unplanned.length})`:''}</h3>
-    ${unplanned.length?`<div class="unplanned" data-cell-unplanned>${unplanned.map(chip).join('')}</div>`:'<p class="hint">Alla aktiva ordrar är planerade.</p>'}`;
+    ${unplanned.length?`<div class="unplanned" data-cell-unplanned>${unplanned.map(o=>chip(o,assigneesOf(o)[0]||'')).join('')}</div>`:'<p class="hint">Alla aktiva ordrar är planerade.</p>'}`;
 }
-async function planMove(oid, uid, date){
-  let o=findOrder(oid); if(!o) return; planSel=null;
+async function planMove(oid, from, to, date, add){
+  let o=findOrder(oid); if(!o) return; planSel=null; planAdd=false;
   if(o.approved){ toast('Godkända ordrar kan inte flyttas'); render(); return; }
-  const sameRow=(o.assignee||'')===(uid||'');
-  if(!sameRow && !canReassign(o)){ toast(`${o.title} är påbörjad av ${nameOf(o.assignee)} – flytta den inom samma rad`); render(); return; }
+  let list=assigneesOf(o);
+  if(add){ if(to && !list.includes(to)) list=[...list,to]; }
+  else if(from!==to){ if(!to) list=[]; else { list=list.filter(u=>u!==from); if(!list.includes(to)) list.push(to); } }
+  const changed=JSON.stringify([...assigneesOf(o)].sort())!==JSON.stringify([...list].sort());
   try{
-    if(!sameRow){ await reassignOrder(o, uid||null); o={...o, assignee:uid||null}; }
-    await writeOrder(o,{start:date, days:o.days||1});
-    toast(`${o.title}: ${fmtDate(date)} · ${uid?nameOf(uid):'alla anställda'}`);
+    if(changed) o=await setAssignees(o, list);
+    if(o.start!==date && (!add || !o.start)) await writeOrder(o,{start:date, days:o.days||1});
+    const kept=from&&!list.includes(from)&&hasActivity(o,from);
+    toast(`${o.title}: ${fmtDate(add&&o.start?o.start:date)} · ${teamNames({...o,assignees:list})}${kept?` (${nameOf(from)} behåller sin tid)`:''}`);
   }catch(err){ toast('Kunde inte flytta ordern'); }
   render();
 }
 $('#planBody').addEventListener('click', e=>{
   const b=e.target.closest('button,td[data-cell]'); if(!b) return;
   if(b.dataset.pw!=null){ const n=+b.dataset.pw; planWeek = n===0 ? weekKey(todayStr()) : shiftWeek(planWeek,n); render(); return; }
-  if(b.hasAttribute('data-plan-cancel')){ planSel=null; render(); return; }
-  if(b.dataset.pchip && planSel && planSel!==b.dataset.pchip){ const td=b.closest('td[data-cell]'); if(td){ const [u,d]=td.dataset.cell.split('|'); planMove(planSel,u,d); return; } }
-  if(b.dataset.pchip){ planSel = planSel===b.dataset.pchip ? null : b.dataset.pchip; if(planSel && findOrder(planSel)?.approved){ go('order-'+planSel); planSel=null; return; } render(); return; }
+  if(b.hasAttribute('data-plan-cancel')){ planSel=null; planAdd=false; render(); return; }
+  const same=b.dataset.pchip && planSel && planSel.oid===b.dataset.pchip && planSel.from===b.dataset.prow;
+  if(b.dataset.pchip && planSel && !same){ const td=b.closest('td[data-cell]'); if(td){ const [u,d]=td.dataset.cell.split('|'); planMove(planSel.oid,planSel.from,u,d,planAdd); return; } }
+  if(b.dataset.pchip){ planSel = same ? null : {oid:b.dataset.pchip, from:b.dataset.prow||''}; if(planSel && findOrder(planSel.oid)?.approved){ go('order-'+planSel.oid); planSel=null; return; } render(); return; }
   if(b.dataset.cell){ const [u,d]=b.dataset.cell.split('|');
-    if(planSel){ planMove(planSel,u,d); return; }
-    resetForm(); if(u){ selectedAssignee=u; renderChip(); } $('#f-start').value=d; $('#f-days').value=1; go('ny-order'); }
+    if(planSel){ planMove(planSel.oid,planSel.from,u,d,planAdd); return; }
+    resetForm(); if(u){ selectedAssignees=[u]; renderChip(); } $('#f-start').value=d; $('#f-days').value=1; go('ny-order'); }
 });
-$('#planBody').addEventListener('dragstart', e=>{ const c=e.target.closest('[data-pchip]'); if(!c) return; e.dataTransfer.setData('text/plain', c.dataset.pchip); e.dataTransfer.effectAllowed='move'; });
+$('#planBody').addEventListener('change', e=>{ if(e.target.id==='planAdd'){ planAdd=e.target.checked; render(); } });
+$('#planBody').addEventListener('dragstart', e=>{ const c=e.target.closest('[data-pchip]'); if(!c) return; e.dataTransfer.setData('text/plain', c.dataset.pchip+'|'+(c.dataset.prow||'')); e.dataTransfer.effectAllowed='copyMove'; });
 $('#planBody').addEventListener('dragover', e=>{ const td=e.target.closest('td[data-cell]'); if(!td) return; e.preventDefault(); document.querySelectorAll('td.drop').forEach(x=>x!==td&&x.classList.remove('drop')); td.classList.add('drop'); });
 $('#planBody').addEventListener('dragleave', e=>{ const td=e.target.closest('td[data-cell]'); if(td && !td.contains(e.relatedTarget)) td.classList.remove('drop'); });
-$('#planBody').addEventListener('drop', e=>{ const td=e.target.closest('td[data-cell]'); if(!td) return; e.preventDefault(); td.classList.remove('drop'); const oid=e.dataTransfer.getData('text/plain'); const [u,d]=td.dataset.cell.split('|'); if(oid) planMove(oid,u,d); });
+$('#planBody').addEventListener('drop', e=>{ const td=e.target.closest('td[data-cell]'); if(!td) return; e.preventDefault(); td.classList.remove('drop'); const [oid,from]=e.dataTransfer.getData('text/plain').split('|'); const [u,d]=td.dataset.cell.split('|'); if(oid) planMove(oid,from||'',u,d,e.altKey||e.ctrlKey||e.metaKey||planAdd); });
 
 /* ---------- Time reporting ---------- */
 const cap=t=>t?t[0].toUpperCase()+t.slice(1):t;
@@ -1952,7 +1990,7 @@ function renderPerson(){
   if(!m){ el.innerHTML = ready.team ? emptyBox('Personen finns inte i teamet','Hen kan ha tagits bort.') : emptyBox('Hämtar…','Ett ögonblick.'); return; }
   const pr=profileOf(u), nm=nameOf(u), iv=invites.find(i=>i.id===m.code)||{};
   const mo=todayStr().slice(0,7); let moH=0; orders.forEach(o=>timeOf(o.id).forEach(t=>{ if(t.by===u && entryDate(t).slice(0,7)===mo) moH+=num(t.hours); })); Object.values(otherTime[u]||{}).forEach(t=>{ if(t&&t.kind!=='absence'&&(t.date||'').slice(0,7)===mo) moH+=num(t.hours); });
-  const act=orders.filter(o=>o.assignee===u && !o.approved), done=orders.filter(o=>o.approved && workersOf(o).includes(u)).length;
+  const act=orders.filter(o=>assigneesOf(o).includes(u) && !o.approved), done=orders.filter(o=>o.approved && workersOf(o).includes(u)).length;
   const recent=Object.keys(sheets[u]||{}).sort().reverse().slice(0,6);
   el.innerHTML=`<div class="prof-head">${bigAv(u,nm)}<div><h2>${esc(nm)}</h2><p>${esc([pr.role, x?'Kopplad '+dayLabel(localDate(new Date(m.joinedAt||Date.now()))).toLowerCase():'Borttagen från teamet'].filter(Boolean).join(' · '))}</p></div></div>
     <div class="kpis" style="margin-top:0">${kpi(`Timmar v.${isoWeek(todayStr()).w}`,fmtNum(hoursThisWeek(u)),'')}${kpi('Timmar i månaden',fmtNum(moH),new Date().toLocaleDateString('sv-SE',{month:'long'}))}${kpi('Aktiva ordrar',act.length,'')}${kpi('Godkända ordrar',done,'totalt')}</div>
@@ -1996,6 +2034,7 @@ function renderOrderDetail(){
       ${signoffHtml(o)}
       ${tmHtml(o,owner)}
       ${ataHtml(o)}
+      ${crewHtml(o)}
       ${notesHtml(o,owner)}
       <div class="notes"><h4>Historik för ordern</h4>${evs.length?tlHtml(evs,{}):'<span class="hint">Inget har hänt än.</span>'}</div>
     </div></article>`;
@@ -2016,14 +2055,14 @@ function buildEvents(){
   const ev=[], add=(at,by,text,o,cls='')=>{ if(at) ev.push({at,by,text,oid:o.id,title:o.title,cls}); };
   orders.forEach(o=>{
     const p=prog[o.id]||{}, pn=id=>((o.parts||[]).find(x=>x.id===id)||{}).text||'delmoment';
-    add(o.createdAt,o.createdBy,`skickade ordern till ${o.assignee?nameOf(o.assignee):'alla anställda'}`,o,'acc');
+    add(o.createdAt,o.createdBy,`skickade ordern till ${assigneesOf(o).length?teamNames(o):'alla anställda'}`,o,'acc');
     if(o.editedAt) add(o.editedAt,o.createdBy,'ändrade ordern',o);
     Object.entries(p.done||{}).forEach(([pid,d])=>{ if(d) add(d.at,d.by,`blev klar med ”${pn(pid)}”`,o,'ok'); });
     timeOf(o.id).forEach(t=>add(t.at,t.by,`rapporterade ${fmtNum(num(t.hours))} h för ${fmtDate(entryDate(t))}`,o));
     matsOf(o.id).forEach(m=>add(m.at,m.by,`rapporterade material: ${m.name}, ${fmtNum(num(m.qty)||1)} st`,o));
     notesOf(o.id).forEach(n=>add(n.at,n.by, n.kind==='return'?`skickade tillbaka ordern: ”${n.text}”` : n.flag?`rapporterade en avvikelse: ”${n.text}”`:`skrev: ”${n.text}”`,o, n.kind==='return'||n.flag?'bad':''));
-    if(p.submittedAt) add(p.submittedAt,p.submittedBy||o.assignee,'skickade in arbetet för granskning',o,'sig');
-    if(p.resubmittedAt) add(p.resubmittedAt,p.submittedBy||o.assignee,'skickade in arbetet igen',o,'sig');
+    if(p.submittedAt) add(p.submittedAt,p.submittedBy||assigneesOf(o)[0],'skickade in arbetet för granskning',o,'sig');
+    if(p.resubmittedAt) add(p.resubmittedAt,p.submittedBy||assigneesOf(o)[0],'skickade in arbetet igen',o,'sig');
     atasOf(o.id).forEach(a=>{ add(a.at,a.by,`skapade ÄTA: ”${a.text}”`,o,'sig'); if(a.signedAt) add(a.signedAt,a.decidedBy, a.status==='approved'?`${a.sig?`fick ÄTA signerad av ${a.custName}`:`markerade ÄTA som godkänd av ${a.custName||'kunden'}`}: ”${a.text}”`:`noterade att ${a.custName||'kunden'} avböjde ÄTA: ”${a.text}”`,o,a.status==='approved'?'ok':'bad'); });
     { const so=signoffOf(o.id); if(so) add(so.at,so.by,`fick arbetet signerat av ${so.name}`,o,'ok'); }
     if(o.approved) add(o.approved.at,o.approved.by,'godkände arbetet',o,'ok');
@@ -2046,7 +2085,7 @@ function tlHtml(evs, opts){
   flush(); return out;
 }
 function finishedOrders(){
-  const list = owner ? orders.filter(o=>o.approved) : myOrders().filter(o=>['review','approved'].includes(stateOf(o)));
+  const list = owner ? orders.filter(o=>o.approved) : [...myOrders().filter(o=>['review','approved'].includes(stateOf(o))), ...orders.filter(isFormer)];
   const when=o=>(o.approved&&o.approved.at)||Math.max((prog[o.id]||{}).submittedAt||0,(prog[o.id]||{}).resubmittedAt||0);
   return list.sort((a,b)=>when(b)-when(a)).map(o=>({o,at:when(o)}));
 }
@@ -2147,6 +2186,12 @@ $('#photoInput').addEventListener('change', async e=>{
 });
 async function onListClick(e){
   const t=e.target.closest('button'); if(!t) return;
+  if(t.dataset.addp){ const o=findOrder(t.dataset.addp), u=$('#addp-'+t.dataset.addp)?.value; if(!o||!u) return; t.disabled=true;
+    try{ await setAssignees(o,[...assigneesOf(o),u]); toast(`${nameOf(u)} är tillagd på ordern`); }catch(err){ toast('Kunde inte lägga till personen'); } render(); return; }
+  if(t.dataset.rmp){ const [oid,u]=t.dataset.rmp.split('|'), o=findOrder(oid); if(!o) return;
+    if(keep.rmp!==t.dataset.rmp){ keep.rmp=t.dataset.rmp; render(); setTimeout(()=>{ if(keep.rmp===t.dataset.rmp){ keep.rmp=null; render(); } },5000); return; }
+    keep.rmp=null; const had=hasActivity(o,u);
+    try{ await setAssignees(o, assigneesOf(o).filter(x=>x!==u)); toast(`${nameOf(u)} är borttagen från ordern${had?' – tiden finns kvar':''}`); }catch(err){ toast('Kunde inte ta bort personen'); } render(); return; }
   if(t.hasAttribute('data-timer-stop')){ stopTimer(false); return; }
   if(t.dataset.timerStart){ startTimer(t.dataset.timerStart); return; }
   if(t.dataset.signoff){ openSig({mode:'signoff', oid:t.dataset.signoff}); return; }
@@ -2244,7 +2289,7 @@ $('#orderDetail').addEventListener('click', async e=>{
     const o=findOrder(id);
     try{
       const photoIds=Object.values(photosOf(id)).flat().filter(Boolean);
-      if(o){ await db.doc(copyPath(o)).delete(); await db.doc(progPath(o)).delete(); }
+      if(o){ for(const path of copyPathsOf(o)) await db.doc(path).delete(); await db.doc(progPath(o)).delete(); }
       await db.doc('progress/'+id).delete(); await db.doc('custpriv/'+id).delete(); await db.doc('orders/'+id).delete();
       if(assets) for(const a of photoIds){ try{ await assets.delete(a); }catch(_){} }
       if(editingId===id) resetForm();
@@ -2731,9 +2776,12 @@ async function boot(){
       gotP=true; if(!snap.metadata.fromCache) ready.prog=true; settle(snap); render();
     }, ()=>{});
   }
+  const progDocs=new Set();
   function ensureWorkSubs(){
-    const ids = owner ? orders.map(o=>o.assignee).filter(Boolean) : (meId?[meId]:[]);
+    const ids = owner ? orders.flatMap(o=>assigneesOf(o)) : (meId?[meId]:[]);
     new Set(ids).forEach(u=>{ if(!workSubs.has(u)){ workSubs.add(u); subProg('w:'+u, `work/${u}/progress`); } });
+    if(!owner) orders.forEach(o=>{ const pp=progPath(o); if(pp.startsWith('progress/') && !progDocs.has(o.id)){ progDocs.add(o.id);
+      db.doc(pp).onSnapshot(sn=>{ srcProg['d:'+o.id]= sn.exists?{[o.id]:sn.data()||{}}:{}; prog=Object.assign({}, ...Object.values(srcProg)); gotP=true; ready.prog=true; render(); }, ()=>{}); } });
   }
   if(owner){
     subOrders('master', db.collection('orders'));
@@ -2741,7 +2789,7 @@ async function boot(){
     if(meId) subOrders('mine', db.collection(`assigned/${meId}/orders`));
     subOrders('pool', db.collection('pool'));
   }
-  subProg('shared', 'progress');
+  if(owner) subProg('shared', 'progress');
   ensureWorkSubs();
   if(owner){
     db.collection('invoices').onSnapshot(snap=>{
