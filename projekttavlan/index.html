@@ -342,6 +342,57 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
 .join h2{margin:0}
 .join input{font:600 24px var(--mono)!important;letter-spacing:.2em;text-transform:uppercase;text-align:center;padding:12px!important}
 .join .err{color:var(--bad);font-weight:600;font-size:14px}
+/* ---- profiles & timesheets ---- */
+.who a{display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;border-radius:20px;padding:3px 10px 3px 3px}
+.who a:hover{background:var(--chip)}
+.weeknav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
+.weeknav .wl{font:700 18px var(--body);min-width:0}
+.weeknav .wl small{display:block;font:500 13px var(--body);color:var(--muted)}
+.wbtn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;width:40px;height:40px;font-size:20px;cursor:pointer;box-shadow:var(--shadow)}
+.wbtn:disabled{opacity:.4;cursor:default}
+.days{display:grid;gap:10px}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px}
+.day.empty-day{box-shadow:none;background:transparent;border-style:dashed}
+.day .dh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:600}
+.day .dh span{font:600 14px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.tline{display:flex;gap:10px;align-items:center;padding:6px 0;border-top:1px dashed var(--line);font-size:14px}
+.tline:first-of-type{border-top:0}
+.k{flex:none;display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:6px;padding:2px 7px;background:var(--chip);color:var(--muted)}
+.k.abs{background:var(--warn-bg);color:var(--warn)}
+.k.ord{background:var(--chip);color:var(--accent)}
+.tline .tt2{flex:1;min-width:0;overflow-wrap:anywhere}
+.tline .tt2 small{display:block;color:var(--muted);font-size:12.5px}
+.tline .h{font:600 14px var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tsform{display:grid;gap:10px}
+.tsform .row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.tsform .row3{grid-template-columns:1fr 1fr}}
+.statusbox{border-radius:var(--radius);padding:12px 14px;display:grid;gap:4px;margin-bottom:14px;border:1px solid var(--line);background:var(--surface)}
+.statusbox.ok{background:var(--ok-bg);border-color:transparent;color:var(--ok)}
+.statusbox.wait{background:var(--chip);border-color:transparent}
+.statusbox.bad{background:var(--bad-bg);border-color:transparent;color:var(--bad)}
+.statusbox b{font-size:15px}
+.statusbox p{margin:0;color:var(--ink);white-space:pre-wrap}
+.sheet-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.sheet-card .sc-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px}
+.sheet-card .sc-top .nm{flex:1;min-width:0}
+.sheet-card .sc-top .nm b{display:block;font-size:16px}
+.sheet-card .sc-top .nm span{font-size:13px;color:var(--muted)}
+.sheet-card .sc-tot{display:flex;gap:18px;flex-wrap:wrap;padding:0 16px 10px;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.sheet-card .sc-tot b{color:var(--ink);font-family:var(--mono)}
+.sheet-card .sc-body{border-top:1px dashed var(--line);padding:10px 16px 14px;display:grid;gap:10px}
+.sheet-card table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.sheet-card td{padding:5px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.sheet-card td.r{text-align:right;font-family:var(--mono);white-space:nowrap}
+.prof-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.prof-head .big-av{width:72px;height:72px;border-radius:50%;background:var(--chip);display:grid;place-items:center;overflow:hidden;font:700 24px var(--body);color:var(--muted);flex:none;box-shadow:var(--shadow)}
+.prof-head .big-av img{width:100%;height:100%}
+.prof-head h2{margin:0}
+.prof-head p{margin:2px 0 0;color:var(--muted)}
+.ts-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:16px;align-items:start}
+@media (max-width:860px){.ts-grid{grid-template-columns:minmax(0,1fr)}}
+.prof-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.prof-grid{grid-template-columns:minmax(0,1fr)}}
+.certrow{display:grid;grid-template-columns:minmax(0,1fr) 150px auto;gap:6px;align-items:center}
 .demobar{background:var(--ink);color:var(--bg)}
 .demo-in{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));font-size:14px}
 .demo-tag{background:var(--signal);color:var(--signal-ink);font:700 12px var(--body);letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:6px}
@@ -355,6 +406,12 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
 .demobar summary{cursor:pointer;font-weight:600;font-size:13.5px}
 .demobar ol{margin:8px 0 2px;padding-left:20px;display:grid;gap:4px;max-width:760px}
 #demoMsg{max-width:1180px;margin:0 auto;padding:0 16px 10px;color:var(--signal)}
+@media (max-width:480px){.certrow{grid-template-columns:minmax(0,1fr) 130px auto}}
+.certlist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.certlist li{display:flex;justify-content:space-between;gap:10px;align-items:center;background:var(--bg);border-radius:8px;padding:8px 10px;font-size:14px}
+.kv2{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:14px;margin:0}
+.kv2 dt{color:var(--muted)} .kv2 dd{margin:0;overflow-wrap:anywhere;user-select:all}
+.stack{display:grid;gap:16px}
 @media (max-width:480px){.row2{grid-template-columns:1fr}.tabs{margin-left:0;width:100%}.tabs button{flex:1}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -383,7 +440,7 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
 </div>
 <script>
 (function(){
-  const KEY='pt-demo-v2', RKEY='pt-demo-role', PKEY='pt-demo-photos';
+  const KEY='pt-demo-v3', RKEY='pt-demo-role', PKEY='pt-demo-photos';
   const ls={get(k){try{return localStorage.getItem(k);}catch(_){return null;}},set(k,v){try{localStorage.setItem(k,v);return true;}catch(_){return false;}},del(k){try{localStorage.removeItem(k);}catch(_){}}};
   const PEOPLE={
     u_eva:{name:'Eva Lindqvist',color:'#1E63C4',role:'Arbetsgivare'},
@@ -405,12 +462,14 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
     const st={};
     const put=(p,v)=>{ st[p]=v; };
     put('settings/company',{name:'Exempelbygg AB (demo)',orgnr:'556000-0000',vatno:'SE556000000001',address:'Verkstadsgatan 1, 123 45 Exempelstad',phone:'010-000 00 00',email:'kontakt@exempelbygg.test',bankgiro:'123-4567',rate:'650',terms:'30',startNo:'1001',rotCap:'50000',fskatt:true});
-    put('public/info',{name:'Exempelbygg AB (demo)'});
+    put('public/info',{name:'Exempelbygg AB (demo)',ownerId:'u_eva',contactName:'Eva Lindqvist',contactTitle:'VD och arbetsledare',contactPhone:'010-000 00 00',contactEmail:'eva@exempelbygg.test'});
     put('invites/K7M2QX',{name:'Kalle Nyström',contact:'070-000 00 01',createdAt:day(-40,9),createdBy:'u_eva',revoked:false});
     put('invites/S4P9TR',{name:'Sara Ali',contact:'',createdAt:day(-35,9),createdBy:'u_eva',revoked:false});
     put('invites/J8N3WD',{name:'Jonas Berg',contact:'jonas@exempel.test',createdAt:now-3*H,createdBy:'u_eva',revoked:false});
-    put('members/u_kalle',{code:'K7M2QX',joinedAt:day(-40,12)});
-    put('members/u_sara',{code:'S4P9TR',joinedAt:day(-34,8)});
+    put('members/u_kalle',{code:'K7M2QX',joinedAt:day(-40,12),profile:{name:'Kalle Nyström',role:'Målare',phone:'070-000 00 01',email:'kalle@exempel.test',iceName:'Lisa Nyström',icePhone:'070-000 00 09',
+      certs:[{name:'ID06',expires:ds(400)},{name:'Fallskydd',expires:ds(25)},{name:'Ställningsbehörighet 2–9 m',expires:ds(700)}]}});
+    put('members/u_sara',{code:'S4P9TR',joinedAt:day(-34,8),profile:{name:'Sara Ali',role:'Plåtslagare',phone:'070-000 00 02',email:'sara@exempel.test',iceName:'',icePhone:'',
+      certs:[{name:'ID06',expires:ds(220)},{name:'Heta arbeten',expires:ds(-12)},{name:'Fallskydd',expires:ds(300)}]}});
     put('pricetpl/lopande',{name:'Löpande räkning',rows:[{text:'Arbete',unit:'tim',price:650,kind:'arbete'}],includeMaterials:true,updatedAt:now});
     put('pricetpl/kvadratmeter',{name:'Målning per m²',rows:[{text:'Målning väggar, två strykningar',unit:'m²',price:180,kind:'arbete'},{text:'Spackling och slipning',unit:'m²',price:95,kind:'arbete'}],includeMaterials:true,updatedAt:now});
     put('pricetpl/meter',{name:'Plåtarbete per meter',rows:[{text:'Plåtarbete',unit:'m',price:420,kind:'arbete'}],includeMaterials:true,updatedAt:now});
@@ -464,6 +523,25 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
       put(o.assignee?`assigned/${o.assignee}/orders/${id}`:`pool/${id}`,o);
       put(o.assignee?`work/${o.assignee}/progress/${id}`:`progress/${id}`,pr);
     });
+    // ---- other time + weekly timesheets ----
+    const wkOf=dstr=>{ const d=new Date(dstr+'T12:00:00'); d.setDate(d.getDate()+3-((d.getDay()+6)%7)); const y=d.getFullYear(), j4=new Date(y,0,4,12); const w=1+Math.round(((d-j4)/864e5-3+((j4.getDay()+6)%7))/7); return `${y}-v${String(w).padStart(2,'0')}`; };
+    const daysOf=key=>{ const y=+key.slice(0,4), w=+key.slice(6), j4=new Date(y,0,4,12), mon=new Date(j4); mon.setDate(j4.getDate()-((j4.getDay()+6)%7)+(w-1)*7); return Array.from({length:7},(_,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i); return ld(d); }); };
+    const thisWk=wkOf(ds(0)), lastWk=wkOf(daysOf(thisWk)[0]===ds(0)?ds(-1):ld(new Date(new Date(daysOf(thisWk)[0]+'T12:00:00').getTime()-D)));
+    const lastDays=daysOf(lastWk);
+    put(`work/u_kalle/time/x1`,{kind:'other',cat:'Materialhämtning',hours:1.5,date:lastDays[1],note:'Färg och tejp till Björkvägen',at:day(-8,9),by:'u_kalle'});
+    put(`work/u_kalle/time/x2`,{kind:'other',cat:'Restid',hours:1,date:ds(-1),note:'',at:day(-1,17),by:'u_kalle'});
+    put(`work/u_sara/time/x3`,{kind:'absence',cat:'VAB',hours:8,date:lastDays[0],note:'',at:day(-9,7),by:'u_sara'});
+    put(`work/u_sara/time/x4`,{kind:'other',cat:'Möte',hours:1,date:lastDays[2],note:'Startmöte Brf Linden',at:day(-8,9),by:'u_sara'});
+    const linesFor=(u,key)=>{ const set=new Set(daysOf(key)), out=[];
+      O.forEach(([id,o,pr])=>Object.values(pr.time||{}).forEach(t=>{ if(t.by===u && set.has(t.date)) out.push({oid:id,date:t.date,kind:'order',title:o.title,hours:t.hours}); }));
+      Object.entries(st).forEach(([p,t])=>{ if(p.startsWith(`work/${u}/time/`) && set.has(t.date)) out.push({date:t.date,kind:t.kind,cat:t.cat,title:t.cat,note:t.note||'',hours:t.hours}); });
+      return out.sort((a,b)=>a.date.localeCompare(b.date)); };
+    const sheet=(u,key,at)=>{ const lines=linesFor(u,key), byAbs={}; let w=0,a=0; lines.forEach(l=>{ if(l.kind==='absence'){ a+=l.hours; byAbs[l.cat]=(byAbs[l.cat]||0)+l.hours; } else w+=l.hours; }); const d=daysOf(key);
+      put(`work/${u}/sheets/${key}`,{week:key,from:d[0],to:d[6],lines,work:w,abs:a,byAbs,submittedAt:at,submittedBy:u}); };
+    const lastFri=new Date(lastDays[4]+'T16:30:00').getTime();
+    sheet('u_kalle',lastWk,lastFri);
+    put(`tsdecisions/u_kalle/weeks/${lastWk}`,{status:'attesterad',comment:'',at:lastFri+18*H,by:'u_eva',submittedAt:lastFri});
+    sheet('u_sara',lastWk,lastFri+40*60e3);
     const ono=(id,at)=>{ const d=new Date(at); return `AO-${String(d.getFullYear()).slice(2)}${pad(d.getMonth()+1)}${pad(d.getDate())}-${id.slice(-4).toUpperCase()}`; };
     const cust=(n,a,e,i)=>({name:n,address:a,email:e,idno:i,property:'',vatno:''});
     const get=id=>O.find(x=>x[0]===id)[1];
@@ -779,6 +857,11 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
     <div class="panel narrow join" id="joinBox"></div>
   </section>
 
+  <section class="view" id="v-timesheet" hidden><div id="tsBody"></div></section>
+  <section class="view" id="v-sheets" hidden><div id="shBody"></div></section>
+  <section class="view" id="v-profile" hidden><div id="profBody"></div></section>
+  <section class="view" id="v-person" hidden><a class="back" href="#anstallda">← Anställda</a><div id="personBody"></div></section>
+
   <section class="view" id="v-more" hidden>
     <div class="lhead"><h2>Mer</h2></div>
     <div class="morelist" id="moreList"></div>
@@ -801,6 +884,8 @@ const ICON={
   tag:'<path d="M3 12V4h8l10 10-8 8zM7.5 8h.01"/>',
   building:'<path d="M4 21V5l8-2v18M12 9h8v12M8 8h.01M8 12h.01M8 16h.01M16 13h.01M16 17h.01M2 21h20"/>',
   users:'<path d="M16 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM21 19v-1a4 4 0 0 0-3-3.9M15.5 3.1a3.5 3.5 0 0 1 0 6.8"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 7-7h2a7 7 0 0 1 7 7v1"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'
 };
 const ic = (k,sz=20) => `<svg viewBox="0 0 24 24" width="${sz}" height="${sz}" fill="none" stroke="currentColor" stroke-width="${k==='more'?3:1.8}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
@@ -844,7 +929,11 @@ function fmtDate(s){ if(!s) return '–'; const d=new Date(s+'T12:00:00'); retur
 function fmtTime(ms){ const d=new Date(ms); const t=d.toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'}); return d.toDateString()===new Date().toDateString() ? t : d.toLocaleDateString('sv-SE',{day:'numeric',month:'short'})+' '+t; }
 let invites=[], members=[], myMember=null, myInvite=null, linkChecked=false, publicInfo={}, inviteBusy=false, teamConfirm=null;
 const inviteOf = uid => { const m=members.find(x=>x.id===uid); return m ? invites.find(i=>i.id===m.code) : null; };
-function nameOf(id){ if(!id) return 'Alla anställda'; const p=names[id]; const iv=inviteOf(id); return (p&&p.name) || (iv&&iv.name) || (id===meId?'Du':'Anställd'); }
+let meAvatar='', otherTime={}, sheets={}, decisions={}, tsWeek=null, shFilter='submitted', profDraft=null, profDirty=false, profFor=null;
+const profileOf = uid => (uid===meId && myMember) ? (myMember.profile||{}) : (((members.find(m=>m.id===uid)||{}).profile)||{});
+function nameOf(id){ if(!id) return 'Alla anställda'; const p=names[id]; const iv=inviteOf(id); const pr=profileOf(id);
+  const boss = id && id===publicInfo.ownerId ? (publicInfo.contactName||'Arbetsgivaren') : '';
+  return (p&&p.name) || pr.name || (iv&&iv.name) || boss || (id===meId?'Du':'Anställd'); }
 const isLinked = () => owner || !!(myMember && myInvite && !myInvite.revoked);
 const team = () => members.map(m=>({uid:m.id, m, inv:invites.find(i=>i.id===m.code)})).filter(x=>x.inv && !x.inv.revoked);
 const doneOf = id => (prog[id]&&prog[id].done)||{};
@@ -1111,35 +1200,38 @@ async function render(){
   if(view==='employer') renderEmployer(); else if(view==='invoices') renderInvoices(); else if(view==='worker') renderWorker();
   else if(view==='order') renderOrderDetail(); else if(view==='history') renderHistory();
   else if(view==='team') renderTeam(); else if(view==='join') renderJoin();
+  else if(view==='timesheet') renderTimesheet(); else if(view==='sheets') renderSheets(); else if(view==='profile') renderProfile(); else if(view==='person') renderPerson();
   if(fid){ const n=document.getElementById(fid); if(n && n!==a){ n.focus(); try{ n.setSelectionRange(s1,s2); }catch(_){} } }
   if(selectedAssignee) renderChip();
 }
 const emptyBox = (h,sub) => `<div class="empty"><strong>${h}</strong>${sub}</div>`;
-const VIEWS=['employer','new','order','invoices','invoice','prices','company','history','worker','more','team','join'];
+const VIEWS=['employer','new','order','invoices','invoice','prices','company','history','worker','more','team','join','timesheet','sheets','profile','person'];
 let detailId=null, histTab='handelser', histPerson='', histLimit=150;
 function navKey(){
-  return ({employer:'ordrar',new:'ny-order',order:'ordrar',invoices:'fakturor',invoice:'fakturor',prices:'prismallar',company:'foretaget',history:'historik',more:'mer',team:'anstallda',join:'ordrar'})[view] || (owner?'anstalldas-vy':'ordrar');
+  return ({employer:'ordrar',new:'ny-order',order:'ordrar',invoices:'fakturor',invoice:'fakturor',prices:'prismallar',company:'foretaget',history:'historik',more:'mer',team:'anstallda',join:'ordrar',timesheet:'tidrapport',sheets:'tidrapporter',profile:'profil',person:'anstallda'})[view] || (owner?'anstalldas-vy':'ordrar');
 }
 function renderNav(){
   const rev=orders.filter(o=>stateOf(o)==='review').length;
   const mineAct=myOrders().filter(o=>['returned','ready'].includes(stateOf(o))).length;
   const drafts=invoices.filter(i=>i.status==='utkast').length;
   const items = owner
-    ? [['ordrar','Ordrar','orders',rev],['ny-order','Ny order','plus'],['fakturor','Fakturor','invoice',drafts],['historik','Historik','history'],['anstallda','Anställda','users',invites.filter(i=>!i.revoked && !members.some(m=>m.code===i.id)).length],['prismallar','Prismallar','tag'],['foretaget','Företaget','building'],['anstalldas-vy','Anställdas vy','eye']]
-    : isLinked() ? [['ordrar','Mina ordrar','orders',mineAct],['historik','Historik','history']] : [];
+    ? [['ordrar','Ordrar','orders',rev],['ny-order','Ny order','plus'],['fakturor','Fakturor','invoice',drafts],['tidrapporter','Tidrapporter','clock',pendingSheets().length],['historik','Historik','history'],['anstallda','Anställda','users',invites.filter(i=>!i.revoked && !members.some(m=>m.code===i.id)).length+certAlerts().length],['prismallar','Prismallar','tag'],['foretaget','Företaget','building'],['profil','Min profil','user'],['anstalldas-vy','Anställdas vy','eye']]
+    : isLinked() ? [['ordrar','Mina ordrar','orders',mineAct],['tidrapport','Tidrapport','clock',sheetState(meId,weekKey(todayStr())).st==='returned'||Object.keys(sheets[meId]||{}).some(k=>sheetState(meId,k).st==='returned')?1:0],['historik','Historik','history'],['profil','Profil','user']] : [];
   const cur=navKey();
-  const link=([h,t,i,n],small)=>`<a href="#${h}"${h==='ny-order'?' data-new':''}${cur===h||(small&&h==='mer'&&['anstallda','prismallar','foretaget','anstalldas-vy','mer'].includes(cur))?' aria-current="page"':''}>${ic(i,small?22:18)}<span>${t}</span>${n?`<span class="badge">${n}</span>`:''}</a>`;
+  const link=([h,t,i,n],small)=>`<a href="#${h}"${h==='ny-order'?' data-new':''}${cur===h||(small&&h==='mer'&&['historik','anstallda','prismallar','foretaget','profil','anstalldas-vy','mer'].includes(cur))?' aria-current="page"':''}>${ic(i,small?22:18)}<span>${t}</span>${n?`<span class="badge">${n}</span>`:''}</a>`;
   $('#navIn').innerHTML=items.map(x=>link(x,false)).join('');
-  const bottom = owner ? [...items.slice(0,4), ['mer','Mer','more']] : items;
+  const bottom = owner ? [...items.slice(0,4), ['mer','Mer','more',items.find(x=>x[0]==='anstallda')[3]]] : items;
   $('#bnav').innerHTML=bottom.map(x=>link(x,true)).join('');
 }
 function route(){
   const h=decodeURIComponent((location.hash||'').slice(1));
   let v, id=null;
   if(h.startsWith('order-')){ v='order'; id=h.slice(6); }
+  else if(h.startsWith('anstalld-')){ v=owner?'person':'worker'; id=h.slice(9); }
   else if(h.startsWith('faktura-')){ v='invoice'; id=h.slice(8); }
-  else v=({'ordrar':owner?'employer':'worker','ny-order':'new','fakturor':'invoices','prismallar':'prices','foretaget':'company','historik':'history','anstalldas-vy':'worker','mer':'more','anstallda':'team'})[h] || (owner?'employer':'worker');
-  if(!owner && !['worker','order','history'].includes(v)) v='worker';
+  else v=({'ordrar':owner?'employer':'worker','ny-order':'new','fakturor':'invoices','prismallar':'prices','foretaget':'company','historik':'history','anstalldas-vy':'worker','mer':'more','anstallda':'team','tidrapport':owner?'sheets':'timesheet','tidrapporter':owner?'sheets':'timesheet','profil':'profile'})[h] || (owner?'employer':'worker');
+  if(!owner && !['worker','order','history','timesheet','profile'].includes(v)) v='worker';
+  if(v==='profile' && (view!=='profile')) { profDraft=null; profDirty=false; }
   if(!owner && !isLinked()) v='join';
   if(v!=='invoice' && editInv){ flushSave(); editInv=null; }
   if(v!=='order') pendingDelete=null;
@@ -1151,7 +1243,7 @@ function route(){
   if(v==='new' && changed) setTimeout(()=>$('#f-title').focus({preventScroll:true}),0);
 }
 window.addEventListener('hashchange', route);
-$('#moreList').innerHTML=[['anstallda','users','Anställda','Bjud in och hantera ditt team'],['prismallar','tag','Prismallar','Priser per timme, m², meter eller fast pris'],['foretaget','building','Företaget','Uppgifter som står på fakturan'],['anstalldas-vy','eye','Anställdas vy','Se appen som dina anställda ser den']].map(([h,i,t,d])=>`<a href="#${h}">${ic(i,24)}<span>${t}<small>${d}</small></span></a>`).join('');
+$('#moreList').innerHTML=[['historik','history','Historik','Allt som hänt, avslutade ordrar och fakturor'],['anstallda','users','Anställda','Bjud in och hantera ditt team'],['profil','user','Min profil','Dina kontaktuppgifter som de anställda ser'],['prismallar','tag','Prismallar','Priser per timme, m², meter eller fast pris'],['foretaget','building','Företaget','Uppgifter som står på fakturan'],['anstalldas-vy','eye','Anställdas vy','Se appen som dina anställda ser den']].map(([h,i,t,d])=>`<a href="#${h}">${ic(i,24)}<span>${t}<small>${d}</small></span></a>`).join('');
 
 function needsMe(o, isEmployer){ const st=stateOf(o); return isEmployer ? st==='review' : (st==='returned'||st==='ready'); }
 function isOpen(o, isEmployer){
@@ -1195,10 +1287,11 @@ function renderStart(){
 }
 
 const shortMoney = n => Math.round(n).toLocaleString('sv-SE')+' kr';
-function hoursThisWeek(by){ const wk=weekKey(todayStr()); let h=0; orders.forEach(o=>timeOf(o.id).forEach(t=>{ if((!by||t.by===by) && weekKey(entryDate(t))===wk) h+=num(t.hours); })); return h; }
+function hoursThisWeek(by){ const wk=weekKey(todayStr()); let h=0; orders.forEach(o=>timeOf(o.id).forEach(t=>{ if((!by||t.by===by) && weekKey(entryDate(t))===wk) h+=num(t.hours); }));
+  Object.entries(otherTime).forEach(([u,m])=>{ if(by && u!==by) return; Object.values(m||{}).forEach(t=>{ if(t && t.kind!=='absence' && t.date && weekKey(t.date)===wk) h+=num(t.hours); }); }); return h; }
 function kpi(label, value, sub, go, hot){ const tag=go?'button':'div'; return `<${tag} ${go?`type="button" data-go="${go}"`:''} class="kpi${hot?' hot':''}"><span>${label}</span><b>${value}</b>${sub?`<small>${sub}</small>`:''}</${tag}>`; }
 function greet(){ const hr=new Date().getHours(); return hr<10?'God morgon':hr<18?'Hej':'God kväll'; }
-function firstName(){ const n=(names[meId]&&names[meId].name)||''; return n.split(' ')[0]; }
+function firstName(){ const n=(names[meId]&&names[meId].name)||profileOf(meId).name||(myInvite&&myInvite.name)||(owner&&publicInfo.contactName)||''; return n.split(' ')[0]; }
 function avatarHtml(id){ if(!id) return ''; const p=names[id]; return p&&p.avatarUrl?`<img class="av" src="${esc(p.avatarUrl)}" alt="">`:''; }
 function renderEmployer(){
   renderStart();
@@ -1219,7 +1312,9 @@ function renderEmployer(){
     + actBtn(flagCount, `öppen${flagCount>1?'na':''} avvikelse${flagCount>1?'r':''} från anställda`, 'flag', 'bad')
     + actBtn(lateOrders, `order har passerat slutdatum`, 'open', 'bad')
     + actBtn(drafts, `fakturautkast att skicka`, 'invdraft')
-    + actBtn(overdue, `förfallen${overdue>1?'a':''} faktur${overdue>1?'or':'a'} – påminn kunden`, 'invsent', 'bad');
+    + actBtn(overdue, `förfallen${overdue>1?'a':''} faktur${overdue>1?'or':'a'} – påminn kunden`, 'invsent', 'bad')
+    + actBtn(pendingSheets().length, `tidrapport${pendingSheets().length>1?'er':''} att attestera`, 'sheets')
+    + actBtn(certAlerts().length, `behörighet${certAlerts().length>1?'er':''} har gått ut eller går ut inom 60 dagar`, 'team', 'bad');
   $('#summary').textContent = active.length ? `${active.length} aktiva · ${rev} att granska` : '';
   const rb=document.querySelector('#filters [data-f="review"]'); if(rb) rb.textContent = rev ? `Att granska (${rev})` : 'Att granska';
   document.querySelectorAll('#filters button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.f===empFilter));
@@ -1245,7 +1340,7 @@ function renderWorker(){
   $('#workTitle').textContent = owner ? 'Så ser de anställda sina ordrar' : `${greet()}${firstName()?', '+firstName():''}`;
   $('#workSub').textContent = owner ? 'Förhandsvisning av den anställdas startsida.' : 'Här är dina arbetsordrar.';
   { const todo=mine.filter(o=>!isDone(o)).length;
-    $('#workKpis').innerHTML = kpi('Att göra', todo, todo?'aktiva ordrar':'Allt klart') + kpi(`Mina timmar v.${isoWeek(todayStr()).w}`, fmtNum(hoursThisWeek(meId)), 'rapporterade'); }
+    $('#workKpis').innerHTML = kpi('Att göra', todo, todo?'aktiva ordrar':'Allt klart') + kpi(`Mina timmar v.${isoWeek(todayStr()).w}`, fmtNum(hoursThisWeek(meId)), 'Öppna tidrapporten', 'timesheet'); }
   $('#workActions').innerHTML = actBtn(ret, `order skickad tillbaka – behöver åtgärdas`, 'w-open', 'bad')
     + actBtn(rdy, `order klar att granska och skicka in`, 'w-open')
     + actBtn(fresh, `ny${fresh>1?'a':''} order sedan du var här senast`, 'w-open', 'ok');
@@ -1281,12 +1376,12 @@ function renderTeam(){
     const confirm = teamConfirm===iv.id;
     let actions='';
     if(iv.revoked) actions=`<button type="button" class="btn small primary" data-reinvite="${esc(iv.id)}">Bjud in igen</button><button type="button" class="btn small" data-delinv="${esc(iv.id)}" style="background:transparent;color:var(--muted)">${confirm?'Bekräfta radering':'Radera'}</button>`;
-    else if(m) actions=`<a class="btn small" href="#historik" data-person-hist="${esc(uid)}" style="background:var(--chip);color:var(--ink)">Visa historik</a><button type="button" class="btn small ${confirm?'danger':''}" data-unlink="${esc(iv.id)}" style="${confirm?'':'background:transparent;color:var(--muted)'}">${confirm?'Bekräfta: ta bort från teamet':'Ta bort från teamet'}</button>`;
+    else if(m) actions=`<a class="btn small" href="#anstalld-${esc(uid)}" style="background:var(--chip);color:var(--ink)">Visa profil</a><a class="btn small" href="#historik" data-person-hist="${esc(uid)}" style="background:transparent;color:var(--accent)">Historik</a><button type="button" class="btn small ${confirm?'danger':''}" data-unlink="${esc(iv.id)}" style="${confirm?'':'background:transparent;color:var(--muted)'}">${confirm?'Bekräfta: ta bort från teamet':'Ta bort från teamet'}</button>`;
     else actions=`<button type="button" class="btn small primary" data-copyinv="${esc(iv.id)}">Kopiera inbjudan</button><button type="button" class="btn small" data-delinv="${esc(iv.id)}" style="background:transparent;color:var(--muted)">${confirm?'Bekräfta: ta bort inbjudan':'Ta bort inbjudan'}</button>`;
     return `<div class="member">
-      <div class="mtop"><span class="mav">${av}</span><span class="mname"><b>${esc(iv.name)}</b><span>${p&&p.name&&p.name!==iv.name?esc(p.name)+' · ':''}${iv.contact?esc(iv.contact)+' · ':''}${m?'kopplad '+esc(dayLabel(localDate(new Date(m.joinedAt||Date.now())))).toLowerCase():'inbjuden '+esc(dayLabel(localDate(new Date(iv.createdAt||Date.now())))).toLowerCase()}</span></span>${status}</div>
+      <div class="mtop"><span class="mav">${av}</span><span class="mname"><b>${uid?`<a href="#anstalld-${esc(uid)}" style="color:inherit">${esc(iv.name)}</a>`:esc(iv.name)}</b><span>${p&&p.name&&p.name!==iv.name?esc(p.name)+' · ':''}${iv.contact?esc(iv.contact)+' · ':''}${m?'kopplad '+esc(dayLabel(localDate(new Date(m.joinedAt||Date.now())))).toLowerCase():'inbjuden '+esc(dayLabel(localDate(new Date(iv.createdAt||Date.now())))).toLowerCase()}</span></span>${status}</div>
       ${!m&&!iv.revoked?`<div><span class="hint">Kod att skicka:</span> <span class="code">${esc(iv.id)}</span></div>`:''}
-      ${m&&!iv.revoked?`<div class="mstats"><span><b>${active}</b> aktiva ordrar</span><span><b>${fmtNum(hoursThisWeek(uid))}</b> h v.${wk}</span></div>`:''}
+      ${m&&!iv.revoked?`<div class="mstats"><span><b>${active}</b> aktiva ordrar</span><span><b>${fmtNum(hoursThisWeek(uid))}</b> h v.${wk}</span>${certWarnText(uid)?`<span style="color:var(--bad);font-weight:600">${esc(certWarnText(uid))}</span>`:''}</div>`:''}
       ${iv.revoked&&m?'<span class="hint">Personen kommer inte längre åt ordrarna i appen. Ta också bort hen under Dela om hen inte ska kunna öppna sidan.</span>':''}
       <div class="mact">${actions}</div>
       ${iv._showText?`<textarea readonly id="invtext-${esc(iv.id)}" style="min-height:150px">${esc(inviteText(iv))}</textarea>`:''}
@@ -1351,6 +1446,249 @@ $('#joinBox').addEventListener('submit', async e=>{
   }catch(err){ fail(err&&err.code==='invalid_argument'?'Du saknar behörighet. Be arbetsgivaren dela sidan med dig så att du kan redigera.':'Det gick inte att gå med. Försök igen.'); }
 });
 
+/* ---------- Time reporting ---------- */
+const cap=t=>t?t[0].toUpperCase()+t.slice(1):t;
+const fmtDateY=s=>s?new Date(s+'T12:00:00').toLocaleDateString('sv-SE',{day:'numeric',month:'short',year:'numeric'}):'–';
+const OTHER_CATS=['Restid','Materialhämtning','Möte','Utbildning','Städning och förråd','Annat'];
+const ABS_CATS=['Sjuk','VAB','Semester','Ledig','Föräldraledig','Tjänstledig'];
+function weekDays(key){ const y=+key.slice(0,4), w=+key.slice(6), j4=new Date(y,0,4,12), mon=new Date(j4); mon.setDate(j4.getDate()-((j4.getDay()+6)%7)+(w-1)*7); return Array.from({length:7},(_,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i); return localDate(d); }); }
+const shiftWeek=(key,n)=>weekKey(addDays(weekDays(key)[0],7*n));
+const weekLabel=key=>{ const d=weekDays(key), f=x=>new Date(x+'T12:00:00').toLocaleDateString('sv-SE',{day:'numeric',month:'short'}); return `${f(d[0])} – ${f(d[6])}`; };
+function timeLines(uid,key){
+  const set=new Set(weekDays(key)), out=[];
+  orders.forEach(o=>timeOf(o.id).forEach(t=>{ if(t.by===uid && set.has(entryDate(t))) out.push({src:'order',id:t.id,oid:o.id,date:entryDate(t),kind:'order',title:o.title,hours:num(t.hours)}); }));
+  Object.entries(otherTime[uid]||{}).forEach(([id,t])=>{ if(t&&t.date&&set.has(t.date)) out.push({src:'other',id,date:t.date,kind:t.kind,cat:t.cat,title:t.cat,note:t.note||'',hours:num(t.hours)}); });
+  return out.sort((a,b)=>a.date.localeCompare(b.date)||(a.kind==='absence')-(b.kind==='absence'));
+}
+function sumLines(lines){ const s={work:0,abs:0,byAbs:{}}; lines.forEach(l=>{ if(l.kind==='absence'){ s.abs+=num(l.hours); s.byAbs[l.cat]=(s.byAbs[l.cat]||0)+num(l.hours); } else s.work+=num(l.hours); }); return s; }
+function sheetState(uid,key){ const sh=(sheets[uid]||{})[key], dc=(decisions[uid]||{})[key];
+  if(!sh||!sh.submittedAt) return {st:'none',sh,dc};
+  if(dc&&dc.at>sh.submittedAt) return {st:dc.status==='attesterad'?'approved':'returned',sh,dc};
+  return {st:'submitted',sh,dc}; }
+const weekLocked=(uid,key)=>['submitted','approved'].includes(sheetState(uid,key).st);
+function pendingSheets(){ const out=[]; Object.entries(sheets).forEach(([u,m])=>Object.keys(m||{}).forEach(k=>{ if(sheetState(u,k).st==='submitted' && (!owner || team().some(x=>x.uid===u))) out.push({uid:u,key:k}); })); return out; }
+const kindTag=l=> l.kind==='absence'?'<span class="k abs">Frånvaro</span>' : l.kind==='order'?'<span class="k ord">Order</span>' : '<span class="k">Övrigt</span>';
+function linesTable(lines){
+  if(!lines.length) return '<span class="hint">Ingen tid rapporterad.</span>';
+  return `<div class="tablewrap"><table><tbody>${lines.map(l=>`<tr><td style="white-space:nowrap">${esc(cap(new Date(l.date+'T12:00:00').toLocaleDateString('sv-SE',{weekday:'short',day:'numeric',month:'short'})))}</td><td>${kindTag(l)} ${esc(l.title||l.cat||'')}${l.note?`<br><span class="hint">${esc(l.note)}</span>`:''}</td><td class="r">${fmtNum(num(l.hours))} h</td></tr>`).join('')}</tbody></table></div>`;
+}
+function renderTimesheet(){
+  const el=$('#tsBody'); if(!tsWeek) tsWeek=weekKey(todayStr());
+  const cur=weekKey(todayStr()), key=tsWeek, days=weekDays(key), lines=timeLines(meId,key), sum=sumLines(lines), {st,sh,dc}=sheetState(meId,key), locked=['submitted','approved'].includes(st);
+  const statusBox = st==='approved' ? `<div class="statusbox ok"><b>Attesterad ${dc&&dc.at?esc(dayLabel(localDate(new Date(dc.at))).toLowerCase()):''}</b><p>Arbetsgivaren har godkänt veckan. Den är låst.</p></div>`
+    : st==='submitted' ? `<div class="statusbox wait"><b>Inskickad ${esc(dayLabel(localDate(new Date(sh.submittedAt))).toLowerCase())} ${hhmm(sh.submittedAt)}</b><p>Väntar på att arbetsgivaren attesterar. Behöver du ändra något? <button type="button" class="linkbtn" data-ts-withdraw>Ta tillbaka inskickningen</button></p></div>`
+    : st==='returned' ? `<div class="statusbox bad"><b>Skickad tillbaka av arbetsgivaren</b>${dc&&dc.comment?`<p>”${esc(dc.comment)}”</p>`:''}<p>Rätta och skicka in veckan igen.</p></div>`
+    : key<cur && lines.length ? `<div class="statusbox wait"><b>Inte inskickad</b><p>Skicka in veckan när allt stämmer.</p></div>` : '';
+  const dayHtml=days.map(d=>{ const dl=lines.filter(l=>l.date===d), tot=dl.reduce((a,l)=>a+(l.kind==='absence'?0:num(l.hours)),0), abs=dl.reduce((a,l)=>a+(l.kind==='absence'?num(l.hours):0),0);
+    const label=cap(new Date(d+'T12:00:00').toLocaleDateString('sv-SE',{weekday:'long',day:'numeric',month:'short'}));
+    return `<div class="day${dl.length?'':' empty-day'}"><div class="dh">${esc(label)}${d===todayStr()?' · idag':''}<span>${dl.length?`${fmtNum(tot)} h${abs?` + ${fmtNum(abs)} h frånvaro`:''}`:'–'}</span></div>
+      ${dl.map(l=>`<div class="tline">${kindTag(l)}<span class="tt2">${l.oid?`<a href="#order-${l.oid}">${esc(l.title)}</a>`:esc(l.title||'')}${l.note?`<small>${esc(l.note)}</small>`:''}</span><span class="h">${fmtNum(l.hours)} h</span>${!locked&&l.src==='other'?`<button type="button" class="iconbtn" data-ts-rm="${esc(l.id)}" aria-label="Ta bort raden" style="height:30px;width:30px">×</button>`:''}</div>`).join('')}</div>`; }).join('');
+  const myOpen=myOrders().filter(o=>!o.approved);
+  const k=keep; if(!k['ts-date']||!days.includes(k['ts-date'])) k['ts-date']=days.includes(todayStr())?todayStr():days[0]; if(!k['ts-kind']) k['ts-kind']='order';
+  const opts=(list,sel)=>list.map(x=>`<option${x===sel?' selected':''}>${esc(x)}</option>`).join('');
+  const form = locked ? '' : `<div class="panel"><h3 class="sub" style="margin:0 0 10px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Lägg till tid</h3>
+    <form class="tsform" id="tsForm" novalidate>
+      <div class="row3">
+        <label class="f">Dag<select id="ts-date">${days.map(d=>`<option value="${d}"${d===k['ts-date']?' selected':''}${d>todayStr()&&k['ts-kind']!=='absence'?' disabled':''}>${esc(new Date(d+'T12:00:00').toLocaleDateString('sv-SE',{weekday:'short',day:'numeric',month:'short'}))}</option>`).join('')}</select></label>
+        <label class="f">Typ<select id="ts-kind"><option value="order"${k['ts-kind']==='order'?' selected':''}>Arbete på order</option><option value="other"${k['ts-kind']==='other'?' selected':''}>Övrig arbetstid</option><option value="absence"${k['ts-kind']==='absence'?' selected':''}>Frånvaro</option></select></label>
+        <label class="f">Timmar<input type="text" id="ts-hours" inputmode="decimal" placeholder="t.ex. 8" value="${esc(k['ts-hours']||'')}"></label>
+      </div>
+      ${k['ts-kind']==='order' ? (myOpen.length?`<label class="f">Order<select id="ts-order">${myOpen.map(o=>`<option value="${o.id}"${o.id===k['ts-order']?' selected':''}>${esc(o.title)}${o.customer?' – '+esc(o.customer):''}</option>`).join('')}</select></label>`:'<span class="hint">Du har inga aktiva ordrar. Välj Övrig arbetstid i stället.</span>')
+        : `<label class="f">${k['ts-kind']==='absence'?'Orsak':'Vad'}<select id="ts-cat">${opts(k['ts-kind']==='absence'?ABS_CATS:OTHER_CATS, k['ts-cat'])}</select></label>`}
+      <label class="f">Anteckning (valfritt)<input type="text" id="ts-note" value="${esc(k['ts-note']||'')}" placeholder="${k['ts-kind']==='absence'?'T.ex. sjukanmäld kl 06.30':'T.ex. hämtade material på Byggmax'}"></label>
+      <div class="chips"><span class="hint">Snabbval:</span>${[1,2,4,8].map(hh=>`<button type="button" class="chipbtn" data-ts-h="${hh}">${hh} h</button>`).join('')}</div>
+      <button type="submit" class="btn primary">Lägg till</button>
+    </form></div>`;
+  const submitBar = (!locked && lines.length) ? `<div class="panel" style="display:grid;gap:8px"><b>Klar med veckan?</b><span class="hint">Kontrollera dagarna ovan. När du skickar in låses veckan tills arbetsgivaren har attesterat den.</span>
+      <button type="button" class="btn primary" data-ts-submit>${keep.tsConfirm===key?`Bekräfta: skicka in ${fmtNum(sum.work)} h för v.${Number(key.slice(6))}`:`Skicka tidrapport för v.${Number(key.slice(6))}`}</button></div>` : '';
+  el.innerHTML=`<div class="lhead"><div><h2>Tidrapport</h2><p class="hint" style="margin:2px 0 0">Din tid skickas till arbetsgivaren varje vecka.</p></div></div>
+    <div class="weeknav"><button type="button" class="wbtn" data-ts-week="-1" aria-label="Föregående vecka">‹</button><span class="wl">Vecka ${Number(key.slice(6))}<small>${esc(weekLabel(key))}</small></span><button type="button" class="wbtn" data-ts-week="1" aria-label="Nästa vecka" ${key>=cur?'disabled':''}>›</button>${key!==cur?'<button type="button" class="btn small" data-ts-week="0" style="background:var(--chip);color:var(--ink)">Denna vecka</button>':''}</div>
+    ${statusBox}
+    <div class="kpis" style="margin-top:0">${kpi('Arbetad tid',fmtNum(sum.work)+' h',`v.${Number(key.slice(6))}`)}${kpi('Frånvaro',fmtNum(sum.abs)+' h',Object.entries(sum.byAbs).map(([c,v])=>`${c} ${fmtNum(v)} h`).join(', ')||'Ingen')}${kpi('På order',fmtNum(lines.filter(l=>l.kind==='order').reduce((a,l)=>a+l.hours,0))+' h','')}${kpi('Övrig tid',fmtNum(lines.filter(l=>l.kind==='other').reduce((a,l)=>a+l.hours,0))+' h','')}</div>
+    <div class="ts-grid" style="margin-top:14px"><div class="stack">${form}${submitBar}</div><div class="days">${dayHtml}</div></div>`;
+}
+$('#tsBody').addEventListener('input', e=>{ if(e.target.id&&e.target.id.startsWith('ts-')) keep[e.target.id]=e.target.value; });
+$('#tsBody').addEventListener('change', e=>{ const id=e.target.id; if(!id||!id.startsWith('ts-')) return; keep[id]=e.target.value; if(id==='ts-kind'){ keep['ts-cat']=''; render(); } });
+$('#tsBody').addEventListener('submit', async e=>{
+  e.preventDefault(); if(!db||!meId) return;
+  const k=keep, date=k['ts-date'], kind=k['ts-kind']||'order', hrs=num(k['ts-hours']);
+  if(!(hrs>0 && hrs<=24)) { toast('Skriv antal timmar, t.ex. 7,5'); $('#ts-hours')?.focus(); return; }
+  if(weekLocked(meId,weekKey(date))){ toast('Veckan är inskickad. Ta tillbaka inskickningen för att ändra.'); return; }
+  try{
+    if(kind==='order'){
+      const oid=k['ts-order']||($('#ts-order')&&$('#ts-order').value); const o=findOrder(oid); if(!o){ toast('Välj en order'); return; }
+      await queued(oid, ()=>writeProgress(oid,{time:{[uid('t')]:{by:meId,at:Date.now(),hours:hrs,date,...(k['ts-note']?{note:k['ts-note']}:{})}}}));
+    } else {
+      const cat=k['ts-cat']||($('#ts-cat')&&$('#ts-cat').value)||(kind==='absence'?ABS_CATS[0]:OTHER_CATS[0]);
+      await db.doc(`work/${meId}/time/${uid('x')}`).set({kind,cat,hours:hrs,date,note:k['ts-note']||'',at:Date.now(),by:meId});
+    }
+    k['ts-hours']=''; k['ts-note']=''; toast(`${fmtNum(hrs)} h tillagt för ${fmtDate(date)}`); render();
+  }catch(err){ writeErr(err); }
+});
+$('#tsBody').addEventListener('click', async e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.tsWeek!=null){ const n=+b.dataset.tsWeek; tsWeek = n===0 ? weekKey(todayStr()) : shiftWeek(tsWeek,n); keep.tsConfirm=null; render(); return; }
+  if(b.dataset.tsH){ keep['ts-hours']=b.dataset.tsH; render(); return; }
+  if(b.dataset.tsRm){ try{ await db.doc(`work/${meId}/time/${b.dataset.tsRm}`).delete(); toast('Raden är borttagen'); }catch(err){ writeErr(err); } return; }
+  if(b.hasAttribute('data-ts-withdraw')){ try{ await db.doc(`work/${meId}/sheets/${tsWeek}`).update({submittedAt:0, withdrawnAt:Date.now()}); toast('Inskickningen är tillbakatagen – du kan ändra veckan'); }catch(err){ writeErr(err); } return; }
+  if(b.hasAttribute('data-ts-submit')){
+    const key=tsWeek; if(keep.tsConfirm!==key){ keep.tsConfirm=key; render(); setTimeout(()=>{ if(keep.tsConfirm===key){ keep.tsConfirm=null; render(); } },6000); return; }
+    keep.tsConfirm=null; const lines=timeLines(meId,key), sm=sumLines(lines), d=weekDays(key);
+    try{ await db.doc(`work/${meId}/sheets/${key}`).set({week:key, from:d[0], to:d[6], lines:lines.map(({src,id,...l})=>l), work:sm.work, abs:sm.abs, byAbs:sm.byAbs, submittedAt:Date.now(), submittedBy:meId}); toast(`Tidrapporten för v.${Number(key.slice(6))} är skickad till arbetsgivaren`); }
+    catch(err){ writeErr(err); }
+  }
+});
+
+/* owner: attest */
+function renderSheets(){
+  const el=$('#shBody'), cur=weekKey(todayStr()), last=shiftWeek(cur,-1);
+  const all=[]; Object.entries(sheets).forEach(([u,m])=>Object.keys(m||{}).forEach(k=>{ const s=sheetState(u,k); if(s.st!=='none') all.push({uid:u,key:k,...s}); }));
+  all.sort((a,b)=>b.key.localeCompare(a.key)||nameOf(a.uid).localeCompare(nameOf(b.uid)));
+  const cnt=f=>all.filter(x=>x.st===f).length;
+  const missing=team().filter(x=>sheetState(x.uid,last).st==='none').map(x=>nameOf(x.uid));
+  const list = shFilter==='all' ? all : all.filter(x=>x.st===shFilter);
+  const tabs=[['submitted',`Att attestera${cnt('submitted')?` (${cnt('submitted')})`:''}`],['returned','Tillbakaskickade'],['approved','Attesterade'],['all','Alla']];
+  const now=new Date(), months=Array.from({length:6},(_,i)=>{ const d=new Date(now.getFullYear(),now.getMonth()-i,15); return localDate(d).slice(0,7); });
+  el.innerHTML=`<div class="lhead"><div><h2>Tidrapporter</h2><p class="hint" style="margin:2px 0 0">Anställda skickar in sin tid varje vecka. Attestera eller skicka tillbaka.</p></div></div>
+    ${missing.length && team().length?`<div class="statusbox wait" style="margin-bottom:12px"><b>Inte inskickat för v.${Number(last.slice(6))}</b><p>${esc(missing.join(', '))}</p></div>`:''}
+    <div class="filters" id="shTabs">${tabs.map(([k,t])=>`<button type="button" data-shf="${k}" aria-pressed="${shFilter===k}">${t}</button>`).join('')}</div>
+    <div class="list">${list.length?list.map(sheetCard).join(''):emptyBox(shFilter==='submitted'?'Inget att attestera':'Inga tidrapporter här', team().length?'När en anställd skickar in sin vecka dyker den upp här.':'Bjud in anställda under Anställda först.')}</div>
+    <div class="exports"><span class="hint">Löneunderlag för månad:</span><select id="shMonth" style="width:auto">${months.map(m=>`<option value="${m}"${m===(keep.shMonth||months[0])?' selected':''}>${esc(new Date(m+'-15T12:00:00').toLocaleDateString('sv-SE',{month:'long',year:'numeric'}))}</option>`).join('')}</select><button type="button" class="btn small" data-sh-export style="background:var(--chip);color:var(--ink)">Ladda ner (CSV)</button></div>`;
+}
+function sheetCard(x){
+  const {uid:u,key:k,st,sh,dc}=x, id=`${u}__${k}`, lines=(sh&&sh.lines)||[];
+  const pill = st==='approved'?'<span class="pill ok">Attesterad</span>':st==='returned'?'<span class="pill late">Tillbakaskickad</span>':'<span class="pill hot">Att attestera</span>';
+  const p=names[u]; const av=p&&p.avatarUrl?`<img class="av" src="${esc(p.avatarUrl)}" alt="" style="width:32px;height:32px">`:'';
+  const byAbs=Object.entries((sh&&sh.byAbs)||{}).map(([c,v])=>`${c} ${fmtNum(v)} h`).join(', ');
+  const actions = st==='submitted' ? `<label class="f" for="shc-${id}">Kommentar (krävs om du skickar tillbaka)</label><textarea id="shc-${id}" data-shc="${id}" placeholder="T.ex. Saknar tid för tisdag">${esc(keep['shc-'+id]||'')}</textarea>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn primary" data-sh-approve="${id}">Attestera</button><button type="button" class="btn" data-sh-return="${id}" style="background:var(--chip);color:var(--ink)">Skicka tillbaka</button></div>`
+    : st==='approved' ? `<span class="hint">Attesterad av ${esc(nameOf(dc.by))} ${esc(dayLabel(localDate(new Date(dc.at))).toLowerCase())}. <button type="button" class="linkbtn" data-sh-undo="${id}">Ångra attest</button></span>`
+    : `<span class="hint">Skickad tillbaka ${esc(dayLabel(localDate(new Date(dc.at))).toLowerCase())}${dc.comment?`: ”${esc(dc.comment)}”`:''}. Väntar på ny inskickning.</span>`;
+  return `<div class="sheet-card"><div class="sc-top">${av}<span class="nm"><b><a href="#anstalld-${esc(u)}" style="color:inherit">${esc(nameOf(u))}</a></b><span>Vecka ${Number(k.slice(6))} · ${esc(weekLabel(k))} · inskickad ${sh&&sh.submittedAt?esc(dayLabel(localDate(new Date(sh.submittedAt))).toLowerCase()):'–'}</span></span>${pill}</div>
+    <div class="sc-tot"><span>Arbetad tid <b>${fmtNum(num(sh&&sh.work))} h</b></span><span>Frånvaro <b>${fmtNum(num(sh&&sh.abs))} h</b>${byAbs?` (${esc(byAbs)})`:''}</span></div>
+    <div class="sc-body">${linesTable(lines)}${actions}</div></div>`;
+}
+$('#shBody').addEventListener('input', e=>{ const d=e.target.dataset.shc; if(d) keep['shc-'+d]=e.target.value; });
+$('#shBody').addEventListener('change', e=>{ if(e.target.id==='shMonth') keep.shMonth=e.target.value; });
+$('#shBody').addEventListener('click', async e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.shf){ shFilter=b.dataset.shf; render(); return; }
+  if(b.hasAttribute('data-sh-export')){ exportPayroll(keep.shMonth||$('#shMonth').value); return; }
+  const id=b.dataset.shApprove||b.dataset.shReturn||b.dataset.shUndo; if(!id) return;
+  const [u,k]=id.split('__'), {sh}=sheetState(u,k), ref=db.doc(`tsdecisions/${u}/weeks/${k}`);
+  try{
+    if(b.dataset.shUndo){ await ref.delete(); toast('Attesten är ångrad'); return; }
+    const comment=(keep['shc-'+id]||'').trim();
+    if(b.dataset.shReturn && !comment){ toast('Skriv vad som behöver rättas'); $('#shc-'+CSS.escape(id))?.focus(); return; }
+    await ref.set({status:b.dataset.shApprove?'attesterad':'retur', comment, at:Date.now(), by:meId, submittedAt:sh?sh.submittedAt:0});
+    keep['shc-'+id]=''; toast(b.dataset.shApprove?`${nameOf(u)}s vecka ${Number(k.slice(6))} är attesterad`:`Tidrapporten är skickad tillbaka till ${nameOf(u)}`);
+  }catch(err){ toast('Kunde inte spara'); }
+});
+function exportPayroll(month){
+  const rows=[['Anställd','Datum','Vecka','Typ','Order/kategori','Timmar','Anteckning','Status']];
+  const stName={approved:'Attesterad',submitted:'Inskickad',returned:'Tillbakaskickad',none:'Ej inskickad'};
+  team().forEach(x=>{ const u=x.uid; const keys=new Set(); for(let d=1; d<=31; d++){ const ds=`${month}-${String(d).padStart(2,'0')}`; if(!isNaN(Date.parse(ds)) && ds.slice(0,7)===month && new Date(ds+'T12:00:00').getMonth()===+month.slice(5)-1) keys.add(weekKey(ds)); }
+    keys.forEach(k=>{ const st=sheetState(u,k).st; timeLines(u,k).filter(l=>l.date.slice(0,7)===month).forEach(l=>rows.push([nameOf(u), l.date, Number(k.slice(6)), l.kind==='absence'?'Frånvaro':l.kind==='order'?'Arbete på order':'Övrig arbetstid', l.title||l.cat||'', csvNum(l.hours), l.note||'', stName[st]])); }); });
+  if(rows.length===1){ toast('Ingen tid rapporterad den månaden'); return; }
+  saveFile(`loneunderlag-${month}.csv`, toCsv(rows));
+}
+
+/* ---------- Profiles ---------- */
+const CERTS=['ID06','Heta arbeten','Fallskydd','Ställningsbehörighet 2–9 m','Säkra lyft','BAM – Bättre arbetsmiljö','Arbete på väg','Truckkort','Liftutbildning (MEWP)','Asbest','Elsäkerhet (ESA)','Första hjälpen och HLR'];
+function certStatus(exp){ if(!exp) return 'none'; const d=(Date.parse(exp+'T12:00:00')-Date.parse(todayStr()+'T12:00:00'))/864e5; return d<0?'expired':d<=60?'soon':'ok'; }
+function certWarnText(uid){ const c=(profileOf(uid).certs||[]); const ex=c.filter(x=>certStatus(x.expires)==='expired').length, so=c.filter(x=>certStatus(x.expires)==='soon').length; return ex?`${ex} behörighet har gått ut`:so?`${so} behörighet går ut snart`:''; }
+function certAlerts(){ return owner ? team().filter(x=>certWarnText(x.uid)) : []; }
+const certPill=x=>{ const s=certStatus(x.expires); return s==='expired'?'<span class="pill late">Utgången</span>':s==='soon'?'<span class="pill go">Går ut snart</span>':s==='ok'?'<span class="pill ok">Giltig</span>':'<span class="pill">Inget datum</span>'; };
+function bigAv(uid, label){ const p=names[uid]; const url=(p&&p.avatarUrl)||(uid===meId?meAvatar:''); const ini=(label||'?').split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase(); return `<span class="big-av">${url?`<img src="${esc(url)}" alt="">`:esc(ini)}</span>`; }
+function renderProfile(){
+  const el=$('#profBody');
+  if(!profDraft || (!profDirty && profFor!==meId)){
+    profFor=meId;
+    profDraft = owner ? {name:publicInfo.contactName||(names[meId]&&names[meId].name)||'', title:publicInfo.contactTitle||'', phone:publicInfo.contactPhone||'', email:publicInfo.contactEmail||''}
+      : JSON.parse(JSON.stringify({name:'',role:'',phone:'',email:'',iceName:'',icePhone:'',certs:[],...profileOf(meId)}));
+    if(!owner && !profDraft.name) profDraft.name=(myInvite&&myInvite.name)||'';
+  } else if(!profDirty){
+    const src = owner ? null : profileOf(meId);
+    if(src && JSON.stringify(src)!==JSON.stringify(profDraft)) profDraft=JSON.parse(JSON.stringify({name:'',role:'',phone:'',email:'',iceName:'',icePhone:'',certs:[],...src}));
+  }
+  const d=profDraft, f=(id,label,val,ph='',type='text')=>`<label class="f">${label}<input type="${type}" id="pf-${id}" data-pf="${id}" value="${esc(val||'')}" placeholder="${esc(ph)}"></label>`;
+  if(owner){
+    const act=orders.filter(o=>!o.approved).length, mo=todayStr().slice(0,7), inv=invoices.filter(i=>(i.date||'').startsWith(mo)&&i.status!=='utkast').reduce((a,i)=>a+calc(i).toPay,0);
+    el.innerHTML=`<div class="prof-head">${bigAv(meId,d.name)}<div><h2>${esc(d.name||'Min profil')}</h2><p>${esc([d.title,company.name].filter(Boolean).join(' · ')||'Arbetsgivare')}</p></div></div>
+      <div class="kpis" style="margin-top:0">${kpi('Anställda',team().length,'kopplade','team')}${kpi('Aktiva ordrar',act,'','open')}${kpi('Fakturerat',shortMoney(inv),new Date().toLocaleDateString('sv-SE',{month:'long'}),'invsent')}${kpi('Att attestera',pendingSheets().length,'tidrapporter','sheets',pendingSheets().length>0)}</div>
+      <div class="prof-grid" style="margin-top:14px">
+        <div class="panel"><h3 class="sub">Mina kontaktuppgifter</h3><p class="hint" style="margin:0 0 10px">De anställda ser dessa på sin profilsida.</p>
+          <form id="profForm" novalidate>${f('name','Namn',d.name,'För- och efternamn')}${f('title','Titel eller roll',d.title,'T.ex. VD, arbetsledare')}<div class="row2">${f('phone','Telefon',d.phone,'070-123 45 67','tel')}${f('email','E-post',d.email,'namn@foretag.se','email')}</div>
+          <button type="submit" class="btn primary">${profDirty?'Spara ändringar':'Spara'}</button></form></div>
+        <div class="panel"><h3 class="sub">Företaget</h3>
+          ${company.name?`<dl class="kv2"><dt>Namn</dt><dd>${esc(company.name)}</dd>${company.orgnr?`<dt>Org.nr</dt><dd>${esc(company.orgnr)}</dd>`:''}${company.address?`<dt>Adress</dt><dd>${esc(company.address)}</dd>`:''}${company.phone?`<dt>Telefon</dt><dd>${esc(company.phone)}</dd>`:''}${company.bankgiro?`<dt>Bankgiro</dt><dd>${esc(company.bankgiro)}</dd>`:''}</dl>`:'<span class="hint">Inga företagsuppgifter än.</span>'}
+          <a class="btn small" href="#foretaget" style="margin-top:12px;background:var(--chip);color:var(--ink)">Ändra företagsuppgifter</a></div>
+      </div>`;
+    return;
+  }
+  const wk=isoWeek(todayStr()).w, mo=todayStr().slice(0,7);
+  let moH=0; orders.forEach(o=>timeOf(o.id).forEach(t=>{ if(t.by===meId && entryDate(t).slice(0,7)===mo) moH+=num(t.hours); })); Object.values(otherTime[meId]||{}).forEach(t=>{ if(t&&t.kind!=='absence'&&(t.date||'').slice(0,7)===mo) moH+=num(t.hours); });
+  const doneCnt=myOrders().filter(o=>o.approved).length;
+  el.innerHTML=`<div class="prof-head">${bigAv(meId,d.name)}<div><h2>${esc(d.name||'Min profil')}</h2><p>${esc([d.role, publicInfo.name].filter(Boolean).join(' · ')||'Anställd')}</p></div></div>
+    <div class="kpis" style="margin-top:0">${kpi(`Timmar v.${wk}`,fmtNum(hoursThisWeek(meId)),'','timesheet')}${kpi('Timmar i månaden',fmtNum(moH),new Date().toLocaleDateString('sv-SE',{month:'long'}))}${kpi('Godkända ordrar',doneCnt,'totalt')}${kpi('Kopplad sedan',myMember&&myMember.joinedAt?new Date(myMember.joinedAt).toLocaleDateString('sv-SE',{day:'numeric',month:'short'}):'–',publicInfo.name||'')}</div>
+    <div class="prof-grid" style="margin-top:14px">
+      <div class="panel"><h3 class="sub">Mina uppgifter</h3><p class="hint" style="margin:0 0 10px">Arbetsgivaren ser det du fyller i här.</p>
+        <form id="profForm" novalidate>${f('name','Namn',d.name,'För- och efternamn')}${f('role','Yrkesroll',d.role,'T.ex. målare, snickare')}<div class="row2">${f('phone','Telefon',d.phone,'070-123 45 67','tel')}${f('email','E-post',d.email,'namn@exempel.se','email')}</div>
+          <div class="row2">${f('iceName','Närmast anhörig',d.iceName,'Namn')}${f('icePhone','Anhörigs telefon',d.icePhone,'Nås vid olycka','tel')}</div>
+          <div class="f" style="display:grid;gap:6px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)">Behörigheter och utbildningar
+            <datalist id="certList">${CERTS.map(c=>`<option value="${esc(c)}"></option>`).join('')}</datalist>
+            ${(d.certs||[]).map((c,i)=>`<div class="certrow"><input type="text" id="pf-cn-${i}" data-cert="${i}" data-cf="name" list="certList" value="${esc(c.name)}" placeholder="T.ex. Heta arbeten" aria-label="Behörighet"><input type="date" id="pf-ce-${i}" data-cert="${i}" data-cf="expires" value="${esc(c.expires||'')}" aria-label="Giltig till"><button type="button" class="iconbtn" data-cert-rm="${i}" aria-label="Ta bort behörighet">×</button></div>`).join('')}
+            <button type="button" class="btn ghost" data-cert-add>+ Lägg till behörighet</button>
+            <span class="hint" style="text-transform:none;letter-spacing:0;font-weight:400">Ange sista giltighetsdag så påminns du och arbetsgivaren innan den går ut.</span></div>
+          <button type="submit" class="btn primary">Spara</button></form></div>
+      <div class="stack">
+        <div class="panel"><h3 class="sub">Din arbetsgivare</h3>
+          <dl class="kv2"><dt>Företag</dt><dd>${esc(publicInfo.name||'–')}</dd>${publicInfo.contactName?`<dt>Kontakt</dt><dd>${esc(publicInfo.contactName)}${publicInfo.contactTitle?`, ${esc(publicInfo.contactTitle)}`:''}</dd>`:''}${publicInfo.contactPhone?`<dt>Telefon</dt><dd>${esc(publicInfo.contactPhone)}</dd>`:''}${publicInfo.contactEmail?`<dt>E-post</dt><dd>${esc(publicInfo.contactEmail)}</dd>`:''}</dl>
+          ${publicInfo.contactPhone?`<a class="btn small primary" href="tel:${esc(publicInfo.contactPhone.replace(/[^+\d]/g,''))}" style="margin-top:12px">Ring</a>`:''}</div>
+        ${(d.certs||[]).some(c=>c.name)?`<div class="panel"><h3 class="sub">Mina behörigheter</h3><ul class="certlist">${(profileOf(meId).certs||[]).filter(c=>c.name).map(c=>`<li><span>${esc(c.name)}${c.expires?`<br><span class="hint">t.o.m. ${esc(fmtDateY(c.expires))}</span>`:''}</span>${certPill(c)}</li>`).join('')}</ul></div>`:''}
+      </div></div>`;
+}
+$('#profBody').addEventListener('input', e=>{
+  const t=e.target; if(!profDraft) return;
+  if(t.dataset.pf){ profDraft[t.dataset.pf]=t.value; profDirty=true; }
+  if(t.dataset.cert!=null){ profDraft.certs[+t.dataset.cert][t.dataset.cf]=t.value; profDirty=true; }
+});
+$('#profBody').addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b||!profDraft) return;
+  if(b.hasAttribute('data-cert-add')){ (profDraft.certs=profDraft.certs||[]).push({name:'',expires:''}); profDirty=true; render(); setTimeout(()=>$('#pf-cn-'+(profDraft.certs.length-1))?.focus(),0); return; }
+  if(b.dataset.certRm!=null){ profDraft.certs.splice(+b.dataset.certRm,1); profDirty=true; render(); return; }
+});
+$('#profBody').addEventListener('submit', async e=>{
+  e.preventDefault(); if(!db||!profDraft) return;
+  try{
+    if(owner){ const v=profDraft; await db.doc('public/info').set({...publicInfo, ownerId:meId, name:company.name||publicInfo.name||'', contactName:v.name.trim(), contactTitle:v.title.trim(), contactPhone:v.phone.trim(), contactEmail:v.email.trim()}); }
+    else { const v={...profDraft, certs:(profDraft.certs||[]).filter(c=>(c.name||'').trim()).map(c=>({name:c.name.trim(),expires:c.expires||''}))}; ['name','role','phone','email','iceName','icePhone'].forEach(k=>v[k]=(v[k]||'').trim()); await db.doc('members/'+meId).update({profile:v}); profDraft=JSON.parse(JSON.stringify(v)); }
+    profDirty=false; toast('Profilen är sparad'); render();
+  }catch(err){ toast(err&&err.code==='invalid_argument'?'Du saknar behörighet att spara profilen':'Kunde inte spara profilen'); }
+});
+function renderPerson(){
+  const el=$('#personBody'), u=detailId, x=team().find(t=>t.uid===u), m=members.find(mm=>mm.id===u);
+  if(!m){ el.innerHTML = ready.team ? emptyBox('Personen finns inte i teamet','Hen kan ha tagits bort.') : emptyBox('Hämtar…','Ett ögonblick.'); return; }
+  const pr=profileOf(u), nm=nameOf(u), iv=invites.find(i=>i.id===m.code)||{};
+  const mo=todayStr().slice(0,7); let moH=0; orders.forEach(o=>timeOf(o.id).forEach(t=>{ if(t.by===u && entryDate(t).slice(0,7)===mo) moH+=num(t.hours); })); Object.values(otherTime[u]||{}).forEach(t=>{ if(t&&t.kind!=='absence'&&(t.date||'').slice(0,7)===mo) moH+=num(t.hours); });
+  const act=orders.filter(o=>o.assignee===u && !o.approved), done=orders.filter(o=>o.approved && workersOf(o).includes(u)).length;
+  const recent=Object.keys(sheets[u]||{}).sort().reverse().slice(0,6);
+  el.innerHTML=`<div class="prof-head">${bigAv(u,nm)}<div><h2>${esc(nm)}</h2><p>${esc([pr.role, x?'Kopplad '+dayLabel(localDate(new Date(m.joinedAt||Date.now()))).toLowerCase():'Borttagen från teamet'].filter(Boolean).join(' · '))}</p></div></div>
+    <div class="kpis" style="margin-top:0">${kpi(`Timmar v.${isoWeek(todayStr()).w}`,fmtNum(hoursThisWeek(u)),'')}${kpi('Timmar i månaden',fmtNum(moH),new Date().toLocaleDateString('sv-SE',{month:'long'}))}${kpi('Aktiva ordrar',act.length,'')}${kpi('Godkända ordrar',done,'totalt')}</div>
+    <div class="prof-grid" style="margin-top:14px">
+      <div class="stack">
+        <div class="panel"><h3 class="sub">Kontakt</h3>
+          <dl class="kv2">${pr.phone?`<dt>Telefon</dt><dd>${esc(pr.phone)}</dd>`:''}${pr.email?`<dt>E-post</dt><dd>${esc(pr.email)}</dd>`:''}${iv.contact?`<dt>Från inbjudan</dt><dd>${esc(iv.contact)}</dd>`:''}${pr.iceName||pr.icePhone?`<dt>Närmast anhörig</dt><dd>${esc([pr.iceName,pr.icePhone].filter(Boolean).join(', '))}</dd>`:''}</dl>
+          ${!pr.phone&&!pr.email&&!iv.contact?'<span class="hint">Personen har inte fyllt i sina uppgifter än.</span>':''}</div>
+        <div class="panel"><h3 class="sub">Behörigheter</h3>${(pr.certs||[]).length?`<ul class="certlist">${pr.certs.map(c=>`<li><span>${esc(c.name)}${c.expires?`<br><span class="hint">t.o.m. ${esc(fmtDateY(c.expires))}</span>`:''}</span>${certPill(c)}</li>`).join('')}</ul>`:'<span class="hint">Inga behörigheter inlagda.</span>'}</div>
+      </div>
+      <div class="stack">
+        <div class="panel"><h3 class="sub">Aktiva ordrar</h3>${act.length?`<ul class="certlist">${act.map(o=>`<li><a href="#order-${o.id}" style="color:var(--accent);font-weight:600">${esc(o.title)}</a>${statusPill(o)}</li>`).join('')}</ul>`:'<span class="hint">Inga aktiva ordrar.</span>'}</div>
+        <div class="panel"><h3 class="sub">Tidrapporter</h3>${recent.length?`<ul class="certlist">${recent.map(k=>{ const s=sheetState(u,k); return `<li><span>Vecka ${Number(k.slice(6))}<br><span class="hint">${esc(weekLabel(k))} · ${fmtNum(num(s.sh&&s.sh.work))} h</span></span>${s.st==='approved'?'<span class="pill ok">Attesterad</span>':s.st==='returned'?'<span class="pill late">Tillbakaskickad</span>':s.st==='submitted'?'<span class="pill hot">Att attestera</span>':'<span class="pill">Ej inskickad</span>'}</li>`; }).join('')}</ul>`:'<span class="hint">Inga inskickade veckor än.</span>'}
+          <a class="btn small" href="#tidrapporter" style="margin-top:12px;background:var(--chip);color:var(--ink)">Till tidrapporter</a></div>
+      </div></div>`;
+}
+
 /* ---------- Order detail ---------- */
 function renderOrderDetail(){
   const el=$('#orderDetail'), o=findOrder(detailId);
@@ -1403,6 +1741,9 @@ function buildEvents(){
     if(p.resubmittedAt) add(p.resubmittedAt,p.submittedBy||o.assignee,'skickade in arbetet igen',o,'sig');
     if(o.approved) add(o.approved.at,o.approved.by,'godkände arbetet',o,'ok');
   });
+  const wl=k=>`v.${Number(k.slice(6))}`;
+  Object.entries(sheets).forEach(([u,m])=>Object.entries(m||{}).forEach(([k,sh])=>{ if(sh&&sh.submittedAt) ev.push({at:sh.submittedAt,by:u,text:`skickade in tidrapport för ${wl(k)} (${fmtNum(num(sh.work))} h)`,href:owner?'#tidrapporter':'#tidrapport',title:'Tidrapporter',cls:'sig'}); }));
+  Object.entries(decisions).forEach(([u,m])=>Object.entries(m||{}).forEach(([k,dc])=>{ if(dc&&dc.at) ev.push({at:dc.at,by:dc.by,text: dc.status==='attesterad'?`attesterade ${nameOf(u)}s tidrapport för ${wl(k)}`:`skickade tillbaka ${nameOf(u)}s tidrapport för ${wl(k)}${dc.comment?`: ”${dc.comment}”`:''}`,href:owner?'#tidrapporter':'#tidrapport',title:'Tidrapporter',cls:dc.status==='attesterad'?'ok':'bad'}); }));
   if(owner) invoices.forEach(i=>invEvents(i).forEach(e=>ev.push({at:e.at,by:e.by||meId,text:`faktura ${i.number}: ${String(e.what||'').toLowerCase()}`,iid:i.id,title:(i.customer&&i.customer.name)||i.title,cls:'acc'})));
   return ev.sort((a,b)=>b.at-a.at);
 }
@@ -1412,7 +1753,7 @@ function tlHtml(evs, opts){
   evs.forEach(e=>{
     const d=localDate(new Date(e.at));
     if(d!==day){ flush(); day=d; out+=`<div class="dayhead">${esc(dayLabel(d))}</div>`; }
-    const link = opts.links ? (e.oid?` <small><a href="#order-${e.oid}">${esc(e.title)}</a></small>` : e.iid?` <small><a href="#faktura-${e.iid}">${esc(e.title)}</a></small>`:'') : '';
+    const link = opts.links ? (e.oid?` <small><a href="#order-${e.oid}">${esc(e.title)}</a></small>` : e.iid?` <small><a href="#faktura-${e.iid}">${esc(e.title)}</a></small>` : e.href?` <small><a href="${e.href}">${esc(e.title)}</a></small>`:'') : '';
     items.push(`<li><span class="tt">${hhmm(e.at)}</span><span class="pt ${e.cls||''}"></span><span class="tx"><b>${esc(who(e.by))}</b> ${esc(e.text)}${link}</span></li>`);
   });
   flush(); return out;
@@ -1533,13 +1874,14 @@ async function onListClick(e){
   }
   if(t.dataset.quick){
     const oid=t.dataset.quick, h=num(t.dataset.h), date=keep['hd-'+oid]||todayStr();
+    if(weekLocked(meId,weekKey(date))){ toast('Den veckan är redan inskickad i tidrapporten'); return; }
     queued(oid, ()=>writeProgress(oid,{time:{[uid('t')]:{by:meId,at:Date.now(),hours:h,date}}})).then(()=>toast(`${fmtNum(h)} h rapporterade för ${fmtDate(date)}`)).catch(writeErr).finally(render);
     return;
   }
   if(t.dataset.addtime){
     const oid=t.dataset.addtime, h=num(keep['h-'+oid]);
     if(h<=0 || h>24){ toast('Skriv antal timmar, t.ex. 2,5'); $('#h-'+oid)?.focus(); return; }
-    const date=keep['hd-'+oid]||todayStr(); keep['h-'+oid]='';
+    const date=keep['hd-'+oid]||todayStr(); if(weekLocked(meId,weekKey(date))){ toast('Den veckan är redan inskickad i tidrapporten'); return; } keep['h-'+oid]='';
     queued(oid, ()=>writeProgress(oid,{time:{[uid('t')]:{by:meId,at:Date.now(),hours:h,date}}})).then(()=>toast(`${fmtNum(h)} h rapporterade`)).catch(err=>{ keep['h-'+oid]=String(h); writeErr(err); }).finally(render);
     return;
   }
@@ -1625,6 +1967,8 @@ document.addEventListener('click', e=>{
   if(g==='company'){ go('foretaget'); return; }
   if(g==='prices'){ go('prismallar'); return; }
   if(g==='team'){ go('anstallda'); return; }
+  if(g==='sheets'){ shFilter='submitted'; go('tidrapporter'); return; }
+  if(g==='timesheet'){ go('tidrapport'); return; }
 });
 $('#q').addEventListener('input', e=>{ query=e.target.value; render(); });
 $('#filters').addEventListener('click', e=>{ const f=e.target.dataset.f; if(f){ empFilter=f; render(); }});
@@ -1837,7 +2181,7 @@ $('#coForm').addEventListener('input', ()=>{ coDirty=true; });
 $('#coForm').addEventListener('submit', async e=>{
   e.preventDefault(); if(!db) return;
   const data={}; coFields.forEach(f=>data[f]=$('#co-'+f).value.trim()); data.fskatt=$('#co-fskatt').checked;
-  try{ await db.doc('settings/company').set(data); if(data.name) db.doc('public/info').set({name:data.name}).catch(()=>{}); coDirty=false; toast('Företagsuppgifterna är sparade'); if(data.name&&data.bankgiro) $('#coPanel').open=false; }
+  try{ await db.doc('settings/company').set(data); if(data.name) db.doc('public/info').set({...publicInfo, name:data.name, ownerId:meId}).catch(()=>{}); coDirty=false; toast('Företagsuppgifterna är sparade'); if(data.name&&data.bankgiro) $('#coPanel').open=false; }
   catch(err){ toast('Kunde inte spara uppgifterna'); }
 });
 
@@ -2043,17 +2387,27 @@ async function boot(){
   if(user){
     const me=await user.me(); meId=me.id; owner=me.isOwner;
     if(await user.can('data.write')===false) canWrite=false;
-    $('#who').innerHTML=`<img src="${esc(me.avatarUrl)}" alt=""><span>${esc(me.name||'Inloggad')}</span>`;
+    $('#who').innerHTML=`<a href="#profil" title="Min profil"><img src="${esc(me.avatarUrl)}" alt=""><span id="whoName">${esc(me.name||'Min profil')}</span></a>`; meAvatar=me.avatarUrl;
   }
-  db.doc('public/info').onSnapshot(s=>{ publicInfo=s.exists?(s.data()||{}):{}; if(view==='join') render(); }, ()=>{});
+  db.doc('public/info').onSnapshot(s=>{ publicInfo=s.exists?(s.data()||{}):{}; render(); }, ()=>{});
+  const subbed=new Set();
+  const subTime=uid=>{ if(!uid||subbed.has(uid)) return; subbed.add(uid);
+    db.collection(`work/${uid}/time`).onSnapshot(sn=>{ const m={}; sn.docs.forEach(d=>m[d.id]=d.data()||{}); otherTime[uid]=m; render(); }, ()=>{});
+    db.collection(`work/${uid}/sheets`).onSnapshot(sn=>{ const m={}; sn.docs.forEach(d=>m[d.id]=d.data()||{}); sheets[uid]=m; render(); }, ()=>{});
+    db.collection(`tsdecisions/${uid}/weeks`).onSnapshot(sn=>{ const m={}; sn.docs.forEach(d=>m[d.id]=d.data()||{}); decisions[uid]=m; render(); }, ()=>{}); };
+  window.__ptSubTime=subTime;
   if(owner){
     linkChecked=true;
     db.collection('invites').onSnapshot(snap=>{ invites=snap.docs.map(d=>({id:d.id,...d.data()})); if(!snap.metadata.fromCache) ready.team=true; render(); }, ()=>{ ready.team=true; render(); });
-    db.collection('members').onSnapshot(snap=>{ members=snap.docs.map(d=>({id:d.id,...d.data()})); render(); }, ()=>{});
+    db.collection('members').onSnapshot(snap=>{ members=snap.docs.map(d=>({id:d.id,...d.data()})); members.forEach(m=>subTime(m.id)); render(); }, ()=>{});
   } else if(meId){
-    let unInv=null;
+    let unInv=null, curCode=null;
+    subTime(meId);
     db.doc('members/'+meId).onSnapshot(s=>{
-      myMember=s.exists?(s.data()||{}):null; if(unInv){ unInv(); unInv=null; }
+      myMember=s.exists?(s.data()||{}):null;
+      const code=myMember&&myMember.code||null;
+      if(code===curCode && linkChecked){ render(); return; }
+      curCode=code; if(unInv){ unInv(); unInv=null; }
       if(myMember&&myMember.code){ unInv=db.doc('invites/'+myMember.code).onSnapshot(x=>{ myInvite=x.exists?(x.data()||{}):null; linkChecked=true; route(); }, ()=>{ linkChecked=true; route(); }); }
       else { myInvite=null; linkChecked=true; route(); }
     }, ()=>{ linkChecked=true; route(); });
@@ -2096,7 +2450,7 @@ async function boot(){
     }, ()=>{});
     db.doc('settings/company').onSnapshot(snap=>{
       company=snap.exists?(snap.data()||{}):{}; if(!snap.metadata.fromCache) ready.co=true; fillCompany(); render();
-      if(company.name && publicInfo.name!==company.name && !snap.metadata.fromCache) db.doc('public/info').set({name:company.name}).catch(()=>{});
+      if(!snap.metadata.fromCache && ((company.name && publicInfo.name!==company.name) || publicInfo.ownerId!==meId)) db.doc('public/info').set({...publicInfo, name:company.name||publicInfo.name||'', ownerId:meId}).catch(()=>{});
     }, ()=>{});
     RT().use('downloads').then(d=>{ downloads=d; });
     db.collection('customers').orderBy('name').onSnapshot(snap=>{ customers=snap.docs.map(d=>({id:d.id,...d.data()})); renderCustomerList(); }, ()=>{});
