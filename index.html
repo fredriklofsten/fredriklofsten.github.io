@@ -2,25 +2,240 @@
 <html lang="sv">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Fredrik Löfsten – appar</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Projekttavlan – arbetsordrar, tid och faktura för hantverkare</title>
+<meta name="description" content="Projekttavlan samlar arbetsordrar, planering, tidrapporter, ÄTA och fakturor för bygg- och hantverksföretag. Prova demon direkt i webbläsaren.">
+<meta property="og:title" content="Projekttavlan">
+<meta property="og:description" content="Arbetsordern, tiden och fakturan på samma tavla. Prova demon direkt i webbläsaren.">
+<meta property="og:image" content="img/desk-plan.webp">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='4' width='28' height='24' rx='7' fill='%231D5FA8'/%3E%3Cpath d='M18.5 22.5l2.5 2.5 5-5' fill='none' stroke='%23F4B400' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Archivo:wght@400;500;600&display=swap">
 <style>
-:root{--bg:#F2F4F6;--fg:#14212B;--muted:#5B6873;--card:#fff;--line:#D3DADF;--accent:#1D5FA8}
-@media (prefers-color-scheme:dark){:root{--bg:#0F161C;--fg:#E6ECF0;--muted:#94A3AE;--card:#18222B;--line:#2B3843;--accent:#6EA8E8;color-scheme:dark}}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:640px;margin:0 auto;padding:48px max(16px,env(safe-area-inset-left))}
-h1{font-size:28px;margin:0 0 6px}
-p{color:var(--muted);margin:0 0 24px}
-a.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;color:var(--fg);text-decoration:none}
-a.card b{display:block;font-size:18px;color:var(--accent)}
+:root{
+  --ink:#152029; --concrete:#E4E8EA; --paper:#FFFFFF; --blue:#1D5FA8; --signal:#F4B400;
+  --muted:#53616C; --line:#CBD3D8; --blue-ink:#FFFFFF;
+  --display:'Barlow Condensed','Arial Narrow',sans-serif;
+  --body:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --gut:max(20px,env(safe-area-inset-left,0px));
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --ink:#E6ECF0; --concrete:#10181E; --paper:#18222B; --blue:#6EA8E8; --muted:#9AA9B4; --line:#2B3843; --blue-ink:#0B1620; color-scheme:dark;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--concrete);color:var(--ink);font:400 17px/1.6 var(--body)}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1160px;margin:0 auto;padding-inline:var(--gut)}
+
+/* top */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px}
+.mark{display:flex;align-items:center;gap:10px;font:700 26px/1 var(--display);letter-spacing:.01em;color:var(--ink);text-decoration:none}
+.mark svg{width:34px;height:34px;flex:none}
+.top a.small{font-weight:600;font-size:15px;text-decoration:none}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:12px 24px;border-radius:12px;font:600 17px var(--body);text-decoration:none;border:2px solid transparent}
+.btn.main{background:var(--blue);color:var(--blue-ink)}
+.btn.main:hover{filter:brightness(1.08)}
+.btn.alt{border-color:var(--ink);color:var(--ink)}
+.btn.alt:hover{background:var(--ink);color:var(--concrete)}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:40px;align-items:center;padding-block:36px 56px}
+h1{font:700 clamp(50px,6.6vw,86px)/.94 var(--display);letter-spacing:-.005em;margin:0 0 24px;text-wrap:balance}
+.lead{font-size:clamp(18px,2vw,21px);line-height:1.55;color:var(--muted);max-width:34em;margin:0 0 32px}
+.note{font-size:14.5px;color:var(--muted);margin:16px 0 0}
+.stage{position:relative;justify-self:center;width:min(100%,380px)}
+.phone{position:relative;z-index:2;border-radius:38px;padding:10px;background:#0E161C;box-shadow:0 30px 60px -20px rgb(10 20 30 / .45),0 2px 4px rgb(10 20 30 / .2)}
+.phone img{border-radius:29px;aspect-ratio:390/844;object-fit:cover;object-position:top;width:100%}
+
+/* the tape */
+.tape{position:relative;height:72px;margin-block:-36px 0;overflow:hidden;z-index:1}
+.tape::before{content:"";position:absolute;inset:14px -40px;background:repeating-linear-gradient(-45deg,var(--signal) 0 26px,#152029 26px 52px);transform:rotate(-2deg);box-shadow:0 6px 0 rgb(0 0 0 / .08)}
+
+/* flow */
+section{padding-block:72px}
+h2{font:700 clamp(38px,5vw,58px)/1 var(--display);margin:0 0 16px;text-wrap:balance}
+.sub{color:var(--muted);max-width:40em;margin:0 0 40px}
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));counter-reset:s;border-top:3px solid var(--ink)}
+.flow li{counter-increment:s;padding:20px 24px 0 0;position:relative}
+.flow li::before{content:counter(s);display:block;font:700 56px/1 var(--display);color:var(--blue);margin-bottom:10px}
+.flow b{display:block;font:700 26px/1.1 var(--display);margin-bottom:6px}
+.flow p{margin:0;color:var(--muted);font-size:16px}
+
+/* feature rows */
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:56px;align-items:center;padding-block:48px;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.row.flip .txt{order:2}
+.row h3{font:700 clamp(30px,3.6vw,40px)/1.05 var(--display);margin:0 0 14px;text-wrap:balance}
+.row p{margin:0 0 12px;color:var(--muted);max-width:32em}
+.row ul{margin:12px 0 0;padding-left:20px;display:grid;gap:6px}
+.shot{border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--paper);box-shadow:0 18px 40px -22px rgb(10 20 30 / .45)}
+.shot.tall{max-width:330px;justify-self:center;border-radius:28px;border:8px solid #0E161C}
+.pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+
+/* also */
+.also{background:var(--paper);border-block:1px solid var(--line)}
+dl.list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 56px;margin:0}
+dl.list div{padding:18px 0;border-top:1px solid var(--line)}
+dl.list dt{font-weight:600;font-size:18px;margin-bottom:2px}
+dl.list dd{margin:0;color:var(--muted);font-size:16px}
+
+/* final */
+.final{background:#152029;color:#E6ECF0;position:relative;overflow:hidden}
+.final::after{content:"";position:absolute;left:0;right:0;bottom:0;height:10px;background:repeating-linear-gradient(-45deg,var(--signal) 0 14px,#152029 14px 28px)}
+.final h2{color:#fff}
+.final p{color:#B7C3CC;max-width:36em;margin:0 0 32px}
+.final .btn.main{background:var(--signal);color:#2A2000}
+.final .btn.alt{border-color:#E6ECF0;color:#E6ECF0}
+.final .btn.alt:hover{background:#E6ECF0;color:#152029}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;margin-top:8px}
+.choices div{border-left:3px solid #3A4A56;padding-left:20px}
+.choices h3{font:700 28px/1.1 var(--display);margin:0 0 8px;color:#fff}
+.choices p{margin:0 0 20px;font-size:16px}
+footer{padding-block:28px 40px;color:var(--muted);font-size:14px}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:minmax(0,1fr);padding-top:16px}
+  .stage{width:min(82%,330px)}
+  .flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 0}
+  .row,.row.flip{grid-template-columns:minmax(0,1fr);gap:28px}
+  .row.flip .txt{order:0}
+  dl.list,.choices{grid-template-columns:minmax(0,1fr)}
+  section{padding-block:56px}
+}
+@media (max-width:520px){
+  body{font-size:16px}
+  .flow{grid-template-columns:minmax(0,1fr)}
+  .flow li{display:grid;grid-template-columns:44px minmax(0,1fr);padding:16px 0 0;border-top:1px solid var(--line)}
+  .flow li:first-child{border-top:0}
+  .flow li::before{font-size:40px;grid-row:span 2}
+  .btn{width:100%}
+  .pair{grid-template-columns:minmax(0,1fr)}
+  .top a.small{display:none}
+}
+@media (prefers-reduced-motion:no-preference){
+  .phone{animation:rise .8s cubic-bezier(.2,.8,.2,1) both .1s}
+  @keyframes rise{from{transform:translateY(40px) rotate(2deg);opacity:0}to{transform:none;opacity:1}}
+}
 </style>
 </head>
 <body>
+<header class="wrap top">
+  <a class="mark" href="./" aria-label="Projekttavlan, startsida">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="4" width="28" height="24" rx="7" fill="#1D5FA8"/><rect x="7" y="9" width="8" height="14" rx="2" fill="#fff" opacity=".35"/><rect x="17" y="9" width="8" height="9" rx="2" fill="#fff" opacity=".35"/><path d="M18.5 22.5l2.5 2.5 5-5" fill="none" stroke="#F4B400" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Projekttavlan
+  </a>
+  <a class="small" href="projekttavlan/">Öppna demon</a>
+</header>
+
 <main>
-  <h1>Appar</h1>
-  <p>Demoversioner att prova direkt i webbläsaren.</p>
-  <a class="card" href="projekttavlan/"><b>Projekttavlan – demo →</b>Se hur det fungerar med ett påhittat företag och färdiga exempel.</a>
-  <a class="card" href="projekttavlan/prova/" style="margin-top:12px"><b>Projekttavlan – prova själv →</b>Börja tomt och lägg in ditt eget företag, dina priser och ordrar.</a>
+  <div class="wrap hero">
+    <div>
+      <h1>Arbetsordern, tiden och fakturan på samma tavla.</h1>
+      <p class="lead">Projekttavlan är för bygg- och hantverksföretag. Du skickar ordern till telefonen, de anställda bockar av och rapporterar tid på plats, och när du har godkänt jobbet är fakturan redan ifylld.</p>
+      <div class="ctas">
+        <a class="btn main" href="projekttavlan/">Prova demon</a>
+        <a class="btn alt" href="projekttavlan/prova/">Börja med ditt eget företag</a>
+      </div>
+      <p class="note">Ingen inloggning. Allt du gör sparas bara i din webbläsare.</p>
+    </div>
+    <div class="stage">
+      <div class="phone"><img src="img/phone-order.webp" width="390" height="844" alt="Projekttavlan i mobilen: ordern Målning vardagsrum med stämpelklocka och checklista"></div>
+    </div>
+  </div>
+
+  <div class="tape" aria-hidden="true"></div>
+
+  <section class="wrap" aria-labelledby="flow-h">
+    <h2 id="flow-h">Från order till betald faktura</h2>
+    <p class="sub">Samma order följer jobbet hela vägen. Ingen skriver av lappar eller jagar timmar i slutet av månaden.</p>
+    <ol class="flow">
+      <li><b>Skicka ordern</b><p>Kund, adress, checklista och vem som ska göra jobbet. Lägg den på en dag i planeringen.</p></li>
+      <li><b>Jobba på plats</b><p>De anställda stämplar in, bockar av, tar foton och låter kunden signera ÄTA direkt i telefonen.</p></li>
+      <li><b>Granska</b><p>Du ser tid, material, foton och avvikelser. Godkänn, eller skicka tillbaka med en kommentar.</p></li>
+      <li><b>Fakturera</b><p>Fakturan fylls i med timmar, material med rätt pris, ÄTA och ROT. Ladda ner som PDF.</p></li>
+    </ol>
+  </section>
+
+  <section class="wrap" aria-label="Funktioner" style="padding-top:0">
+    <div class="row">
+      <div class="txt">
+        <h3>Se veckan för hela laget</h3>
+        <p>Planeringen visar vem som är var, dag för dag. Dra en order till en annan dag eller person, eller tryck på en tom ruta för att skapa en ny order där.</p>
+        <p>Flera anställda kan dela samma order, och du kan lägga till eller ta bort folk mitt i projektet utan att någons tid försvinner.</p>
+      </div>
+      <img class="shot" src="img/desk-plan.webp" width="1240" height="760" loading="lazy" alt="Planeringsvyn med veckans ordrar per anställd">
+    </div>
+    <div class="row flip">
+      <div class="txt">
+        <h3>Byggt för telefonen i fickan</h3>
+        <p>Stora knappar, en sak i taget. Den anställda ser sina ordrar, stämplar in och ut, och skickar veckans tidrapport för attest med ett tryck.</p>
+        <ul>
+          <li>Stämpelklocka per order</li>
+          <li>Foto på varje delmoment</li>
+          <li>Avvikelser som syns direkt för dig</li>
+          <li>Tid kan rättas tills veckan är inskickad</li>
+        </ul>
+      </div>
+      <div class="pair">
+        <img class="shot tall" src="img/phone-ata.webp" width="390" height="844" loading="lazy" alt="ÄTA i mobilen som väntar på kundens godkännande">
+        <img class="shot tall" src="img/phone-time.webp" width="390" height="844" loading="lazy" alt="Veckans tidrapport i mobilen">
+      </div>
+    </div>
+    <div class="row">
+      <div class="txt">
+        <h3>Fakturan är klar när jobbet är klart</h3>
+        <p>Bara du sätter priser och bara du godkänner. Timmar och material hämtas från ordern, materialet prissätts från ert materialregister och godkända ÄTA läggs till automatiskt.</p>
+        <p>ROT-avdrag, omvänd moms, kreditfakturor, er logga och export till bokföringen finns med.</p>
+      </div>
+      <img class="shot" src="img/desk-invoice.webp" width="1240" height="860" loading="lazy" alt="Fakturautkast med arbetsrader, material och ROT-avdrag">
+    </div>
+  </section>
+
+  <section class="also" aria-labelledby="also-h">
+    <div class="wrap">
+      <h2 id="also-h">Det här ingår också</h2>
+      <p class="sub">Det som brukar kräva tre olika program och en pärm.</p>
+      <dl class="list">
+        <div><dt>ÄTA med kundsignatur</dt><dd>Kunden godkänner extraarbete med fingret på skärmen. Signaturen följer med till fakturan.</dd></div>
+        <div><dt>Kundens slutsignering</dt><dd>Låt kunden intyga att arbetet är klart innan ni lämnar platsen.</dd></div>
+        <div><dt>Kundregister</dt><dd>Alla ordrar och fakturor per kund, med kontaktuppgifter och anteckningar.</dd></div>
+        <div><dt>Materialregister</dt><dd>Inköps- och kundpris per artikel. Klistra in leverantörens prislista direkt från Excel.</dd></div>
+        <div><dt>Tidrapporter för attest</dt><dd>Veckovis, med frånvaro som sjuk, VAB och semester. Löneunderlag som fil.</dd></div>
+        <div><dt>Bjud in med en kod</dt><dd>Den anställda skriver in en sexteckenskod och är kopplad till företaget.</dd></div>
+        <div><dt>Profiler och behörigheter</dt><dd>Telefon, anhörig och certifikat som ID06 och Heta arbeten, med påminnelse innan de går ut.</dd></div>
+        <div><dt>Historik</dt><dd>Allt som hänt på varje order, vem som gjorde vad och när.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="final" aria-labelledby="final-h">
+    <div class="wrap">
+      <h2 id="final-h">Två sätt att prova</h2>
+      <p>Båda körs direkt i webbläsaren, på datorn eller i telefonen. Byt mellan arbetsgivare och anställda med ett tryck.</p>
+      <div class="choices">
+        <div>
+          <h3>Demon</h3>
+          <p>Ett påhittat byggföretag med pågående ordrar, tidrapporter och fakturor. Snabbast om du vill se hur allt hänger ihop.</p>
+          <a class="btn main" href="projekttavlan/">Öppna demon</a>
+        </div>
+        <div>
+          <h3>Provversionen</h3>
+          <p>Börjar tom. Lägg in ditt företag, dina priser och en riktig order och se hur det känns.</p>
+          <a class="btn alt" href="projekttavlan/prova/">Starta provversionen</a>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
+
+<footer class="wrap">Projekttavlan. Demon och provversionen sparar allt lokalt i din webbläsare och skickar ingenting vidare.</footer>
 </body>
 </html>

@@ -480,6 +480,53 @@ table.plan td:hover .addhint{opacity:.6}
 .sigpad .sigline{position:absolute;left:16px;right:16px;bottom:28px;border-top:1px solid var(--paper-line);font-size:11px;color:var(--paper-line);padding-top:2px;pointer-events:none}
 .crew{display:flex;flex-wrap:wrap;gap:6px}
 .crew .chipsel button{font-size:12px;font-weight:600}
+.tmrows li .rowact{display:flex;gap:12px;margin-left:8px}
+.tmrows li.edrow{padding:6px}
+.tline.edline{flex-wrap:wrap}
+.otabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);margin:14px -4px 0;padding:0 4px;-webkit-overflow-scrolling:touch}
+.otabs::-webkit-scrollbar{display:none}
+.otabs button{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--muted);font:600 14px var(--body);padding:11px 10px 10px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;min-height:44px}
+.otabs button:hover{color:var(--ink)}
+.otabs button.on{color:var(--ink);border-bottom-color:var(--accent)}
+.otabs .ob{font:600 11.5px var(--mono);background:var(--chip);color:var(--muted);border-radius:10px;padding:1px 7px;font-variant-numeric:tabular-nums}
+.otabs button.on .ob{background:var(--accent);color:var(--accent-ink)}
+.otabs .ob.hot,.otabs button.on .ob.hot{background:var(--signal);color:var(--signal-ink)}
+.otab-panel{display:grid;gap:14px;padding-top:6px}
+.otab-panel>.notes:first-child,.otab-panel>.tm:first-child{margin-top:0;border-top:0}
+@media (max-width:560px){ .otabs .lg{display:none} .otabs{mask-image:linear-gradient(90deg,#000 85%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent)} .otabs button{padding:11px 8px 10px} }
+.clist{display:grid;gap:8px}
+.crow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 16px;color:var(--ink);text-decoration:none;transition:box-shadow .18s}
+.crow:hover{box-shadow:var(--shadow-hover)}
+.crow .cmain{display:grid;gap:2px;min-width:0}
+.crow .cmain b{font-size:16px;overflow-wrap:anywhere}
+.crow .cmain span{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.crow .cside{display:grid;justify-items:end;gap:2px;font-size:13px;color:var(--muted);white-space:nowrap}
+.crow .cside .m{font:600 14px var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+.crow .hotx{color:var(--accent)}
+@media (max-width:480px){.crow{grid-template-columns:minmax(0,1fr) auto}.crow .arrow{display:none}}
+.alist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.arow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px 16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:10px 14px}
+.arow.edit{display:block;padding:0;border:0;box-shadow:none;background:none}
+.arow .an{display:grid;gap:1px;min-width:0}
+.arow .an b{overflow-wrap:anywhere}
+.arow .an span,.arow .ap small{font-size:12.5px;color:var(--muted)}
+.arow .ap{display:grid;justify-items:end;gap:1px;text-align:right}
+.arow .ap .m{font:600 14.5px var(--mono);font-variant-numeric:tabular-nums}
+.arow .aa{display:flex;gap:12px;align-items:center}
+@media (max-width:560px){.arow{grid-template-columns:minmax(0,1fr) auto}.arow .aa{grid-column:1/-1}}
+.ckpis .kpi b{font-size:clamp(20px,5vw,26px)}
+.kv2 dd a[href^="tel:"]{white-space:nowrap}
+.cologo{height:38px;max-width:170px;width:auto;object-fit:contain;display:block}
+.brandrow.haslogo .logo,.brandrow.haslogo #brandName{display:none}
+.brandrow.haslogo .brand small{margin-top:0}
+.logobox{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--bg);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.logobox .lprev{height:64px;min-width:120px;max-width:240px;display:grid;place-items:center;background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:6px 10px;color:var(--paper-line);font-size:12px}
+.logobox .lprev img{max-height:52px;max-width:220px;display:block}
+.logobox .lt{flex:1 1 180px;display:grid;gap:6px;min-width:0}
+.sheet .co img{display:block;max-height:56px;max-width:220px;margin-bottom:8px}
+.cgrid{grid-template-columns:minmax(0,340px) minmax(0,1fr)}
+.agrid{grid-template-columns:minmax(0,1fr) minmax(0,320px)}
+@media (max-width:860px){.cgrid,.agrid{grid-template-columns:minmax(0,1fr)}}
 /* ---- overflow guards ---- */
 .sheetwrap,.sheet,.list,.stack,.days,.actions,.join{grid-template-columns:minmax(0,1fr)}
 .sheetwrap>*,.sheet>*,.list>*,.stack>*,.days>*,.obody>*,.panel>*{min-width:0}
@@ -496,7 +543,7 @@ table.plan td:hover .addhint{opacity:.6}
     <details id="demoHow">
       <summary>Så kommer du igång</summary>
       <ol>
-        <li>Som <b>Arbetsgivare</b>: fyll i <b>Företaget</b> och sätt dina priser under <b>Prismallar</b>.</li>
+        <li>Som <b>Arbetsgivare</b>: fyll i <b>Företaget</b> och ladda upp er logga. Sätt dina priser under <b>Prismallar</b> och lägg in ert vanligaste material under <b>Material</b>.</li>
         <li>Gå till <b>Anställda</b>, skriv namnet på en anställd och tryck <b>Skapa inbjudan</b>. Notera koden.</li>
         <li>Byt till <b>Anställd 1</b> här uppe och ange koden. Nu är personen kopplad till ditt företag.</li>
         <li>Byt tillbaka till Arbetsgivare, öppna <b>Planering</b> och tryck på en dag hos personen för att skapa en order där.</li>
@@ -624,7 +671,7 @@ table.plan td:hover .addhint{opacity:.6}
 </script>
 <header class="top">
   <div class="top-in">
-    <div class="brandrow"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="4" width="28" height="24" rx="7" fill="var(--accent)"/><rect x="7" y="9" width="8" height="14" rx="2" fill="var(--accent-ink)" opacity=".35"/><rect x="17" y="9" width="8" height="9" rx="2" fill="var(--accent-ink)" opacity=".35"/><path d="M18.5 22.5l2.5 2.5 5-5" fill="none" stroke="var(--signal)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="brand">Projekttavlan<small id="roleLabel">Arbetsorder</small></div></div>
+    <div class="brandrow"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="4" width="28" height="24" rx="7" fill="var(--accent)"/><rect x="7" y="9" width="8" height="14" rx="2" fill="var(--accent-ink)" opacity=".35"/><rect x="17" y="9" width="8" height="9" rx="2" fill="var(--accent-ink)" opacity=".35"/><path d="M18.5 22.5l2.5 2.5 5-5" fill="none" stroke="var(--signal)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><img class="cologo" id="coLogo" alt="" hidden><div class="brand"><span id="brandName">Projekttavlan</span><small id="roleLabel">Arbetsorder</small></div></div>
     <a class="timerchip" id="timerChip" href="#ordrar" hidden></a>
     <div class="who" id="who"></div>
   </div>
@@ -768,6 +815,8 @@ table.plan td:hover .addhint{opacity:.6}
     <div class="panel narrow" id="coPanel">
       <h2>Företagsuppgifter <span class="hint" id="coState"></span></h2>
       <p class="hint" style="margin:0 0 12px">Uppgifterna skrivs ut på alla fakturor.</p>
+      <div class="logobox" id="logoBox"></div>
+      <input type="file" id="logoInput" accept="image/png,image/jpeg,image/svg+xml,image/webp" hidden>
       <form id="coForm" novalidate>
           <label class="f">Företagsnamn<input type="text" id="co-name"></label>
           <div class="row2">
@@ -838,6 +887,10 @@ table.plan td:hover .addhint{opacity:.6}
   <section class="view" id="v-timesheet" hidden><div id="tsBody"></div></section>
   <section class="view" id="v-sheets" hidden><div id="shBody"></div></section>
   <section class="view" id="v-profile" hidden><div id="profBody"></div></section>
+  <section class="view" id="v-customers" hidden><div id="custBody"></div></section>
+  <section class="view" id="v-customer" hidden><a class="back" href="#kunder">← Kunder</a><div id="customerBody"></div></section>
+  <section class="view" id="v-articles" hidden><div id="artBody"></div></section>
+  <datalist id="artList"></datalist>
   <section class="view" id="v-person" hidden><a class="back" href="#anstallda">← Anställda</a><div id="personBody"></div></section>
 
   <section class="view" id="v-more" hidden>
@@ -876,7 +929,9 @@ const ICON={
   user:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 7-7h2a7 7 0 0 1 7 7v1"/>',
   calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-  eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'
+  eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  contact:'<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7.5 17.5a4.5 4.5 0 0 1 9 0M2 7h2M2 12h2M2 17h2"/>',
+  box:'<path d="M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/>'
 };
 const ic = (k,sz=20) => `<svg viewBox="0 0 24 24" width="${sz}" height="${sz}" fill="none" stroke="currentColor" stroke-width="${k==='more'?3:1.8}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -984,13 +1039,16 @@ function notesHtml(o, isEmployer){
 
 function tmHtml(o, isEmployer){
   const ts=timeOf(o.id), ms=matsOf(o.id);
-  const rows = ts.map(t=>`<li><b>${fmtNum(num(t.hours))} h</b><span>${esc(nameOf(t.by))}</span><span class="x">${t.date?fmtDate(t.date):fmtTime(t.at)}</span>${!isEmployer&&t.by===meId&&editable(o)?`<button type="button" class="linkbtn" data-rmtime="${o.id}" data-k="${esc(t.id)}" aria-label="Ta bort tidsrad">Ta bort</button>`:''}</li>`).join('')
-    + ms.map(m=>`<li><b>${esc(m.name)}</b><span>${fmtNum(num(m.qty)||1)} st</span><span class="x">${esc(nameOf(m.by))}</span>${!isEmployer&&m.by===meId&&editable(o)?`<button type="button" class="linkbtn" data-rmmat="${o.id}" data-k="${esc(m.id)}" aria-label="Ta bort materialrad">Ta bort</button>`:''}</li>`).join('');
+  const mine = t => !isEmployer&&t.by===meId&&editable(o)&&!weekLocked(meId,weekKey(entryDate(t)));
+  const rows = ts.map(t=> keep.edtime===o.id+'|'+t.id && mine(t)
+      ? `<li class="edrow"><div class="tmin" style="margin:0;flex:1"><input type="date" id="et-d-${o.id}" data-keep value="${esc(keep['et-d-'+o.id]||entryDate(t))}" max="${todayStr()}" aria-label="Nytt datum" style="flex:0 1 150px"><input type="text" inputmode="decimal" id="et-h-${o.id}" data-keep value="${esc(keep['et-h-'+o.id]??fmtNum(num(t.hours)))}" aria-label="Nya timmar"><button type="button" class="btn small primary" data-etsave="${o.id}" data-k="${esc(t.id)}">Spara</button><button type="button" class="btn small" data-etcancel style="background:var(--chip);color:var(--ink)">Avbryt</button></div></li>`
+      : `<li><b>${fmtNum(num(t.hours))} h</b><span>${esc(nameOf(t.by))}</span><span class="x">${t.date?fmtDate(t.date):fmtTime(t.at)}${t.editedAt?' · ändrad':''}</span>${mine(t)?`<span class="rowact"><button type="button" class="linkbtn" data-edtime="${o.id}" data-k="${esc(t.id)}" aria-label="Ändra tidsrad">Ändra</button><button type="button" class="linkbtn" data-rmtime="${o.id}" data-k="${esc(t.id)}" aria-label="Ta bort tidsrad">Ta bort</button></span>`:''}</li>`).join('')
+    + ms.map(m=>`<li><b>${esc(m.name)}</b><span>${fmtNum(num(m.qty)||1)} ${esc(m.unit||'st')}</span><span class="x">${esc(nameOf(m.by))}</span>${!isEmployer&&m.by===meId&&editable(o)?`<button type="button" class="linkbtn" data-rmmat="${o.id}" data-k="${esc(m.id)}" aria-label="Ta bort materialrad">Ta bort</button>`:''}</li>`).join('');
   const total = ts.length ? ` · ${fmtNum(hoursOf(o.id))} h totalt` : '';
   const k = id => esc(keep[id]||'');
   const inputs = (!isEmployer && editable(o)) ? `<div class="tmin"><input type="date" id="hd-${o.id}" data-keep value="${esc(keep['hd-'+o.id]||todayStr())}" max="${todayStr()}" aria-label="Datum för arbetet" style="flex:0 1 150px"><input type="text" inputmode="decimal" id="h-${o.id}" data-keep placeholder="Timmar, t.ex. 2,5" value="${k('h-'+o.id)}" aria-label="Arbetade timmar"><button type="button" class="btn small primary" data-addtime="${o.id}">Lägg till tid</button></div>
     <div class="chips"><span class="hint">Snabbval:</span>${[1,2,4,8].map(h=>`<button type="button" class="chipbtn" data-quick="${o.id}" data-h="${h}">+${h} h</button>`).join('')}</div>
-    <div class="tmin"><input type="text" class="wide" id="mn-${o.id}" data-keep placeholder="Material" value="${k('mn-'+o.id)}" aria-label="Material"><input type="text" inputmode="decimal" id="mq-${o.id}" data-keep placeholder="Antal" value="${k('mq-'+o.id)}" aria-label="Antal"><button type="button" class="btn small primary" data-addmat="${o.id}">Lägg till material</button></div>` : '';
+    <div class="tmin"><input type="text" class="wide" id="mn-${o.id}" data-keep list="artList" autocomplete="off" placeholder="${pubArticles.length?'Material – välj i listan eller skriv':'Material'}" value="${k('mn-'+o.id)}" aria-label="Material"><input type="text" inputmode="decimal" id="mq-${o.id}" data-keep placeholder="Antal${(()=>{ const pa=findPubArticle(keep['mn-'+o.id]); return pa&&pa.unit&&pa.unit!=='st'?' ('+esc(pa.unit)+')':''; })()}" value="${k('mq-'+o.id)}" aria-label="Antal"><button type="button" class="btn small primary" data-addmat="${o.id}">Lägg till material</button></div>` : '';
   if(isEmployer && !rows) return '';
   return `<div class="tm"><h4>Tid och material${total}</h4>${rows?`<ul class="tmrows">${rows}</ul>`:''}${inputs}</div>`;
 }
@@ -1009,7 +1067,7 @@ function workerBanner(o){
       <b>${st==='returned'?'Arbetsgivaren har skickat tillbaka ordern':'Granska ditt arbete innan du skickar det'}</b>
       ${n?`<span style="white-space:pre-wrap;color:var(--ink)">${esc(n.text)}</span>`:''}
       ${ok?reviewSummary(o):''}
-      ${ok?'<span style="color:var(--ink);font-weight:400">Kontrollera tid, material och foton nedan. Du kan ändra allt tills du skickar.</span>':''}
+      ${ok?'<span style="color:var(--ink);font-weight:400">Kontrollera tid, material och foton i flikarna nedan. Du kan ändra allt tills du skickar.</span>':''}
       ${canWrite&&ok&&!signoffOf(o.id)?`<div><button type="button" class="btn small" data-signoff="${o.id}" style="background:var(--surface);color:var(--ink)">Låt kunden signera att arbetet är klart</button></div>`:''}
       ${canWrite?`<div><button type="button" class="btn small primary" data-submit="${o.id}" ${ok?'':'disabled'}>${st==='returned'?'Skicka för granskning igen':'Skicka till arbetsgivaren'}</button>${ok?'':' <span class="hint">Kryssa i alla delmoment först</span>'}</div>`:''}
     </div>`;
@@ -1107,7 +1165,7 @@ function ataHtml(o){
   const form = !can ? '' : keep['ataOpen-'+o.id] ? `<div class="ataform">
       <label class="f" for="ata-kind-${o.id}">Typ</label><select id="ata-kind-${o.id}" data-keep>${Object.entries(ATA_KIND).map(([v,t])=>`<option value="${v}"${(keep['ata-kind-'+o.id]||'tillagg')===v?' selected':''}>${t}</option>`).join('')}</select>
       <label class="f" for="ata-text-${o.id}">Vad ska göras?</label><textarea id="ata-text-${o.id}" data-keep placeholder="T.ex. Kunden vill att vi målar även taket i hallen">${k('ata-text')}</textarea>
-      <div class="row2"><label class="f">Uppskattad extra tid (h)<input type="text" inputmode="decimal" id="ata-h-${o.id}" data-keep value="${k('ata-h')}" placeholder="t.ex. 3"></label><label class="f">Material (valfritt)<input type="text" id="ata-mat-${o.id}" data-keep value="${k('ata-mat')}" placeholder="t.ex. 2 l takfärg"></label></div>
+      <div class="row2"><label class="f">Uppskattad extra tid (h)<input type="text" inputmode="decimal" id="ata-h-${o.id}" data-keep value="${k('ata-h')}" placeholder="t.ex. 3"></label><label class="f">Material (valfritt)<input type="text" id="ata-mat-${o.id}" data-keep list="artList" autocomplete="off" value="${k('ata-mat')}" placeholder="t.ex. 2 l takfärg"></label></div>
       <div class="mact"><button type="button" class="btn primary" data-ata-save="${o.id}">Spara ÄTA</button><button type="button" class="btn" data-ata-cancel="${o.id}" style="background:var(--chip);color:var(--ink)">Avbryt</button></div></div>`
     : `<button type="button" class="btn ghost" data-ata-new="${o.id}">+ Ny ÄTA (extra arbete eller ändring)</button>`;
   return `<div class="notes"><h4>ÄTA – ändrings- och tilläggsarbeten${list.length?` (${list.length})`:''}</h4>${items}${form}<span class="hint">Kunden godkänner direkt på skärmen. Godkända ÄTA hamnar automatiskt på fakturan.</span></div>`;
@@ -1265,11 +1323,14 @@ function startEdit(o){
 }
 $('#cancelEdit').addEventListener('click', ()=>{ const back=editingId?'order-'+editingId:'ordrar'; resetForm(); go(back); });
 async function saveCustomer(name, address, email, idno){
-  const id=slug(name); if(!id) return;
-  try{ await db.doc('customers/'+id).set({name, address, email, idno, updatedAt:Date.now()}); }catch(_){}
+  const ex=findCustomer(name);
+  try{
+    if(ex){ const patch={}; if(address&&!ex.address) patch.address=address; if(email&&!ex.email) patch.email=email; if(idno&&!ex.idno) patch.idno=idno; if(Object.keys(patch).length) await db.doc('customers/'+ex.id).update({...patch,updatedAt:Date.now()}); }
+    else { const id=slug(name); if(!id) return; await db.doc('customers/'+id).set({name, address, email, idno, phone:'', note:'', aka:[], createdAt:Date.now(), updatedAt:Date.now()}); }
+  }catch(_){}
 }
 $('#f-customer').addEventListener('change', e=>{
-  const c=customers.find(x=>x.name===e.target.value.trim()); if(!c) return;
+  const c=findCustomer(e.target.value.trim()); if(!c) return;
   if(!$('#f-address').value) $('#f-address').value=c.address||'';
   if(!$('#f-custEmail').value) $('#f-custEmail').value=c.email||'';
   if(!$('#f-custId').value) $('#f-custId').value=c.idno||'';
@@ -1321,7 +1382,7 @@ async function render(){
   if(user && ids.size){ const ps=await user.profiles([...ids]); if(my!==seq) return; Object.assign(names,ps); }
   VIEWS.forEach(v=>{ $('#v-'+v).hidden = view!==v; });
   { const t=!owner&&myTimer(), c=$('#timerChip'); c.hidden=!t; if(t){ const o=findOrder(t.oid); c.href='#order-'+t.oid; c.title='Tiden går'+(o?' på '+o.title:''); c.innerHTML=ic('clock',16)+timerLive(t); } }
-  renderNav();
+  renderNav(); brandLogo();
   $('#roleLabel').textContent = owner ? (view==='worker' ? 'Så ser de anställda det' : 'Arbetsgivare') : 'Anställd';
   const a=document.activeElement, fid=a&&a.id, s1=a&&a.selectionStart, s2=a&&a.selectionEnd;
   if(view==='employer') renderEmployer(); else if(view==='invoices') renderInvoices(); else if(view==='worker') renderWorker();
@@ -1329,24 +1390,25 @@ async function render(){
   else if(view==='team') renderTeam(); else if(view==='join') renderJoin();
   else if(view==='plan') renderPlan();
   else if(view==='timesheet') renderTimesheet(); else if(view==='sheets') renderSheets(); else if(view==='profile') renderProfile(); else if(view==='person') renderPerson();
+  else if(view==='customers') renderCustomers(); else if(view==='customer') renderCustomer(); else if(view==='articles') renderArticles();
   if(fid){ const n=document.getElementById(fid); if(n && n!==a){ n.focus(); try{ n.setSelectionRange(s1,s2); }catch(_){} } }
   if(selectedAssignees.length && view==='new') renderChip();
 }
 const emptyBox = (h,sub) => `<div class="empty"><strong>${h}</strong>${sub}</div>`;
-const VIEWS=['employer','new','order','invoices','invoice','prices','company','history','worker','more','team','join','timesheet','sheets','profile','person','plan'];
+const VIEWS=['employer','new','order','invoices','invoice','prices','company','history','worker','more','team','join','timesheet','sheets','profile','person','plan','customers','customer','articles'];
 let detailId=null, histTab='handelser', histPerson='', histLimit=150;
 function navKey(){
-  return ({employer:'ordrar',new:'ny-order',order:'ordrar',invoices:'fakturor',invoice:'fakturor',prices:'prismallar',company:'foretaget',history:'historik',more:'mer',team:'anstallda',join:'ordrar',timesheet:'tidrapport',sheets:'tidrapporter',profile:'profil',person:'anstallda',plan:'planering'})[view] || (owner?'anstalldas-vy':'ordrar');
+  return ({employer:'ordrar',new:'ny-order',order:'ordrar',invoices:'fakturor',invoice:'fakturor',prices:'prismallar',company:'foretaget',history:'historik',more:'mer',team:'anstallda',join:'ordrar',timesheet:'tidrapport',sheets:'tidrapporter',profile:'profil',person:'anstallda',plan:'planering',customers:'kunder',customer:'kunder',articles:'material'})[view] || (owner?'anstalldas-vy':'ordrar');
 }
 function renderNav(){
   const rev=orders.filter(o=>stateOf(o)==='review').length;
   const mineAct=myOrders().filter(o=>['returned','ready'].includes(stateOf(o))).length;
   const drafts=invoices.filter(i=>i.status==='utkast').length;
   const items = owner
-    ? [['ordrar','Ordrar','orders',rev],['ny-order','Ny order','plus'],['planering','Planering','calendar',orders.filter(o=>!o.approved&&!o.start).length],['fakturor','Fakturor','invoice',drafts],['tidrapporter','Tidrapporter','clock',pendingSheets().length],['historik','Historik','history'],['anstallda','Anställda','users',invites.filter(i=>!i.revoked && !members.some(m=>m.code===i.id)).length+certAlerts().length],['prismallar','Prismallar','tag'],['foretaget','Företaget','building'],['profil','Min profil','user'],['anstalldas-vy','Anställdas vy','eye']]
+    ? [['ordrar','Ordrar','orders',rev],['ny-order','Ny order','plus'],['planering','Planering','calendar',orders.filter(o=>!o.approved&&!o.start).length],['fakturor','Fakturor','invoice',drafts],['tidrapporter','Tidrapporter','clock',pendingSheets().length],['historik','Historik','history'],['anstallda','Anställda','users',invites.filter(i=>!i.revoked && !members.some(m=>m.code===i.id)).length+certAlerts().length],['kunder','Kunder','contact'],['material','Material','box'],['prismallar','Prismallar','tag'],['foretaget','Företaget','building'],['profil','Min profil','user'],['anstalldas-vy','Anställdas vy','eye']]
     : isLinked() ? [['ordrar','Mina ordrar','orders',mineAct],['tidrapport','Tidrapport','clock',sheetState(meId,weekKey(todayStr())).st==='returned'||Object.keys(sheets[meId]||{}).some(k=>sheetState(meId,k).st==='returned')?1:0],['historik','Historik','history'],['profil','Profil','user']] : [];
   const cur=navKey();
-  const link=([h,t,i,n],small)=>`<a href="#${h}"${h==='ny-order'?' data-new':''}${cur===h||(small&&h==='mer'&&['tidrapporter','historik','anstallda','prismallar','foretaget','profil','anstalldas-vy','mer'].includes(cur))?' aria-current="page"':''}>${ic(i,small?22:18)}<span>${t}</span>${n?`<span class="badge">${n}</span>`:''}</a>`;
+  const link=([h,t,i,n],small)=>`<a href="#${h}"${h==='ny-order'?' data-new':''}${cur===h||(small&&h==='mer'&&['tidrapporter','historik','anstallda','kunder','material','prismallar','foretaget','profil','anstalldas-vy','mer'].includes(cur))?' aria-current="page"':''}>${ic(i,small?22:18)}<span>${t}</span>${n?`<span class="badge">${n}</span>`:''}</a>`;
   $('#navIn').innerHTML=items.map(x=>link(x,false)).join('');
   const bottom = owner ? [...items.slice(0,4), ['mer','Mer','more',(items.find(x=>x[0]==='anstallda')[3]||0)+(items.find(x=>x[0]==='tidrapporter')[3]||0)]] : items;
   $('#bnav').innerHTML=bottom.map(x=>link(x,true)).join('');
@@ -1358,12 +1420,14 @@ function route(){
   if(h.startsWith('order-')){ v='order'; id=h.slice(6); }
   else if(h.startsWith('anstalld-')){ v=owner?'person':'worker'; id=h.slice(9); }
   else if(h.startsWith('faktura-')){ v='invoice'; id=h.slice(8); }
-  else v=({'ordrar':owner?'employer':'worker','ny-order':'new','fakturor':'invoices','prismallar':'prices','foretaget':'company','historik':'history','anstalldas-vy':'worker','mer':'more','anstallda':'team','tidrapport':owner?'sheets':'timesheet','tidrapporter':owner?'sheets':'timesheet','profil':'profile','planering':owner?'plan':'worker'})[h] || (owner?'employer':'worker');
+  else if(h.startsWith('kund-')){ v='customer'; id=h.slice(5); }
+  else v=({'ordrar':owner?'employer':'worker','ny-order':'new','fakturor':'invoices','prismallar':'prices','foretaget':'company','historik':'history','anstalldas-vy':'worker','mer':'more','anstallda':'team','tidrapport':owner?'sheets':'timesheet','tidrapporter':owner?'sheets':'timesheet','profil':'profile','planering':owner?'plan':'worker','kunder':'customers','material':'articles'})[h] || (owner?'employer':'worker');
   if(!owner && !['worker','order','history','timesheet','profile'].includes(v)) v='worker';
   if(v==='profile' && (view!=='profile')) { profDraft=null; profDirty=false; }
   if(!owner && !isLinked()) v='join';
   if(v!=='invoice' && editInv){ flushSave(); editInv=null; }
   if(v!=='order') pendingDelete=null;
+  if(v!==view || id!==detailId){ custDraft=null; custDel=null; if(v!=='articles'){ artEdit=null; artDel=null; artImport=null; } }
   const changed = v!==view || id!==detailId;
   view=v; detailId=id;
   if(changed) window.scrollTo(0,0);
@@ -1372,7 +1436,7 @@ function route(){
   if(v==='new' && changed) setTimeout(()=>$('#f-title').focus({preventScroll:true}),0);
 }
 window.addEventListener('hashchange', route);
-$('#moreList').innerHTML=[['tidrapporter','clock','Tidrapporter','Attestera de anställdas veckor och ta ut löneunderlag'],['historik','history','Historik','Allt som hänt, avslutade ordrar och fakturor'],['anstallda','users','Anställda','Bjud in och hantera ditt team'],['profil','user','Min profil','Dina kontaktuppgifter som de anställda ser'],['prismallar','tag','Prismallar','Priser per timme, m², meter eller fast pris'],['foretaget','building','Företaget','Uppgifter som står på fakturan'],['anstalldas-vy','eye','Anställdas vy','Se appen som dina anställda ser den']].map(([h,i,t,d])=>`<a href="#${h}">${ic(i,24)}<span>${t}<small>${d}</small></span></a>`).join('');
+$('#moreList').innerHTML=[['tidrapporter','clock','Tidrapporter','Attestera de anställdas veckor och ta ut löneunderlag'],['historik','history','Historik','Allt som hänt, avslutade ordrar och fakturor'],['anstallda','users','Anställda','Bjud in och hantera ditt team'],['kunder','contact','Kunder','Kontaktuppgifter, ordrar och fakturor per kund'],['material','box','Material och priser','Materialregister med inköps- och kundpriser'],['profil','user','Min profil','Dina kontaktuppgifter som de anställda ser'],['prismallar','tag','Prismallar','Priser per timme, m², meter eller fast pris'],['foretaget','building','Företaget','Uppgifter som står på fakturan'],['anstalldas-vy','eye','Anställdas vy','Se appen som dina anställda ser den']].map(([h,i,t,d])=>`<a href="#${h}">${ic(i,24)}<span>${t}<small>${d}</small></span></a>`).join('');
 
 function needsMe(o, isEmployer){ const st=stateOf(o); return isEmployer ? st==='review' : (st==='returned'||st==='ready'); }
 function isOpen(o, isEmployer){
@@ -1657,8 +1721,8 @@ const shiftWeek=(key,n)=>weekKey(addDays(weekDays(key)[0],7*n));
 const weekLabel=key=>{ const d=weekDays(key), f=x=>new Date(x+'T12:00:00').toLocaleDateString('sv-SE',{day:'numeric',month:'short'}); return `${f(d[0])} – ${f(d[6])}`; };
 function timeLines(uid,key){
   const set=new Set(weekDays(key)), out=[];
-  orders.forEach(o=>timeOf(o.id).forEach(t=>{ if(t.by===uid && set.has(entryDate(t))) out.push({src:'order',id:t.id,oid:o.id,date:entryDate(t),kind:'order',title:o.title,hours:num(t.hours)}); }));
-  Object.entries(otherTime[uid]||{}).forEach(([id,t])=>{ if(t&&t.date&&set.has(t.date)) out.push({src:'other',id,date:t.date,kind:t.kind,cat:t.cat,title:t.cat,note:t.note||'',hours:num(t.hours)}); });
+  orders.forEach(o=>timeOf(o.id).forEach(t=>{ if(t.by===uid && set.has(entryDate(t))) out.push({src:'order',id:t.id,oid:o.id,date:entryDate(t),kind:'order',title:o.title,hours:num(t.hours),note:t.note||'',edited:!!t.editedAt}); }));
+  Object.entries(otherTime[uid]||{}).forEach(([id,t])=>{ if(t&&t.date&&set.has(t.date)) out.push({src:'other',id,date:t.date,kind:t.kind,cat:t.cat,title:t.cat,note:t.note||'',hours:num(t.hours),edited:!!t.editedAt}); });
   return out.sort((a,b)=>a.date.localeCompare(b.date)||(a.kind==='absence')-(b.kind==='absence'));
 }
 function sumLines(lines){ const s={work:0,abs:0,byAbs:{}}; lines.forEach(l=>{ if(l.kind==='absence'){ s.abs+=num(l.hours); s.byAbs[l.cat]=(s.byAbs[l.cat]||0)+num(l.hours); } else s.work+=num(l.hours); }); return s; }
@@ -1667,6 +1731,18 @@ function sheetState(uid,key){ const sh=(sheets[uid]||{})[key], dc=(decisions[uid
   if(dc&&dc.at>sh.submittedAt) return {st:dc.status==='attesterad'?'approved':'returned',sh,dc};
   return {st:'submitted',sh,dc}; }
 const weekLocked=(uid,key)=>['submitted','approved'].includes(sheetState(uid,key).st);
+async function saveTimeEdit(src, oid, id, prevDate, date, hrsRaw, allowFuture){
+  const hrs=num(hrsRaw);
+  if(!date){ toast('Välj ett datum'); return false; }
+  if(!(hrs>0 && hrs<=24)){ toast('Skriv antal timmar, t.ex. 7,5'); return false; }
+  if(!allowFuture && date>todayStr()){ toast('Du kan inte rapportera arbetstid i framtiden'); return false; }
+  if(weekLocked(meId,weekKey(prevDate)) || weekLocked(meId,weekKey(date))){ toast('Veckan är inskickad. Ta tillbaka inskickningen i Tidrapport för att ändra.'); return false; }
+  try{
+    if(src==='order') await queued(oid, ()=>writeProgress(oid,{time:{[id]:{hours:hrs,date,editedAt:Date.now()}}}));
+    else await db.doc(`work/${meId}/time/${id}`).update({hours:hrs,date,editedAt:Date.now()});
+    toast(`Ändrat till ${fmtNum(hrs)} h ${fmtDate(date)}`); return true;
+  }catch(err){ writeErr(err); return false; }
+}
 function pendingSheets(){ const out=[]; Object.entries(sheets).forEach(([u,m])=>Object.keys(m||{}).forEach(k=>{ if(sheetState(u,k).st==='submitted' && (!owner || team().some(x=>x.uid===u))) out.push({uid:u,key:k}); })); return out; }
 const kindTag=l=> l.kind==='absence'?'<span class="k abs">Frånvaro</span>' : l.kind==='order'?'<span class="k ord">Order</span>' : '<span class="k">Övrigt</span>';
 function linesTable(lines){
@@ -1683,7 +1759,10 @@ function renderTimesheet(){
   const dayHtml=days.map(d=>{ const dl=lines.filter(l=>l.date===d), tot=dl.reduce((a,l)=>a+(l.kind==='absence'?0:num(l.hours)),0), abs=dl.reduce((a,l)=>a+(l.kind==='absence'?num(l.hours):0),0);
     const label=cap(new Date(d+'T12:00:00').toLocaleDateString('sv-SE',{weekday:'long',day:'numeric',month:'short'}));
     return `<div class="day${dl.length?'':' empty-day'}"><div class="dh">${esc(label)}${d===todayStr()?' · idag':''}<span>${dl.length?`${fmtNum(tot)} h${abs?` + ${fmtNum(abs)} h frånvaro`:''}`:'–'}</span></div>
-      ${dl.map(l=>`<div class="tline">${kindTag(l)}<span class="tt2">${l.oid?`<a href="#order-${l.oid}">${esc(l.title)}</a>`:esc(l.title||'')}${l.note?`<small>${esc(l.note)}</small>`:''}</span><span class="h">${fmtNum(l.hours)} h</span>${!locked&&l.src==='other'?`<button type="button" class="iconbtn" data-ts-rm="${esc(l.id)}" aria-label="Ta bort raden" style="height:30px;width:30px">×</button>`:''}</div>`).join('')}</div>`; }).join('');
+      ${dl.map(l=>{ const ek=`${l.src}|${l.oid||''}|${l.id}`, can=!locked&&(l.src==='other'||(findOrder(l.oid)&&editable(findOrder(l.oid))));
+        if(can && keep.tsEd===ek) return `<div class="tline edline">${kindTag(l)}<span class="tt2">${esc(l.title||'')}</span>
+          <div class="tmin" style="margin:0;flex-basis:100%"><input type="date" id="ts-ed-d" value="${esc(keep['ts-ed-d']||l.date)}" ${l.kind==='absence'?'':`max="${todayStr()}"`} aria-label="Nytt datum" style="flex:0 1 150px"><input type="text" inputmode="decimal" id="ts-ed-h" value="${esc(keep['ts-ed-h']??fmtNum(l.hours))}" aria-label="Nya timmar"><button type="button" class="btn small primary" data-ts-edsave="${esc(ek)}" data-prev="${l.date}" data-kind="${l.kind}">Spara</button><button type="button" class="btn small" data-ts-edcancel style="background:var(--chip);color:var(--ink)">Avbryt</button></div></div>`;
+        return `<div class="tline">${kindTag(l)}<span class="tt2">${l.oid?`<a href="#order-${l.oid}">${esc(l.title)}</a>`:esc(l.title||'')}${l.note?`<small>${esc(l.note)}</small>`:''}${l.edited?'<small>ändrad</small>':''}</span><span class="h">${fmtNum(l.hours)} h</span>${can?`<button type="button" class="iconbtn" data-ts-ed="${esc(ek)}" data-d="${l.date}" data-h="${fmtNum(l.hours)}" aria-label="Ändra raden" title="Ändra" style="height:30px;width:30px">✎</button><button type="button" class="iconbtn" data-ts-rm="${esc(ek)}" aria-label="Ta bort raden" title="Ta bort" style="height:30px;width:30px">×</button>`:''}</div>`; }).join('')}</div>`; }).join('');
   const myOpen=myOrders().filter(o=>!o.approved);
   const k=keep; if(!k['ts-date']||!days.includes(k['ts-date'])) k['ts-date']=days.includes(todayStr())?todayStr():days[0]; if(!k['ts-kind']) k['ts-kind']='order';
   const opts=(list,sel)=>list.map(x=>`<option${x===sel?' selected':''}>${esc(x)}</option>`).join('');
@@ -1709,6 +1788,7 @@ function renderTimesheet(){
     <div class="ts-grid" style="margin-top:14px"><div class="stack">${form}${submitBar}</div><div class="days">${dayHtml}</div></div>`;
 }
 $('#tsBody').addEventListener('input', e=>{ if(e.target.id&&e.target.id.startsWith('ts-')) keep[e.target.id]=e.target.value; });
+$('#tsBody').addEventListener('keydown', e=>{ if(e.key==='Enter' && (e.target.id==='ts-ed-h'||e.target.id==='ts-ed-d')){ e.preventDefault(); $('[data-ts-edsave]')?.click(); } else if(e.key==='Escape' && keep.tsEd){ keep.tsEd=null; render(); } });
 $('#tsBody').addEventListener('change', e=>{ const id=e.target.id; if(!id||!id.startsWith('ts-')) return; keep[id]=e.target.value; if(id==='ts-kind'){ keep['ts-cat']=''; render(); } });
 $('#tsBody').addEventListener('submit', async e=>{
   e.preventDefault(); if(!db||!meId) return;
@@ -1730,12 +1810,18 @@ $('#tsBody').addEventListener('click', async e=>{
   const b=e.target.closest('button'); if(!b) return;
   if(b.dataset.tsWeek!=null){ const n=+b.dataset.tsWeek; tsWeek = n===0 ? weekKey(todayStr()) : shiftWeek(tsWeek,n); keep.tsConfirm=null; render(); return; }
   if(b.dataset.tsH){ keep['ts-hours']=b.dataset.tsH; render(); return; }
-  if(b.dataset.tsRm){ try{ await db.doc(`work/${meId}/time/${b.dataset.tsRm}`).delete(); toast('Raden är borttagen'); }catch(err){ writeErr(err); } return; }
+  if(b.dataset.tsRm){ const [src,oid,id]=b.dataset.tsRm.split('|');
+    try{ if(src==='order') await queued(oid, ()=>writeProgress(oid,{time:{[id]:null}})); else await db.doc(`work/${meId}/time/${id}`).delete(); toast('Raden är borttagen'); }catch(err){ writeErr(err); } return; }
+  if(b.dataset.tsEd){ keep.tsEd=b.dataset.tsEd; keep['ts-ed-d']=b.dataset.d; keep['ts-ed-h']=b.dataset.h; render(); $('#ts-ed-h')?.focus(); return; }
+  if(b.hasAttribute('data-ts-edcancel')){ keep.tsEd=null; render(); return; }
+  if(b.dataset.tsEdsave){ const [src,oid,id]=b.dataset.tsEdsave.split('|');
+    const ok=await saveTimeEdit(src,oid,id,b.dataset.prev,$('#ts-ed-d')?.value||keep['ts-ed-d'],$('#ts-ed-h')?.value||keep['ts-ed-h'],b.dataset.kind==='absence');
+    if(ok){ keep.tsEd=null; render(); } return; }
   if(b.hasAttribute('data-ts-withdraw')){ try{ await db.doc(`work/${meId}/sheets/${tsWeek}`).update({submittedAt:0, withdrawnAt:Date.now()}); toast('Inskickningen är tillbakatagen – du kan ändra veckan'); }catch(err){ writeErr(err); } return; }
   if(b.hasAttribute('data-ts-submit')){
     const key=tsWeek; if(keep.tsConfirm!==key){ keep.tsConfirm=key; render(); setTimeout(()=>{ if(keep.tsConfirm===key){ keep.tsConfirm=null; render(); } },6000); return; }
     keep.tsConfirm=null; const lines=timeLines(meId,key), sm=sumLines(lines), d=weekDays(key);
-    try{ await db.doc(`work/${meId}/sheets/${key}`).set({week:key, from:d[0], to:d[6], lines:lines.map(({src,id,...l})=>l), work:sm.work, abs:sm.abs, byAbs:sm.byAbs, submittedAt:Date.now(), submittedBy:meId}); toast(`Tidrapporten för v.${Number(key.slice(6))} är skickad till arbetsgivaren`); }
+    try{ await db.doc(`work/${meId}/sheets/${key}`).set({week:key, from:d[0], to:d[6], lines:lines.map(({src,id,edited,...l})=>l), work:sm.work, abs:sm.abs, byAbs:sm.byAbs, submittedAt:Date.now(), submittedBy:meId}); toast(`Tidrapporten för v.${Number(key.slice(6))} är skickad till arbetsgivaren`); }
     catch(err){ writeErr(err); }
   }
 });
@@ -1908,19 +1994,29 @@ function renderOrderDetail(){
       <h1>${esc(o.title)}</h1>
       ${metaHtml(o,owner)}${mapLink(o)}
       ${owner?invBarHtml(o):workerBanner(o)}
-      ${o.description?`<p class="desc">${esc(o.description)}</p>`:''}
       ${barHtml(o)}
       ${o.start?`<span class="sum-plan">Planerad ${esc(planLabel(o))}</span>`:''}
-      ${timerRow(o)}
-      ${partsHtml(o,!owner)}
-      ${signoffHtml(o)}
-      ${tmHtml(o,owner)}
-      ${ataHtml(o)}
-      ${crewHtml(o)}
-      ${notesHtml(o,owner)}
-      <div class="notes"><h4>Historik för ordern</h4>${evs.length?tlHtml(evs,{}):'<span class="hint">Inget har hänt än.</span>'}</div>
+      ${orderTabs(o,evs)}
     </div></article>`;
 }
+function orderTabs(o,evs){
+  const ata=ataHtml(o), tm=tmHtml(o,owner), s=stats(o), notes=notesOf(o.id), atas=atasOf(o.id), h=hoursOf(o.id), mats=matsOf(o.id);
+  const tabs=[
+    {id:'arbete', label:'Arbete', badge:`${s.n}/${s.total}`,
+      html:`${o.description?`<p class="desc">${esc(o.description)}</p>`:''}${timerRow(o)}${partsHtml(o,!owner)}${signoffHtml(o)}`},
+    {id:'tid', label:'Tid<span class="lg"> och material</span>', badge: h||mats.length ? `${fmtNum(h)} h` : '',
+      html: tm || '<div class="notes"><h4>Tid och material</h4><span class="hint">Ingen tid eller material rapporterat än.</span></div>'},
+    ata ? {id:'ata', label:'ÄTA', badge: atas.length?String(atas.length):'', hot: atas.some(a=>a.status==='pending'), html:ata} : null,
+    owner ? {id:'personal', label:'Personal', badge:String(assigneesOf(o).length), html:crewHtml(o)} : null,
+    {id:'msg', label:'Meddelanden', badge: notes.length?String(notes.length):'', hot: !!openFlag(o), html:notesHtml(o,owner)},
+    {id:'hist', label:'Historik', badge:'', html:`<div class="notes"><h4>Historik för ordern</h4>${evs.length?tlHtml(evs,{}):'<span class="hint">Inget har hänt än.</span>'}</div>`},
+  ].filter(Boolean);
+  let cur=keep['otab-'+o.id]; if(!tabs.some(t=>t.id===cur)) cur='arbete';
+  const active=tabs.find(t=>t.id===cur);
+  return `<div class="otabs" role="tablist" aria-label="Delar av ordern">${tabs.map(t=>`<button type="button" role="tab" id="otab-${t.id}" aria-selected="${t.id===cur}" aria-controls="otab-panel" data-otab="${t.id}"${t.id===cur?' class="on"':''}>${t.label}${t.badge?`<span class="ob${t.hot?' hot':''}">${esc(t.badge)}</span>`:t.hot?'<span class="ob hot">!</span>':''}</button>`).join('')}</div>
+    <div class="otab-panel" id="otab-panel" role="tabpanel" aria-labelledby="otab-${cur}">${active.html}</div>`;
+}
+function showTab(oid,tab){ keep['otab-'+oid]=tab; render(); }
 
 /* ---------- History ---------- */
 const who = by => by ? nameOf(by) : 'Någon';
@@ -2068,6 +2164,7 @@ $('#photoInput').addEventListener('change', async e=>{
 });
 async function onListClick(e){
   const t=e.target.closest('button'); if(!t) return;
+  if(t.dataset.otab){ showTab(detailId,t.dataset.otab); const b=$('#otab-'+t.dataset.otab); if(b){ b.focus({preventScroll:true}); b.scrollIntoView({block:'nearest',inline:'nearest'}); } return; }
   if(t.dataset.addp){ const o=findOrder(t.dataset.addp), u=$('#addp-'+t.dataset.addp)?.value; if(!o||!u) return; t.disabled=true;
     try{ await setAssignees(o,[...assigneesOf(o),u]); toast(`${nameOf(u)} är tillagd på ordern`); }catch(err){ toast('Kunde inte lägga till personen'); } render(); return; }
   if(t.dataset.rmp){ const [oid,u]=t.dataset.rmp.split('|'), o=findOrder(oid); if(!o) return;
@@ -2113,12 +2210,17 @@ async function onListClick(e){
   if(t.dataset.addmat){
     const oid=t.dataset.addmat, name=(keep['mn-'+oid]||'').trim();
     if(!name){ toast('Skriv vilket material'); $('#mn-'+oid)?.focus(); return; }
-    const m={by:meId,at:Date.now(),name,qty:num(keep['mq-'+oid])||1};
+    const pa=findPubArticle(name), m={by:meId,at:Date.now(),name:pa?pa.name:name,qty:num(keep['mq-'+oid])||1,...(pa?{aid:pa.id,unit:pa.unit||'st'}:{})};
     keep['mn-'+oid]=keep['mq-'+oid]='';
     queued(oid, ()=>writeProgress(oid,{materials:{[uid('m')]:m}})).then(()=>toast('Material tillagt')).catch(writeErr).finally(render);
     return;
   }
-  if(t.dataset.rmtime){ const oid=t.dataset.rmtime; queued(oid, ()=>writeProgress(oid,{time:{[t.dataset.k]:null}})).catch(writeErr); return; }
+  if(t.dataset.rmtime){ const oid=t.dataset.rmtime, te=timeOf(oid).find(x=>x.id===t.dataset.k); if(te&&weekLocked(meId,weekKey(entryDate(te)))){ toast('Veckan är inskickad. Ta tillbaka inskickningen i Tidrapport för att ändra.'); return; } queued(oid, ()=>writeProgress(oid,{time:{[t.dataset.k]:null}})).catch(writeErr); return; }
+  if(t.dataset.edtime){ const oid=t.dataset.edtime; keep.edtime=oid+'|'+t.dataset.k; delete keep['et-d-'+oid]; delete keep['et-h-'+oid]; render(); $('#et-h-'+oid)?.focus(); return; }
+  if(t.hasAttribute('data-etcancel')){ keep.edtime=null; render(); return; }
+  if(t.dataset.etsave){ const oid=t.dataset.etsave, te=timeOf(oid).find(x=>x.id===t.dataset.k); if(!te) return;
+    const ok=await saveTimeEdit('order',oid,te.id,entryDate(te),$('#et-d-'+oid)?.value,$('#et-h-'+oid)?.value,false);
+    if(ok){ keep.edtime=null; delete keep['et-d-'+oid]; delete keep['et-h-'+oid]; render(); } return; }
   if(t.dataset.rmmat){ const oid=t.dataset.rmmat; queued(oid, ()=>writeProgress(oid,{materials:{[t.dataset.k]:null}})).catch(writeErr); return; }
   if(t.dataset.openinv){ openInvoice(t.dataset.openinv); return; }
   if(t.dataset.approve){
@@ -2129,7 +2231,7 @@ async function onListClick(e){
   }
   if(t.dataset.return){
     const oid=t.dataset.return, text=(drafts[oid]||'').trim();
-    if(!text){ toast('Skriv vad som behöver göras i meddelandefältet nedan'); const n=$('#note-'+oid); if(n){ n.focus(); n.scrollIntoView({block:'center'}); } return; }
+    if(!text){ toast('Skriv vad som behöver göras i meddelandet'); showTab(oid,'msg'); const n=$('#note-'+oid); if(n){ n.focus(); n.scrollIntoView({block:'center'}); } return; }
     t.disabled=true;
     try{
       await queued(oid, ()=>writeProgress(oid,{notes:{[uid('n')]:{by:meId,at:Date.now(),text,flag:false,kind:'return'}}}));
@@ -2146,7 +2248,7 @@ $('#lightbox').addEventListener('click', ()=>{ $('#lightbox').hidden=true; $('#l
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') $('#lightbox').hidden=true; });
 for(const id of ['#orderDetail']){
   $(id).addEventListener('click', onListClick);
-  $(id).addEventListener('change', e=>{ if(e.target.hasAttribute('data-keep')) keep[e.target.id]=e.target.value; });
+  $(id).addEventListener('change', e=>{ if(e.target.hasAttribute('data-keep')){ keep[e.target.id]=e.target.value; if(e.target.id.startsWith('mn-')) render(); } });
   $(id).addEventListener('input', e=>{ const d=e.target.dataset.draft; if(d) drafts[d]=e.target.value; if(e.target.hasAttribute('data-keep')) keep[e.target.id]=e.target.value; });
   $(id).addEventListener('keydown', e=>{ if(e.key!=='Enter'||!e.target.hasAttribute('data-keep')||e.target.tagName==='TEXTAREA') return; e.preventDefault(); const row=e.target.closest('.tmin'); row&&row.querySelector('button')?.click(); });
 }
@@ -2232,14 +2334,14 @@ function invPill(inv){
 function linesFromOrder(o){
   const rate=num(o.rate)||num(company.rate);
   const lines=[{kind:'arbete',text:'Arbete: '+o.title,qty:hoursOf(o.id),unit:'tim',price:rate}];
-  matsOf(o.id).forEach(m=>lines.push({kind:'material',text:m.name,qty:num(m.qty)||1,unit:'st',price:''}));
+  matsOf(o.id).forEach(m=>lines.push(matLine(m)));
   return lines;
 }
 function tplLines(t,o){
   const lines=(t.rows||[]).filter(r=>r.text).map(r=>({kind:r.kind||'arbete', text:r.text, unit:r.unit||'st',
     price: num(r.price) || (r.unit==='tim' ? num(company.rate)||'' : ''),
     qty: r.unit==='tim' ? (o?hoursOf(o.id):'') : r.unit==='fast pris' ? 1 : ''}));
-  if(t.includeMaterials && o) matsOf(o.id).forEach(m=>lines.push({kind:'material',text:m.name,qty:num(m.qty)||1,unit:'st',price:''}));
+  if(t.includeMaterials && o) matsOf(o.id).forEach(m=>lines.push(matLine(m)));
   return lines;
 }
 function invoiceLines(o){ const t=priceTpls.find(x=>x.id===o.priceTpl); return [...(t ? tplLines(t,o) : linesFromOrder(o)), ...ataLines(o)]; }
@@ -2393,10 +2495,239 @@ $('#ptPanel').addEventListener('click', async e=>{
   }
 });
 
+/* ---------- Kundregister ---------- */
+let custQ='', custDraft=null, custDel=null;
+const sameName=(a,b)=>!!a&&!!b&&a.trim().toLowerCase()===b.trim().toLowerCase();
+const custMatch=(c,name)=> sameName(c.name,name) || (c.aka||[]).some(n=>sameName(n,name));
+const findCustomer=name=> name ? customers.find(c=>custMatch(c,name)) : null;
+const custOrders=c=>orders.filter(o=>custMatch(c,o.customer)).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+function custInvoices(c){ const ids=new Set(custOrders(c).map(o=>o.id)); return invoices.filter(i=>ids.has(i.orderId)||custMatch(c,(i.customer||{}).name)).sort((a,b)=>(b.date||'').localeCompare(a.date||'')); }
+function custSums(c){ const inv=custInvoices(c).filter(i=>i.status!=='utkast'); return {billed:inv.reduce((s,i)=>s+calc(i).toPay,0), unpaid:inv.filter(i=>i.status==='skickad').reduce((s,i)=>s+calc(i).toPay,0)}; }
+const CU_FIELDS=[['name','Namn','T.ex. Anna Berg eller Brf Linden'],['address','Adress','Gata, postnr ort'],['email','E-post','kund@exempel.se'],['phone','Telefon','070-123 45 67'],['idno','Person-/orgnummer','Behövs för ROT'],['note','Anteckning','T.ex. portkod, kontaktperson, nyckel hos granne']];
+function custFormHtml(d){
+  return `<form class="panel" id="cuForm" novalidate style="display:grid;gap:10px">
+    <h3 class="sub">${d.id?'Ändra kund':'Ny kund'}</h3>
+    ${CU_FIELDS.map(([f,l,ph])=>f==='note'?`<label class="f">${l}<textarea id="cu-${f}" placeholder="${esc(ph)}">${esc(d[f]||'')}</textarea></label>`:`<label class="f">${l}<input type="text" id="cu-${f}" value="${esc(d[f]||'')}" placeholder="${esc(ph)}"${f==='email'?' inputmode="email"':f==='phone'?' inputmode="tel"':''}></label>`).join('')}
+    ${d.id&&d.name&&custOrders(d).some(o=>!o.approved)?'<span class="hint">Byter du namn uppdateras även kundens pågående ordrar.</span>':''}
+    <div class="mact" style="display:flex;gap:8px;flex-wrap:wrap"><button type="submit" class="btn primary">Spara kund</button><button type="button" class="btn" data-cu-cancel style="background:var(--chip);color:var(--ink)">Avbryt</button></div>
+  </form>`;
+}
+function renderCustomers(){
+  const el=$('#custBody'), q=custQ.trim().toLowerCase();
+  const list=customers.filter(c=>!q||[c.name,c.address,c.email,c.phone,c.idno].some(v=>(v||'').toLowerCase().includes(q)));
+  const rows=list.map(c=>{ const os=custOrders(c), act=os.filter(o=>!o.approved).length, s=custSums(c);
+    return `<a class="crow" href="#kund-${esc(c.id)}"><span class="cmain"><b>${esc(c.name)}</b><span>${esc([c.address,c.phone||c.email].filter(Boolean).join(' · ')||'Inga kontaktuppgifter')}</span></span>
+      <span class="cside"><span>${os.length} order${os.length===1?'':'ar'}${act?` · <b class="hotx">${act} aktiv${act>1?'a':''}</b>`:''}</span><span class="m">${s.billed?money(s.billed):''}</span></span><span class="arrow" aria-hidden="true">›</span></a>`; }).join('');
+  el.innerHTML=`<div class="lhead"><div><h2>Kunder</h2><p class="hint" style="margin:2px 0 0">Alla kunder med ordrar, fakturor och kontaktuppgifter. Nya kunder sparas också automatiskt när du skapar en order.</p></div>${custDraft&&!custDraft.id?'':'<button type="button" class="btn primary" data-cu-new>+ Ny kund</button>'}</div>
+    ${custDraft&&!custDraft.id?`<div class="narrow" style="margin-bottom:16px">${custFormHtml(custDraft)}</div>`:''}
+    ${customers.length?`<input type="search" id="cu-q" class="search" placeholder="Sök namn, adress, telefon eller e-post" aria-label="Sök kund" value="${esc(custQ)}">`:''}
+    <div class="clist">${rows || (customers.length?emptyBox('Ingen kund matchar','Prova ett annat sökord.'):emptyBox('Inga kunder än','Lägg till en kund här, eller skapa en order så sparas kunden automatiskt.'))}</div>
+    ${customers.length?`<p class="hint" style="margin-top:12px">${customers.length} kund${customers.length===1?'':'er'} totalt.</p>`:''}`;
+}
+function renderCustomer(){
+  const el=$('#customerBody'), c=customers.find(x=>x.id===detailId);
+  if(!c){ el.innerHTML=emptyBox('Kunden finns inte','Den kan ha tagits bort.'); return; }
+  if(custDraft && custDraft.id===c.id){ el.innerHTML=`<div class="narrow">${custFormHtml(custDraft)}</div>`; return; }
+  const os=custOrders(c), inv=custInvoices(c), s=custSums(c), act=os.filter(o=>!o.approved);
+  const contact=[c.address&&`<div><dt>Adress</dt><dd>${esc(c.address)} <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}" target="_blank" rel="noopener">Karta ↗</a></dd></div>`,
+    c.phone&&`<div><dt>Telefon</dt><dd><a href="tel:${esc(c.phone.replace(/[^\d+]/g,''))}">${esc(c.phone)}</a></dd></div>`,
+    c.email&&`<div><dt>E-post</dt><dd><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></dd></div>`,
+    c.idno&&`<div><dt>Person-/orgnr</dt><dd>${esc(c.idno)}</dd></div>`].filter(Boolean).join('');
+  el.innerHTML=`<div class="phead"><div style="min-width:0"><h2 style="overflow-wrap:anywhere">${esc(c.name)}</h2>${(c.aka||[]).length?`<p class="hint" style="margin:2px 0 0">Tidigare namn: ${esc(c.aka.join(', '))}</p>`:''}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn primary" data-cu-order="${esc(c.id)}">+ Ny order för kunden</button><button type="button" class="btn" data-cu-edit="${esc(c.id)}" style="background:var(--chip);color:var(--ink)">Ändra</button></div></div>
+    <div class="grid cgrid">
+      <div class="stack"><div class="panel"><h3 class="sub">Kontakt</h3>${contact?`<dl class="kv2">${contact}</dl>`:'<span class="hint">Inga kontaktuppgifter. Tryck Ändra för att lägga till.</span>'}
+        ${c.note?`<p style="margin:12px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--bg);border-radius:8px;padding:8px 10px">${esc(c.note)}</p>`:''}</div>
+        <div class="kpis two ckpis" style="margin:0">${kpi('Ordrar',String(os.length),act.length?`${act.length} pågår`:'Inga pågående')}${kpi('Fakturerat',money(s.billed).replace(',00 kr',' kr'),s.unpaid?`Obetalt ${money(s.unpaid)}`:'Allt betalt',null,s.unpaid>0)}</div>
+        <div>${custDel===c.id?`<button type="button" class="btn danger small" data-cu-delok="${esc(c.id)}">Bekräfta: ta bort kunden</button> <button type="button" class="btn small" data-cu-delno style="background:var(--chip);color:var(--ink)">Avbryt</button><p class="hint">Ordrar och fakturor finns kvar.</p>`:`<button type="button" class="btn small" data-cu-del="${esc(c.id)}" style="background:transparent;color:var(--muted)">Ta bort kunden</button>`}</div>
+      </div>
+      <div class="stack">
+        <div><h3 class="sect" style="margin-top:0">Ordrar</h3>${os.length?`<div class="list">${os.map(o=>`<article class="order">${summaryHtml(o)}</article>`).join('')}</div>`:'<span class="hint">Inga ordrar för kunden än.</span>'}</div>
+        <div><h3 class="sect">Fakturor</h3>${inv.length?`<div class="list" style="gap:8px">${inv.map(i=>`<button type="button" class="invrow" data-openinv="${esc(i.id)}"><span class="num">${esc(i.number)}</span><span class="cust">${esc(i.title)}</span><span class="amt">${money(calc(i).toPay)}</span><span class="sub">${invPill(i)}<span>${fmtDate(i.date)}</span></span></button>`).join('')}</div>`:'<span class="hint">Inga fakturor än.</span>'}</div>
+      </div>
+    </div>`;
+}
+function readCustForm(){ const d={}; CU_FIELDS.forEach(([f])=>d[f]=($('#cu-'+f)?.value||'').trim()); return d; }
+async function saveCustForm(){
+  const d=readCustForm(), cur=custDraft;
+  if(!d.name){ toast('Skriv kundens namn'); $('#cu-name')?.focus(); return; }
+  const clash=findCustomer(d.name); if(clash && clash.id!==cur.id){ toast(`Det finns redan en kund som heter ${clash.name}`); return; }
+  try{
+    if(cur.id){
+      const old=customers.find(x=>x.id===cur.id)||{}; const renamed=!sameName(old.name,d.name);
+      const aka=renamed?[...new Set([...(old.aka||[]),old.name].filter(n=>n&&!sameName(n,d.name)))]:(old.aka||[]);
+      await db.doc('customers/'+cur.id).update({...d, aka, updatedAt:Date.now()});
+      if(renamed) for(const o of custOrders(old).filter(o=>!o.approved)) await writeOrder(o,{customer:d.name});
+      custDraft=null; toast('Kunden är sparad'); render();
+    } else {
+      let id=slug(d.name)||uid('c'); if(customers.some(x=>x.id===id)) id=id+'-'+uid('').slice(-4);
+      await db.doc('customers/'+id).set({...d, aka:[], createdAt:Date.now(), updatedAt:Date.now()});
+      custDraft=null; toast(`${d.name} är tillagd`); go('kund-'+id);
+    }
+  }catch(err){ writeErr(err); }
+}
+function onCustClick(e){
+  const b=e.target.closest('button,[data-openinv]'); if(!b) return;
+  if(b.dataset.openinv){ openInvoice(b.dataset.openinv); return; }
+  if(b.hasAttribute('data-cu-new')){ custDraft={id:null}; render(); setTimeout(()=>$('#cu-name')?.focus(),0); return; }
+  if(b.hasAttribute('data-cu-cancel')){ custDraft=null; render(); return; }
+  if(b.dataset.cuEdit){ custDraft={...customers.find(x=>x.id===b.dataset.cuEdit)}; render(); setTimeout(()=>$('#cu-name')?.focus(),0); return; }
+  if(b.dataset.cuDel){ custDel=b.dataset.cuDel; render(); return; }
+  if(b.hasAttribute('data-cu-delno')){ custDel=null; render(); return; }
+  if(b.dataset.cuDelok){ const id=b.dataset.cuDelok; custDel=null; db.doc('customers/'+id).delete().then(()=>{ toast('Kunden är borttagen'); go('kunder'); }).catch(writeErr); return; }
+  if(b.dataset.cuOrder){ const c=customers.find(x=>x.id===b.dataset.cuOrder); if(!c) return; resetForm();
+    $('#f-customer').value=c.name; $('#f-address').value=c.address||''; $('#f-custEmail').value=c.email||''; $('#f-custId').value=c.idno||'';
+    if(c.note && !$('#f-desc').value) $('#f-desc').value=c.note;
+    $('#newBack').href='#kund-'+c.id; $('#newBack').textContent='← '+c.name; go('ny-order'); return; }
+}
+['#custBody','#customerBody'].forEach(id=>{
+  $(id).addEventListener('click', onCustClick);
+  $(id).addEventListener('submit', e=>{ if(e.target.id==='cuForm'){ e.preventDefault(); saveCustForm(); } });
+  $(id).addEventListener('input', e=>{ if(e.target.id==='cu-q'){ custQ=e.target.value; render(); } else if(custDraft && e.target.id&&e.target.id.startsWith('cu-')) custDraft[e.target.id.slice(3)]=e.target.value; });
+});
+
+/* ---------- Materialregister ---------- */
+let articles=[], pubArticles=[], artQ='', artEdit=null, artDel=null, artImport=null;
+const ART_UNITS=['st','m','m²','m³','kg','l','paket','rulle','förp','tim'];
+const markupPct=()=> company.markup===undefined||company.markup==='' ? 20 : num(company.markup);
+const artPrice=a=> a ? (num(a.price) || (num(a.cost) ? Math.round(num(a.cost)*(1+markupPct()/100)*100)/100 : 0)) : 0;
+const findArticle=(id,name)=> (id&&articles.find(a=>a.id===id)) || (name&&articles.find(a=>sameName(a.name,name)||(a.artno&&sameName(a.artno,name)))) || null;
+const findPubArticle=name=> name ? pubArticles.find(a=>sameName(a.name,name)) : null;
+function matLine(m){ const a=findArticle(m.aid,m.name); return {kind:'material', text:m.name, qty:num(m.qty)||1, unit:m.unit||(a&&a.unit)||'st', price:a?artPrice(a)||'':''}; }
+function renderArtList(){ const dl=$('#artList'); if(dl) dl.innerHTML=pubArticles.map(a=>`<option value="${esc(a.name)}">${esc(a.unit||'st')}</option>`).join(''); }
+async function publishArticles(list){ try{ await db.doc('public/articles').set({items:list.map(a=>({id:a.id,name:a.name,unit:a.unit||'st'})).sort((x,y)=>x.name.localeCompare(y.name,'sv')), updatedAt:Date.now()}); }catch(_){} }
+function unregisteredMats(){
+  const seen=new Map(); orders.forEach(o=>matsOf(o.id).forEach(m=>{ const n=(m.name||'').trim(); if(n && !findArticle(m.aid,n) && !seen.has(n.toLowerCase())) seen.set(n.toLowerCase(),n); }));
+  return [...seen.values()].slice(0,12);
+}
+function artFormHtml(d){
+  const auto = num(d.cost) ? Math.round(num(d.cost)*(1+markupPct()/100)*100)/100 : 0;
+  return `<form class="panel" id="artForm" novalidate style="display:grid;gap:10px">
+    <h3 class="sub">${d.id?'Ändra artikel':'Ny artikel'}</h3>
+    <label class="f">Benämning<input type="text" id="ar-name" value="${esc(d.name||'')}" placeholder="T.ex. Väggfärg 10 l"></label>
+    <div class="row2"><label class="f">Artikelnummer<input type="text" id="ar-artno" value="${esc(d.artno||'')}" placeholder="Valfritt"></label>
+      <label class="f">Enhet<select id="ar-unit">${ART_UNITS.map(u=>`<option${(d.unit||'st')===u?' selected':''}>${u}</option>`).join('')}</select></label></div>
+    <div class="row2"><label class="f">Inköpspris exkl. moms<input type="text" id="ar-cost" inputmode="decimal" value="${esc(d.cost??'')}" placeholder="t.ex. 420"></label>
+      <label class="f">Kundpris exkl. moms<input type="text" id="ar-price" inputmode="decimal" value="${esc(d.price??'')}" placeholder="${auto?`${fmtNum(auto)} (inköp + ${fmtNum(markupPct())} %)`:'Lämna tomt = inköp + påslag'}"></label></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="submit" class="btn primary">Spara artikel</button><button type="button" class="btn" data-ar-cancel style="background:var(--chip);color:var(--ink)">Avbryt</button></div>
+  </form>`;
+}
+function renderArticles(){
+  const el=$('#artBody'), q=artQ.trim().toLowerCase();
+  const list=articles.filter(a=>!q||[a.name,a.artno].some(v=>(v||'').toLowerCase().includes(q)));
+  const rows=list.map(a=>{ const p=artPrice(a), margin=num(a.cost)&&p?Math.round(100*(p-num(a.cost))/p):null;
+    if(artEdit&&artEdit.id===a.id) return `<li class="arow edit">${artFormHtml(artEdit)}</li>`;
+    return `<li class="arow"><div class="an"><b>${esc(a.name)}</b><span>${a.artno?`Art.nr ${esc(a.artno)} · `:''}per ${esc(a.unit||'st')}</span></div>
+      <div class="ap"><span class="m">${p?money(p):'<span class="hint">Pris saknas</span>'}</span><small>${num(a.cost)?`Inköp ${money(num(a.cost))}${margin!==null?` · TG ${margin} %`:''}`:''}${!num(a.price)&&num(a.cost)?' · auto':''}</small></div>
+      <div class="aa">${artDel===a.id?`<button type="button" class="btn danger small" data-ar-delok="${esc(a.id)}">Ta bort</button><button type="button" class="btn small" data-ar-delno style="background:var(--chip);color:var(--ink)">Avbryt</button>`:`<button type="button" class="linkbtn" data-ar-edit="${esc(a.id)}">Ändra</button><button type="button" class="linkbtn" data-ar-del="${esc(a.id)}" style="color:var(--muted)">Ta bort</button>`}</div></li>`; }).join('');
+  const unreg=unregisteredMats();
+  el.innerHTML=`<div class="lhead"><div><h2>Material och priser</h2><p class="hint" style="margin:2px 0 0">De anställda väljer material från listan (utan priser). Fakturan får rätt pris automatiskt.</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${artImport===null?'<button type="button" class="btn" data-ar-import style="background:var(--chip);color:var(--ink)">Klistra in prislista</button>':''}${artEdit&&!artEdit.id?'':'<button type="button" class="btn primary" data-ar-new>+ Ny artikel</button>'}</div></div>
+    <div class="grid agrid">
+      <div class="stack">
+        ${artEdit&&!artEdit.id?artFormHtml(artEdit):''}
+        ${artImport!==null?`<div class="panel" style="display:grid;gap:10px"><h3 class="sub">Klistra in prislista</h3>
+          <span class="hint">En artikel per rad: <b>benämning; artikelnummer; enhet; inköpspris; kundpris</b>. Bara benämningen måste finnas. Du kan klistra in direkt från Excel.</span>
+          <textarea id="ar-imp" rows="7" placeholder="Väggfärg 10 l; 12345; st; 520; 690&#10;Spackel 3 l;;st;89&#10;Fönsterbleck;;m;180;290">${esc(artImport)}</textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn primary" data-ar-impok>Lägg till artiklarna</button><button type="button" class="btn" data-ar-impno style="background:var(--chip);color:var(--ink)">Avbryt</button></div></div>`:''}
+        ${articles.length?`<input type="search" id="ar-q" class="search" style="margin:0" placeholder="Sök benämning eller artikelnummer" aria-label="Sök artikel" value="${esc(artQ)}">`:''}
+        ${rows?`<ul class="alist">${rows}</ul>`:articles.length?emptyBox('Ingen artikel matchar','Prova ett annat sökord.'):emptyBox('Inget material än','Lägg till det material ni använder mest, eller klistra in leverantörens prislista.')}
+      </div>
+      <div class="stack">
+        <div class="panel" style="display:grid;gap:8px"><h3 class="sub" style="margin:0">Påslag på material</h3>
+          <label class="f">Procent på inköpspriset<input type="text" id="ar-markup" inputmode="decimal" value="${esc(company.markup??'')}" placeholder="20"></label>
+          <span class="hint">Används när en artikel saknar kundpris. Nu: ${fmtNum(markupPct())} %.</span>
+          <button type="button" class="btn small primary" data-ar-markup style="justify-self:start">Spara påslag</button></div>
+        ${unreg.length?`<div class="panel" style="display:grid;gap:8px"><h3 class="sub" style="margin:0">Rapporterat men saknas i registret</h3>
+          <span class="hint">Material som de anställda har skrivit in själva. Lägg till med pris så blir nästa faktura rätt.</span>
+          <div class="chips">${unreg.map(n=>`<button type="button" class="chipbtn" data-ar-from="${esc(n)}">+ ${esc(n)}</button>`).join('')}</div></div>`:''}
+      </div>
+    </div>`;
+}
+function readArtForm(){ return {name:($('#ar-name')?.value||'').trim(), artno:($('#ar-artno')?.value||'').trim(), unit:$('#ar-unit')?.value||'st', cost:($('#ar-cost')?.value||'').trim(), price:($('#ar-price')?.value||'').trim()}; }
+async function saveArticle(){
+  const d=readArtForm(); if(!d.name){ toast('Skriv vad artikeln heter'); $('#ar-name')?.focus(); return; }
+  const clash=articles.find(a=>sameName(a.name,d.name)&&a.id!==artEdit.id); if(clash){ toast(`${clash.name} finns redan`); return; }
+  const data={name:d.name, artno:d.artno, unit:d.unit, cost:d.cost===''?'':num(d.cost), price:d.price===''?'':num(d.price), updatedAt:Date.now()};
+  try{ const ref=artEdit.id?db.doc('articles/'+artEdit.id):db.collection('articles').doc(); await ref.set(data);
+    const next=[...articles.filter(a=>a.id!==ref.id), {id:ref.id,...data}]; artEdit=null; await publishArticles(next); toast(`${d.name} är sparad`); render(); }
+  catch(err){ writeErr(err); }
+}
+async function importArticles(){
+  const txt=$('#ar-imp')?.value||''; const added=[];
+  const rows=txt.split(/\r?\n/).map(r=>r.split(/\t|;/).map(x=>x.trim())).filter(r=>r[0]);
+  if(!rows.length){ toast('Klistra in minst en rad'); return; }
+  try{
+    for(const [name,artno='',unit='',cost='',price=''] of rows){
+      const u=ART_UNITS.find(x=>sameName(x,unit))||'st', ex=articles.find(a=>sameName(a.name,name));
+      const data={name, artno, unit:u, cost:cost===''?'':num(cost), price:price===''?'':num(price), updatedAt:Date.now()};
+      const ref=ex?db.doc('articles/'+ex.id):db.collection('articles').doc(); await ref.set(data); added.push({id:ref.id,...data});
+    }
+    const ids=new Set(added.map(a=>a.id)); await publishArticles([...articles.filter(a=>!ids.has(a.id)),...added]);
+    artImport=null; toast(`${added.length} artikl${added.length===1?'':'ar'} sparade`); render();
+  }catch(err){ writeErr(err); }
+}
+$('#artBody').addEventListener('click', async e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.hasAttribute('data-ar-new')){ artEdit={id:null,unit:'st'}; render(); setTimeout(()=>$('#ar-name')?.focus(),0); return; }
+  if(b.dataset.arFrom){ artEdit={id:null,name:b.dataset.arFrom,unit:'st'}; render(); window.scrollTo(0,0); setTimeout(()=>$('#ar-cost')?.focus(),0); return; }
+  if(b.dataset.arEdit){ artEdit={...articles.find(a=>a.id===b.dataset.arEdit)}; render(); setTimeout(()=>$('#ar-name')?.focus(),0); return; }
+  if(b.hasAttribute('data-ar-cancel')){ artEdit=null; render(); return; }
+  if(b.dataset.arDel){ artDel=b.dataset.arDel; render(); return; }
+  if(b.hasAttribute('data-ar-delno')){ artDel=null; render(); return; }
+  if(b.dataset.arDelok){ const id=b.dataset.arDelok; artDel=null; try{ await db.doc('articles/'+id).delete(); await publishArticles(articles.filter(a=>a.id!==id)); toast('Artikeln är borttagen'); }catch(err){ writeErr(err); } return; }
+  if(b.hasAttribute('data-ar-import')){ artImport=''; render(); setTimeout(()=>$('#ar-imp')?.focus(),0); return; }
+  if(b.hasAttribute('data-ar-impno')){ artImport=null; render(); return; }
+  if(b.hasAttribute('data-ar-impok')){ importArticles(); return; }
+  if(b.hasAttribute('data-ar-markup')){ const v=($('#ar-markup')?.value||'').trim(); if(v!==''&&!(num(v)>=0&&num(v)<=500)){ toast('Skriv påslaget i procent, t.ex. 20'); return; }
+    try{ await db.doc('settings/company').set({...company, markup:v===''?'':num(v)}); toast(`Påslaget är ${v===''?'20 % (standard)':fmtNum(num(v))+' %'}`); }catch(err){ writeErr(err); } return; }
+});
+$('#artBody').addEventListener('submit', e=>{ if(e.target.id==='artForm'){ e.preventDefault(); saveArticle(); } });
+$('#artBody').addEventListener('input', e=>{ const id=e.target.id||'';
+  if(id==='ar-q'){ artQ=e.target.value; render(); return; }
+  if(id==='ar-imp'){ artImport=e.target.value; return; }
+  if(artEdit && ['ar-name','ar-artno','ar-unit','ar-cost','ar-price'].includes(id)){ artEdit[id.slice(3)]=e.target.value; if(id==='ar-cost'){ const p=$('#ar-price'); const c=num(e.target.value); if(p) p.placeholder=c?`${fmtNum(Math.round(c*(1+markupPct()/100)*100)/100)} (inköp + ${fmtNum(markupPct())} %)`:'Lämna tomt = inköp + påslag'; } }
+});
+$('#artBody').addEventListener('change', e=>{ if(artEdit && e.target.id==='ar-unit') artEdit.unit=e.target.value; });
+
 /* company settings */
 const coFields=['name','orgnr','vatno','address','phone','email','bankgiro','rate','terms','startNo','rotCap'];
 let coDirty=false;
+function renderLogoBox(){
+  const el=$('#logoBox'); if(!el) return;
+  el.innerHTML=`<div class="lprev">${company.logo?`<img src="${esc(company.logo)}" alt="Företagets logga">`:'Ingen logga'}</div>
+    <div class="lt"><b>Logga</b><span class="hint">Visas överst i appen för alla i företaget och på fakturorna. PNG med genomskinlig bakgrund blir snyggast.</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn small primary" data-logo-up>${company.logo?'Byt logga':'Ladda upp logga'}</button>${company.logo?'<button type="button" class="btn small" data-logo-rm style="background:var(--surface);color:var(--ink)">Ta bort</button>':''}</div></div>`;
+}
+function loadImg(file){ return new Promise((res,rej)=>{ const u=URL.createObjectURL(file), im=new Image(); im.onload=()=>{ res(im); setTimeout(()=>URL.revokeObjectURL(u),1000); }; im.onerror=()=>{ URL.revokeObjectURL(u); rej(new Error('bad image')); }; im.src=u; }); }
+async function logoFromFile(file){
+  const im=await loadImg(file); let w=im.naturalWidth||im.width||480, h=im.naturalHeight||im.height||160;
+  const s=Math.min(1, 480/w, 160/h); w=Math.max(1,Math.round(w*s)); h=Math.max(1,Math.round(h*s));
+  const c=document.createElement('canvas'); c.width=w; c.height=h; const g=c.getContext('2d'); g.drawImage(im,0,0,w,h);
+  let url=c.toDataURL('image/png');
+  if(url.length>180000){ const c2=document.createElement('canvas'); c2.width=w; c2.height=h; const g2=c2.getContext('2d'); g2.fillStyle='#fff'; g2.fillRect(0,0,w,h); g2.drawImage(c,0,0); url=c2.toDataURL('image/jpeg',0.86); }
+  return {logo:url, logoW:w, logoH:h};
+}
+async function saveLogo(lg){
+  await db.doc('settings/company').set({...company, ...lg});
+  await db.doc('public/info').set({...publicInfo, logo:lg.logo||'', ownerId:meId});
+}
+$('#logoBox').addEventListener('click', async e=>{
+  const b=e.target.closest('button'); if(!b||!db) return;
+  if(b.hasAttribute('data-logo-up')){ $('#logoInput').click(); return; }
+  if(b.hasAttribute('data-logo-rm')){ try{ await saveLogo({logo:'',logoW:0,logoH:0}); toast('Loggan är borttagen'); }catch(err){ writeErr(err); } }
+});
+$('#logoInput').addEventListener('change', async e=>{
+  const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f) return;
+  if(f.size>8e6){ toast('Bilden är för stor (max 8 MB)'); return; }
+  try{ const lg=await logoFromFile(f); await saveLogo(lg); toast('Loggan är sparad'); }
+  catch(err){ toast(err&&err.message==='bad image'?'Kunde inte läsa bilden – prova PNG eller JPG':'Kunde inte spara loggan'); }
+});
+function brandLogo(){ const src=company.logo||publicInfo.logo||''; const im=$('#coLogo'), row=im&&im.closest('.brandrow'); if(!im) return;
+  if(src){ if(im.getAttribute('src')!==src) im.src=src; im.alt=company.name||publicInfo.name||'Logga'; im.hidden=false; row.classList.add('haslogo'); }
+  else { im.hidden=true; im.removeAttribute('src'); row.classList.remove('haslogo'); } }
 function fillCompany(){
+  renderLogoBox();
   $('#coState').textContent = company.name && company.bankgiro ? '' : 'Behöver fyllas i';
   if(!company.name || !company.bankgiro) $('#coPanel').open=true;
   if(coDirty) return;
@@ -2407,7 +2738,7 @@ $('#coForm').addEventListener('input', ()=>{ coDirty=true; });
 $('#coForm').addEventListener('submit', async e=>{
   e.preventDefault(); if(!db) return;
   const data={}; coFields.forEach(f=>data[f]=$('#co-'+f).value.trim()); data.fskatt=$('#co-fskatt').checked;
-  try{ await db.doc('settings/company').set(data); if(data.name) db.doc('public/info').set({...publicInfo, name:data.name, ownerId:meId}).catch(()=>{}); coDirty=false; toast('Företagsuppgifterna är sparade'); if(data.name&&data.bankgiro) $('#coPanel').open=false; }
+  try{ await db.doc('settings/company').set({...company, ...data}); if(data.name) db.doc('public/info').set({...publicInfo, name:data.name, ownerId:meId}).catch(()=>{}); coDirty=false; toast('Företagsuppgifterna är sparade'); if(data.name&&data.bankgiro) $('#coPanel').open=false; }
   catch(err){ toast('Kunde inte spara uppgifterna'); }
 });
 
@@ -2482,7 +2813,7 @@ function renderEditor(){
     ${mailShown?`<div class="panel" style="display:grid;gap:6px"><h4 class="hint" style="text-transform:uppercase;letter-spacing:.06em;font-weight:600">Mejl till ${esc(inv.customer.email||'kunden')}</h4><textarea id="mailText" readonly style="min-height:170px">${esc(mailText(inv))}</textarea></div>`:''}
     <div class="sheet">
       <div class="hd">
-        <div class="co"><b>${esc(company.name||'Ditt företag')}</b>${[company.address, company.orgnr&&'Org.nr '+company.orgnr, company.phone, company.email].filter(Boolean).map(esc).join('<br>')}</div>
+        <div class="co">${company.logo?`<img src="${esc(company.logo)}" alt="${esc(company.name||'Logga')}">`:''}<b>${esc(company.name||'Ditt företag')}</b>${[company.address, company.orgnr&&'Org.nr '+company.orgnr, company.phone, company.email].filter(Boolean).map(esc).join('<br>')}</div>
         <div style="display:grid;gap:10px"><div class="ft">${inv.creditOf?'KREDIT&shy;FAKTURA':'FAKTURA'}</div>${inv.creditOf?`<span class="hint">Krediterar faktura ${esc(inv.creditOf)}</span>`:''}
           <div class="kv"><span>Fakturanr</span><span style="font-family:var(--mono)">${esc(inv.number)}</span>
           <span>Datum</span><span>${d('date',inv.date)}</span><span>Förfaller</span><span>${d('dueDate',inv.dueDate)}</span>
@@ -2494,7 +2825,7 @@ function renderEditor(){
       </div>
       <div><h4 style="margin-bottom:6px">Avser: ${esc(inv.title)}</h4>
         <div class="tablewrap"><table class="lines"><thead><tr><th>Typ</th><th>Beskrivning</th><th class="r">Antal</th><th>Enhet</th><th class="r">À-pris</th><th class="r">Belopp</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
-        ${ed?`<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button type="button" class="btn ghost" data-act="addwork">+ Arbetsrad</button><button type="button" class="btn ghost" data-act="addmat">+ Materialrad</button>${priceTpls.length?`<select id="iv-addtpl" aria-label="Lägg till från prismall" style="width:auto;max-width:100%"><option value="">Lägg till från prismall…</option>${priceTpls.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')}</select>`:''}</div>`:''}
+        ${ed?`<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button type="button" class="btn ghost" data-act="addwork">+ Arbetsrad</button><button type="button" class="btn ghost" data-act="addmat">+ Materialrad</button>${priceTpls.length?`<select id="iv-addtpl" aria-label="Lägg till från prismall" style="width:auto;max-width:100%"><option value="">Lägg till från prismall…</option>${priceTpls.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')}</select>`:''}${articles.length?`<select id="iv-addart" aria-label="Lägg till från materialregistret" style="width:auto;max-width:100%"><option value="">Lägg till material från registret…</option>${articles.map(a=>`<option value="${esc(a.id)}">${esc(a.name)}${artPrice(a)?' – '+esc(money(artPrice(a)))+'/'+esc(a.unit||'st'):''}</option>`).join('')}</select>`:''}${(()=>{ const n=inv.lines.filter(l=>l.kind==='material'&&!num(l.price)&&artPrice(findArticle(null,l.text))).length; return n?`<button type="button" class="btn ghost" data-act="fillmat">Hämta ${n} materialpris${n>1?'er':''} från registret</button>`:''; })()}</div>`:''}
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
         <div style="display:grid;gap:6px;flex:1 1 220px">
@@ -2520,6 +2851,7 @@ $('#invWrap').addEventListener('input', e=>{
   $('#totals').innerHTML=totalsHtml(editInv); scheduleSave();
 });
 $('#invWrap').addEventListener('change', e=>{
+  if(e.target.id==='iv-addart' && editInv){ const a=articles.find(x=>x.id===e.target.value); if(a){ editInv.lines.push({kind:'material',text:a.name,qty:1,unit:a.unit||'st',price:artPrice(a)||''}); renderEditor(); scheduleSave(); toast(`${a.name} tillagd – ändra antal vid behov`); } return; }
   if(e.target.id==='iv-addtpl' && editInv){ const t=priceTpls.find(x=>x.id===e.target.value); if(t){ editInv.lines.push(...tplLines(t, findOrder(editInv.orderId))); renderEditor(); scheduleSave(); toast(`Rader från ${t.name} tillagda`); } return; }
   const f=e.target.dataset.f; if(!f||!editInv) return;
   if(e.target.type==='checkbox'||e.target.tagName==='SELECT'){ setPath(editInv,f,e.target.type==='checkbox'?e.target.checked:e.target.value); renderEditor(); scheduleSave(); }
@@ -2531,6 +2863,7 @@ $('#invWrap').addEventListener('click', async e=>{
   const a=b.dataset.act;
   if(a==='close') return closeInvoice();
   if(a==='addwork'){ editInv.lines.push({kind:'arbete',text:'Arbete',qty:'',unit:'tim',price:num(company.rate)||''}); renderEditor(); scheduleSave(); return; }
+  if(a==='fillmat'){ let n=0; editInv.lines.forEach(l=>{ if(l.kind==='material'&&!num(l.price)){ const ar=findArticle(null,l.text), p=artPrice(ar); if(p){ l.price=p; if(!l.unit||l.unit==='st') l.unit=ar.unit||'st'; n++; } } }); renderEditor(); scheduleSave(); toast(`${n} pris${n>1?'er':''} ifyllda`); return; }
   if(a==='addmat'){ editInv.lines.push({kind:'material',text:'',qty:1,unit:'st',price:''}); renderEditor(); scheduleSave(); return; }
   if(a==='reload'){ const o=findOrder(editInv.orderId); if(o){ editInv.lines=invoiceLines(o); renderEditor(); scheduleSave(); toast('Raderna är uppdaterade från ordern'); } else toast('Ordern finns inte längre'); return; }
   if(a==='credit'){ if(!editInv.confirmCredit){ editInv.confirmCredit=true; renderEditor(); return; } const orig=invById(editInv.id)||editInv; await flushSave(); closeInvoice(); creditInvoice(orig); return; }
@@ -2557,18 +2890,19 @@ const pdfSafe = s => String(s??'').replace(/[   ]/g,' ').replace(/−/g,'-'
 async function downloadPdf(inv){
   if(!window.jspdf){ toast('PDF-verktyget kunde inte laddas'); return; }
   const doc=new window.jspdf.jsPDF({unit:'mm',format:'a4'});
-  const W=210, L=18, R=W-18; let y=22;
+  const W=210, L=18, R=W-18; let y=22; const y0=y;
   const T=(t,x,yy,o)=>doc.text(pdfSafe(t),x,yy,o);
+  if(company.logo && company.logoW && company.logoH){ try{ let h=16, w=h*company.logoW/company.logoH; if(w>62){ w=62; h=w*company.logoH/company.logoW; } doc.addImage(company.logo, /^data:image\/png/.test(company.logo)?'PNG':'JPEG', L, y-7, w, h); y+=h-1; }catch(_){} }
   doc.setFont('helvetica','bold'); doc.setFontSize(16); T(company.name||'Ditt företag',L,y);
   doc.setFont('helvetica','normal'); doc.setFontSize(9);
   const coL=[company.address, company.orgnr&&'Org.nr '+company.orgnr, company.phone, company.email].filter(Boolean);
   coL.forEach((l,i)=>T(l,L,y+6+i*4.5));
-  doc.setFont('helvetica','bold'); doc.setFontSize(22); T(inv.creditOf?'KREDITFAKTURA':'FAKTURA',R,y,{align:'right'});
+  doc.setFont('helvetica','bold'); doc.setFontSize(22); T(inv.creditOf?'KREDITFAKTURA':'FAKTURA',R,y0,{align:'right'});
   doc.setFontSize(9);
   const kv=[['Fakturanummer',inv.number],['Fakturadatum',inv.date],['Förfallodatum',inv.dueDate],['Utfört',inv.performed],['Er referens',inv.orderNo]];
   if(inv.creditOf) kv.push(['Krediterar faktura',inv.creditOf]);
-  kv.forEach(([k,v],i)=>{ doc.setFont('helvetica','normal'); T(k,R-42,y+8+i*5,{align:'right'}); doc.setFont('helvetica','bold'); T(v||'',R,y+8+i*5,{align:'right'}); });
-  y=Math.max(y+8+kv.length*5, y+6+coL.length*4.5)+8;
+  kv.forEach(([k,v],i)=>{ doc.setFont('helvetica','normal'); T(k,R-42,y0+8+i*5,{align:'right'}); doc.setFont('helvetica','bold'); T(v||'',R,y0+8+i*5,{align:'right'}); });
+  y=Math.max(y0+8+kv.length*5, y+6+coL.length*4.5)+8;
   doc.setFontSize(8); doc.setTextColor(110); T('KUND',L,y); doc.setTextColor(0);
   doc.setFont('helvetica','normal'); doc.setFontSize(10);
   const rotOn=inv.rot&&inv.rot.on&&!inv.reverseVat;
@@ -2617,6 +2951,7 @@ async function boot(){
     $('#who').innerHTML=`<a href="#profil" title="Min profil"><img src="${esc(me.avatarUrl)}" alt=""><span id="whoName">${esc(me.name||'Min profil')}</span></a>`; meAvatar=me.avatarUrl;
   }
   db.doc('public/info').onSnapshot(s=>{ publicInfo=s.exists?(s.data()||{}):{}; render(); }, ()=>{});
+  db.doc('public/articles').onSnapshot(s=>{ pubArticles=s.exists?((s.data()||{}).items||[]):[]; renderArtList(); }, ()=>{});
   const subbed=new Set();
   const subTime=uid=>{ if(!uid||subbed.has(uid)) return; subbed.add(uid);
     db.collection(`work/${uid}/time`).onSnapshot(sn=>{ const m={}; sn.docs.forEach(d=>m[d.id]=d.data()||{}); otherTime[uid]=m; render(); }, ()=>{});
@@ -2680,11 +3015,12 @@ async function boot(){
       if(view==='invoice' && !editInv && detailId) openInvoiceView(detailId);
     }, ()=>{});
     db.doc('settings/company').onSnapshot(snap=>{
-      company=snap.exists?(snap.data()||{}):{}; if(!snap.metadata.fromCache) ready.co=true; fillCompany(); render();
+      company=snap.exists?(snap.data()||{}):{}; if(!snap.metadata.fromCache) ready.co=true; fillCompany(); render(); if(view==='invoice'&&editInv) renderEditor();
       if(!snap.metadata.fromCache && ((company.name && publicInfo.name!==company.name) || publicInfo.ownerId!==meId)) db.doc('public/info').set({...publicInfo, name:company.name||publicInfo.name||'', ownerId:meId}).catch(()=>{});
     }, ()=>{});
     RT().use('downloads').then(d=>{ downloads=d; });
-    db.collection('customers').orderBy('name').onSnapshot(snap=>{ customers=snap.docs.map(d=>({id:d.id,...d.data()})); renderCustomerList(); }, ()=>{});
+    db.collection('customers').orderBy('name').onSnapshot(snap=>{ customers=snap.docs.map(d=>({id:d.id,...d.data()})); renderCustomerList(); render(); }, ()=>{});
+    db.collection('articles').orderBy('name').onSnapshot(snap=>{ articles=snap.docs.map(d=>({id:d.id,...d.data()})); render(); if(view==='invoice'&&editInv) renderEditor(); }, ()=>{});
     db.collection('custpriv').onSnapshot(snap=>{ const m={}; snap.docs.forEach(d=>m[d.id]=d.data()||{}); custPriv=m; }, ()=>{});
     db.collection('pricetpl').orderBy('name').onSnapshot(snap=>{
       priceTpls=snap.docs.map(d=>({id:d.id,...d.data()})); renderPriceSelect(); if(!ptEdit) renderPriceTpls(); render();
