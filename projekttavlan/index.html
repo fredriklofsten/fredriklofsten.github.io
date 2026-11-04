@@ -20,6 +20,7 @@
   --display:'Barlow Condensed','Arial Narrow',sans-serif;
   --body:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  --paper:#FFFFFF; --paper-line:#9AA6AF;
   --radius:14px; --shadow:0 1px 2px rgb(16 27 36 / .06), 0 3px 10px rgb(16 27 36 / .05); --shadow-hover:0 6px 22px rgb(16 27 36 / .11); --shadow-up:0 -3px 14px rgb(16 27 36 / .07);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
@@ -414,6 +415,69 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
 .stack{display:grid;gap:16px}
 @media (max-width:480px){.row2{grid-template-columns:1fr}.tabs{margin-left:0;width:100%}.tabs button{flex:1}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ---- timer, planning, ÄTA, signatures ---- */
+.timerchip{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:var(--ok-bg);color:var(--ok);border-radius:20px;padding:5px 12px;font:700 14px var(--mono);text-decoration:none}
+.timerchip:not([hidden])+.who{margin-left:0}
+.timercard{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;margin:14px 0}
+.timercard>div{flex:1 1 220px;display:grid;gap:6px;min-width:0}
+.timercard .lbl{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.timercard.on{border-color:transparent;background:var(--ok-bg)}
+.timercard.on .tlive{font:700 36px var(--mono);color:var(--ok);line-height:1}
+.timercard.on a{color:var(--ink);font-weight:600}
+.timercard .btn{padding:14px 22px;font-size:16px}
+.todaylist{display:grid;gap:8px;margin:0 0 6px}
+.trow{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--ink);text-decoration:none;box-shadow:var(--shadow)}
+.trow b{font-size:15px}
+.trow small{display:block;color:var(--muted)}
+.live{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:10px 14px;margin:12px 0 0;font-size:14px}
+.live .dot{width:10px;height:10px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px var(--ok-bg)}
+.live a{color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:4px;background:var(--chip);border-radius:20px;padding:3px 10px 3px 4px;max-width:100%}
+.live .tlive{font-family:var(--mono);font-weight:700;color:var(--ok)}
+.timerrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--bg);border-radius:10px;padding:8px 10px}
+.timerrow.on{background:var(--ok-bg)}
+.timerrow .tlive{font:700 18px var(--mono);color:var(--ok)}
+.sum-plan{font-size:12.5px;color:var(--accent);font-weight:600}
+.plan-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+table.plan{border-collapse:collapse;width:100%;min-width:920px;table-layout:fixed}
+table.plan th,table.plan td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);vertical-align:top;padding:6px}
+table.plan thead th{font-size:13px;font-weight:600;color:var(--muted);text-align:left;background:var(--bg);font-variant-numeric:tabular-nums}
+table.plan thead th span{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+table.plan thead th.today{color:var(--accent)}
+table.plan td.today{background:var(--chip)}
+table.plan td.we{background:var(--bg)}
+table.plan tbody th{width:150px;text-align:left;font-size:14px;background:var(--surface);position:sticky;left:0;z-index:1}
+table.plan tbody th small{display:block;color:var(--muted);font-weight:400;font-size:12px}
+table.plan thead th:first-child{width:150px;position:sticky;left:0;z-index:2}
+table.plan td{height:86px;cursor:pointer}
+table.plan td:hover{box-shadow:inset 0 0 0 2px var(--line)}
+table.plan td.drop{box-shadow:inset 0 0 0 3px var(--accent)}
+table.plan td .addhint{display:block;text-align:center;color:var(--muted);font-size:18px;opacity:0;line-height:60px}
+table.plan td:hover .addhint{opacity:.6}
+.pchip{display:block;width:100%;text-align:left;border:1px solid var(--line);border-left:4px solid var(--accent);background:var(--surface);color:var(--ink);border-radius:8px;padding:5px 7px;margin-bottom:4px;font:inherit;cursor:grab;box-shadow:var(--shadow)}
+.pchip b{display:block;font-size:12.5px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pchip span{display:block;font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pchip.go{border-left-color:var(--signal)} .pchip.hot{border-left-color:var(--warn)} .pchip.ok{border-left-color:var(--ok);opacity:.7}
+.pchip.sel{outline:3px solid var(--accent);outline-offset:1px}
+.unplanned{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.planbar{display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap;background:var(--accent);color:var(--accent-ink);border-radius:var(--radius);padding:10px 14px;margin-bottom:10px;font-weight:600}
+.planbar button,.planbar a{color:inherit;font:inherit;background:transparent;border:0;text-decoration:underline;cursor:pointer;padding:0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin:10px 0 0}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.ata{background:var(--bg);border-radius:10px;padding:10px 12px;display:grid;gap:6px}
+.ata .mh{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ata p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.ata .mact{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ataform{display:grid;gap:8px;background:var(--bg);border-radius:10px;padding:12px}
+.signed{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.signed img{height:56px;max-width:180px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:2px}
+.signoffbox{background:var(--ok-bg);border-radius:10px;padding:10px 12px}
+.modal{position:fixed;inset:0;z-index:35;background:rgb(10 16 22 / .62);display:grid;place-items:center;overflow:auto;padding:calc(16px + env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
+.mbox{background:var(--surface);border-radius:var(--radius);padding:18px;width:min(640px,100%);display:grid;gap:10px;box-shadow:var(--shadow-hover)}
+.mbox h2{margin:0}
+.sigtext{background:var(--bg);border-radius:10px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}
+.sigpad{position:relative;background:var(--paper);border:2px dashed var(--line);border-radius:12px;touch-action:none}
+.sigpad canvas{display:block;width:100%;height:auto;aspect-ratio:600/220;cursor:crosshair;touch-action:none}
+.sigpad .sigline{position:absolute;left:16px;right:16px;bottom:28px;border-top:1px solid var(--paper-line);font-size:11px;color:var(--paper-line);padding-top:2px;pointer-events:none}
 /* ---- overflow guards ---- */
 .sheetwrap,.sheet,.list,.stack,.days,.actions,.join{grid-template-columns:minmax(0,1fr)}
 .sheetwrap>*,.sheet>*,.list>*,.stack>*,.days>*,.obody>*,.panel>*{min-width:0}
@@ -430,10 +494,11 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
     <details id="demoHow">
       <summary>Så provar du demon</summary>
       <ol>
+        <li>Som <b>Eva</b>: öppna <b>Planering</b> och dra <i>Golvslipning hall</i> till en dag hos Sara. Överst på Ordrar ser du vem som jobbar just nu.</li>
         <li>Som <b>Eva (arbetsgivare)</b>: öppna <i>Byte av fönsterbleck</i>, titta på foton och tid, och tryck <b>Godkänn och skapa faktura</b>.</li>
         <li>På fakturan: kontrollera rader och priser, tryck <b>Markera som skickad</b> och prova <b>Ladda ner PDF</b>.</li>
         <li>Byt till <b>Kalle (anställd)</b>: öppna <i>Montering av köksluckor</i>, gå igenom checklistan och tryck <b>Skicka till arbetsgivaren</b>.</li>
-        <li>Rapportera tid med snabbknapparna och kryssa delmoment i <i>Målning vardagsrum</i>.</li>
+        <li>Som Kalle: stoppa stämpelklockan som går, och låt kunden signera ÄTA:n <i>måla taket i hallen</i> direkt på skärmen.</li>
         <li>Byt tillbaka till Eva och skapa en <b>Ny order</b> med mallen <i>Målning av rum</i>. Kolla sedan <b>Historik</b>.</li>
         <li>Under <b>Anställda</b> ser du teamet. Byt till <b>Jonas (ny anställd)</b> och gå med med koden <b>J8N3WD</b>.</li>
       </ol>
@@ -443,7 +508,7 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
 </div>
 <script>
 (function(){
-  const KEY='pt-demo-v3', RKEY='pt-demo-role', PKEY='pt-demo-photos';
+  const KEY='pt-demo-v4', RKEY='pt-demo-role', PKEY='pt-demo-photos';
   const ls={get(k){try{return localStorage.getItem(k);}catch(_){return null;}},set(k,v){try{localStorage.setItem(k,v);return true;}catch(_){return false;}},del(k){try{localStorage.removeItem(k);}catch(_){}}};
   const PEOPLE={
     u_eva:{name:'Eva Lindqvist',color:'#1E63C4',role:'Arbetsgivare'},
@@ -465,6 +530,7 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
     const st={};
     const put=(p,v)=>{ st[p]=v; };
     put('settings/company',{name:'Exempelbygg AB (demo)',orgnr:'556000-0000',vatno:'SE556000000001',address:'Verkstadsgatan 1, 123 45 Exempelstad',phone:'010-000 00 00',email:'kontakt@exempelbygg.test',bankgiro:'123-4567',rate:'650',terms:'30',startNo:'1001',rotCap:'50000',fskatt:true});
+    put('work/u_kalle/timer/current',{oid:'dm1k7a',start:now-95*60e3});
     put('public/info',{name:'Exempelbygg AB (demo)',ownerId:'u_eva',contactName:'Eva Lindqvist',contactTitle:'VD och arbetsledare',contactPhone:'010-000 00 00',contactEmail:'eva@exempelbygg.test'});
     put('invites/K7M2QX',{name:'Kalle Nyström',contact:'070-000 00 01',createdAt:day(-40,9),createdBy:'u_eva',revoked:false});
     put('invites/S4P9TR',{name:'Sara Ali',contact:'',createdAt:day(-35,9),createdBy:'u_eva',revoked:false});
@@ -480,26 +546,32 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
     put('templates/malning',{name:'Målning av rum',title:'Målning av rum',description:'Två strykningar. Kunden flyttar möbler själv.',priority:'normal',priceTpl:'kvadratmeter',parts:['Täcka golv och möbler','Spackla och slipa','Grundmåla','Färdigmåla två strykningar','Städa och ta bort skydd'],createdAt:now});
     const custs=[['Anna Berg','Björkvägen 3, Exempelstad','anna.berg@exempel.test','19800101-0000'],['Brf Linden','Parkvägen 12, Exempelstad','styrelsen@brflinden.test','769600-0000'],['Erik Ström','Ekbacken 7, Exempelstad','',''],['Maria Holm','Sjögatan 21, Exempelstad','maria.holm@exempel.test','19750505-0000'],['Johan Ek','Tallstigen 2, Exempelstad','','']];
     custs.forEach(([n,a,e,i])=>put('customers/'+n.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-'),{name:n,address:a,email:e,idno:i,updatedAt:now}));
+    const sigSvg=(d)=>'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 220"><path d="${d}" fill="none" stroke="#14212B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`);
+    const SIG1=sigSvg('M60 150 C 80 60, 110 60, 120 140 S 160 170, 175 110 C 185 80, 200 80, 205 130 L 215 150 M240 140 C 260 100, 290 100, 300 135 S 340 160, 360 120 C 380 90, 400 100, 410 140 M430 135 C 450 120, 480 115, 540 125');
+    const SIG2=sigSvg('M70 160 C 90 70, 140 50, 150 120 C 155 160, 120 170, 110 140 M180 140 C 200 110, 230 105, 250 130 S 290 150, 310 115 M330 120 L 345 150 L 370 95 M390 130 C 420 110, 470 105, 530 120');
     const O=[];
     const order=(id,o,prog)=>{ O.push([id,o,prog]); };
     const parts=list=>list.map((t,i)=>({id:'p'+(i+1),text:t}));
     // 1: Kalle, pågår
-    order('dm1k7a',{title:'Målning vardagsrum',customer:'Anna Berg',address:'Björkvägen 3, Exempelstad',description:'Ljusgrå väggar (kulör enligt kund). Nyckel hos grannen på nr 5.',due:ds(3),priority:'normal',priceTpl:'kvadratmeter',rot:true,assignee:'u_kalle',createdBy:'u_eva',createdAt:day(-2,8),
+    order('dm1k7a',{title:'Målning vardagsrum',customer:'Anna Berg',address:'Björkvägen 3, Exempelstad',description:'Ljusgrå väggar (kulör enligt kund). Nyckel hos grannen på nr 5.',due:ds(3),start:ds(-1),days:3,priority:'normal',priceTpl:'kvadratmeter',rot:true,assignee:'u_kalle',createdBy:'u_eva',createdAt:day(-2,8),
       parts:parts(['Täcka golv och möbler','Spackla och slipa','Grundmåla','Färdigmåla två strykningar'])},
       {done:{p1:{by:'u_kalle',at:day(-1,8)},p2:{by:'u_kalle',at:day(-1,15)}},photos:{},notes:{n1:{by:'u_kalle',at:day(-1,15)+20*60e3,text:'Fler sprickor än väntat vid fönstret, tog lite extra tid.',flag:false}},
-       time:{t1:{by:'u_kalle',at:day(-1,16),hours:7,date:ds(-1)}},materials:{m1:{by:'u_kalle',at:day(-1,9),name:'Väggfärg 10 l',qty:2},m2:{by:'u_kalle',at:day(-1,9),name:'Spackel 3 l',qty:1}}});
+       time:{t1:{by:'u_kalle',at:day(-1,16),hours:7,date:ds(-1)}},materials:{m1:{by:'u_kalle',at:day(-1,9),name:'Väggfärg 10 l',qty:2},m2:{by:'u_kalle',at:day(-1,9),name:'Spackel 3 l',qty:1}},
+       atas:{a1:{by:'u_kalle',at:day(0,9),text:'Kunden vill att vi målar även taket i hallen.',kind:'tillagg',hours:3,mat:'Takfärg 3 l',status:'pending'}}});
     // 2: Sara, inskickad för granskning
-    order('dm2s4b',{title:'Byte av fönsterbleck',customer:'Brf Linden',address:'Parkvägen 12, Exempelstad',description:'Sex fönster på gårdssidan, plan 2.',due:ds(1),priority:'urgent',priceTpl:'meter',rot:false,assignee:'u_sara',createdBy:'u_eva',createdAt:day(-4,9),
+    order('dm2s4b',{title:'Byte av fönsterbleck',customer:'Brf Linden',address:'Parkvägen 12, Exempelstad',description:'Sex fönster på gårdssidan, plan 2.',due:ds(1),start:ds(0),days:1,priority:'urgent',priceTpl:'meter',rot:false,assignee:'u_sara',createdBy:'u_eva',createdAt:day(-4,9),
       parts:parts(['Riva gamla bleck','Montera nya bleck','Täta och kontrollera'])},
       {done:{p1:{by:'u_sara',at:day(0,9)},p2:{by:'u_sara',at:day(0,12)},p3:{by:'u_sara',at:day(0,13)}},photos:{p2:['demo-f1','demo-f2']},
        notes:{n1:{by:'u_sara',at:day(0,12)+15*60e3,text:'Ett av blecken var rostigt underifrån – bytte även det.',flag:false}},
        time:{t1:{by:'u_sara',at:day(0,13),hours:6.5,date:ds(0)}},materials:{m1:{by:'u_sara',at:day(0,10),name:'Fönsterbleck, lackad plåt',qty:6},m2:{by:'u_sara',at:day(0,10),name:'Fogmassa',qty:2}},
-       submittedAt:day(0,13)+30*60e3,submittedBy:'u_sara'});
+       submittedAt:day(0,13)+30*60e3,submittedBy:'u_sara',
+       atas:{a1:{by:'u_sara',at:day(0,11),text:'Byta även det rostiga blecket på fönster 7 (ingick inte i ordern).',kind:'tillagg',hours:1,mat:'1 fönsterbleck',status:'approved',custName:'Lena Ström (Brf Linden)',sig:SIG2,signedAt:day(0,11)+10*60e3,decidedBy:'u_sara'}},
+       signoff:{name:'Lena Ström (Brf Linden)',sig:SIG1,at:day(0,13)+20*60e3,by:'u_sara'}});
     // 3: ny, alla anställda
     order('dm3x9c',{title:'Golvslipning hall',customer:'Erik Ström',address:'Ekbacken 7, Exempelstad',description:'Ekparkett ca 12 m². Kunden är hemma efter 15.',due:ds(6),priority:'normal',priceTpl:'lopande',rot:true,assignee:null,createdBy:'u_eva',createdAt:now-50*60e3,
       parts:parts(['Flytta skor och mattor','Grovslipa','Finslipa','Olja två gånger'])},{done:{},photos:{},notes:{}});
     // 4: Kalle, klar men ej inskickad, med avvikelse
-    order('dm4k2d',{title:'Montering av köksluckor',customer:'Johan Ek',address:'Tallstigen 2, Exempelstad',description:'14 luckor och 6 lådfronter, levererade till garaget.',due:ds(2),priority:'normal',priceTpl:'lopande',rot:true,assignee:'u_kalle',createdBy:'u_eva',createdAt:day(-3,10),
+    order('dm4k2d',{title:'Montering av köksluckor',customer:'Johan Ek',address:'Tallstigen 2, Exempelstad',description:'14 luckor och 6 lådfronter, levererade till garaget.',due:ds(2),start:ds(-2),days:1,priority:'normal',priceTpl:'lopande',rot:true,assignee:'u_kalle',createdBy:'u_eva',createdAt:day(-3,10),
       parts:parts(['Demontera gamla luckor','Montera nya luckor','Justera gångjärn och lådor'])},
       {done:{p1:{by:'u_kalle',at:day(-2,9)},p2:{by:'u_kalle',at:day(-2,13)},p3:{by:'u_kalle',at:day(-2,15)}},photos:{},
        notes:{n1:{by:'u_kalle',at:day(-2,11),text:'Två luckor saknades i leveransen. Monterade resten, kunden kontaktar leverantören.',flag:true}},
@@ -662,6 +734,7 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
 <header class="top">
   <div class="top-in">
     <div class="brandrow"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="4" width="28" height="24" rx="7" fill="var(--accent)"/><rect x="7" y="9" width="8" height="14" rx="2" fill="var(--accent-ink)" opacity=".35"/><rect x="17" y="9" width="8" height="9" rx="2" fill="var(--accent-ink)" opacity=".35"/><path d="M18.5 22.5l2.5 2.5 5-5" fill="none" stroke="var(--signal)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="brand">Projekttavlan<small id="roleLabel">Arbetsorder</small></div></div>
+    <a class="timerchip" id="timerChip" href="#ordrar" hidden></a>
     <div class="who" id="who"></div>
   </div>
   <nav class="nav" id="nav" aria-label="Huvudmeny"><div class="nav-in" id="navIn"></div></nav>
@@ -675,6 +748,7 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
     <div class="start" id="startGuide" hidden></div>
     <div class="lhead"><div><h2 id="hello">Översikt</h2><p class="hint" id="helloSub" style="margin:2px 0 0"></p></div><a class="btn primary" href="#ny-order" data-new>+ Ny arbetsorder</a></div>
     <div class="kpis" id="empKpis"></div>
+    <div id="liveNow"></div>
     <div class="actions" id="empActions"></div>
     <h3 class="sect">Aktiva arbetsordrar</h3>
     <input type="search" id="q" class="search" placeholder="Sök kund, adress, uppdrag eller ordernummer" aria-label="Sök bland ordrar">
@@ -710,6 +784,14 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
             </label>
             <label class="f">Klart senast
               <input type="date" id="f-due">
+            </label>
+          </div>
+          <div class="row2">
+            <label class="f">Planerad start
+              <input type="date" id="f-start">
+            </label>
+            <label class="f">Antal arbetsdagar
+              <input type="number" id="f-days" min="1" max="60" value="1" inputmode="numeric">
             </label>
           </div>
           <label class="f">Adress
@@ -830,6 +912,7 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
   <section class="view" id="v-worker" hidden>
     <div class="lhead"><div><h2 id="workTitle">Mina arbetsordrar</h2><p class="hint" id="workSub" style="margin:2px 0 0"></p></div></div>
     <div class="kpis two" id="workKpis"></div>
+    <div id="workToday"></div>
     <div class="actions" id="workActions"></div>
     <div class="list" id="workList"></div>
     <p class="hint" style="margin-top:14px">Inskickade och godkända ordrar finns under <a href="#historik">Historik</a>.</p>
@@ -860,6 +943,7 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
     <div class="panel narrow join" id="joinBox"></div>
   </section>
 
+  <section class="view" id="v-plan" hidden><div id="planBody"></div></section>
   <section class="view" id="v-timesheet" hidden><div id="tsBody"></div></section>
   <section class="view" id="v-sheets" hidden><div id="shBody"></div></section>
   <section class="view" id="v-profile" hidden><div id="profBody"></div></section>
@@ -871,6 +955,17 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
   </section>
 </main>
 <nav class="bnav" id="bnav" aria-label="Meny"></nav>
+<div class="modal" id="sigModal" hidden role="dialog" aria-modal="true" aria-labelledby="sigTitle">
+  <div class="mbox">
+    <h2 id="sigTitle">Kundens godkännande</h2>
+    <div class="sigtext" id="sigText"></div>
+    <label class="f" for="sigName">Kundens namn</label>
+    <input type="text" id="sigName" autocomplete="name" placeholder="För- och efternamn">
+    <div class="sigpad"><canvas id="sigCanvas" width="600" height="220" aria-label="Signera med fingret här"></canvas><span class="sigline">Signera här med fingret</span></div>
+    <div><button type="button" class="linkbtn" id="sigClear">Rensa signaturen</button></div>
+    <div class="mact"><button type="button" class="btn primary" id="sigOk">Godkänn och signera</button><button type="button" class="btn" id="sigDecline" style="background:var(--bad-bg);color:var(--bad)">Kunden avböjer</button><button type="button" class="btn" id="sigCancel" style="background:var(--chip);color:var(--ink)">Avbryt</button></div>
+  </div>
+</div>
 <div class="toast" id="toast" hidden></div>
 <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
 <div class="lightbox" id="lightbox" hidden><img id="lightImg" alt="Foto från arbetsordern"></div>
@@ -888,6 +983,7 @@ const ICON={
   building:'<path d="M4 21V5l8-2v18M12 9h8v12M8 8h.01M8 12h.01M8 16h.01M16 13h.01M16 17h.01M2 21h20"/>',
   users:'<path d="M16 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM21 19v-1a4 4 0 0 0-3-3.9M15.5 3.1a3.5 3.5 0 0 1 0 6.8"/>',
   user:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 7-7h2a7 7 0 0 1 7 7v1"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'
 };
@@ -1006,7 +1102,7 @@ function tmHtml(o, isEmployer){
 function reviewSummary(o){
   const s=stats(o), photos=Object.values(photosOf(o.id)).reduce((n,a)=>n+(a||[]).length,0), h=hoursOf(o.id), mats=matsOf(o.id);
   const row=(ok,txt)=>`<li style="background:var(--surface)"><span aria-hidden="true" style="color:${ok?'var(--ok)':'var(--warn)'};font-weight:700">${ok?'✓':'!'}</span><span>${txt}</span></li>`;
-  return `<ul class="tmrows">${row(s.complete,`${s.n} av ${s.total} delmoment klara`)}${row(h>0, h>0?`${fmtNum(h)} h rapporterade`:'Ingen tid rapporterad')}${row(true, mats.length?`${mats.length} materialrad${mats.length>1?'er':''}: ${esc(mats.map(m=>m.name).join(', '))}`:'Inget material rapporterat')}${row(photos>0, photos?`${photos} foto${photos>1?'n':''}`:'Inga foton')}${row(!openFlag(o), openFlag(o)?'Det finns en öppen avvikelse':'Inga öppna avvikelser')}</ul>`;
+  return `<ul class="tmrows">${row(s.complete,`${s.n} av ${s.total} delmoment klara`)}${row(h>0, h>0?`${fmtNum(h)} h rapporterade`:'Ingen tid rapporterad')}${row(true, mats.length?`${mats.length} materialrad${mats.length>1?'er':''}: ${esc(mats.map(m=>m.name).join(', '))}`:'Inget material rapporterat')}${row(photos>0, photos?`${photos} foto${photos>1?'n':''}`:'Inga foton')}${row(!openFlag(o), openFlag(o)?'Det finns en öppen avvikelse':'Inga öppna avvikelser')}${(()=>{ const pa=atasOf(o.id).filter(a=>a.status==='pending').length; return pa?row(false,`${pa} ÄTA väntar på kundens godkännande`):''; })()}${row(!!signoffOf(o.id), signoffOf(o.id)?`Kunden ${esc(signoffOf(o.id).name)} har signerat`:'Ingen kundsignatur (valfritt)')}</ul>`;
 }
 function workerBanner(o){
   const st=stateOf(o);
@@ -1018,6 +1114,7 @@ function workerBanner(o){
       ${n?`<span style="white-space:pre-wrap;color:var(--ink)">${esc(n.text)}</span>`:''}
       ${ok?reviewSummary(o):''}
       ${ok?'<span style="color:var(--ink);font-weight:400">Kontrollera tid, material och foton nedan. Du kan ändra allt tills du skickar.</span>':''}
+      ${canWrite&&ok&&!signoffOf(o.id)?`<div><button type="button" class="btn small" data-signoff="${o.id}" style="background:var(--surface);color:var(--ink)">Låt kunden signera att arbetet är klart</button></div>`:''}
       ${canWrite?`<div><button type="button" class="btn small primary" data-submit="${o.id}" ${ok?'':'disabled'}>${st==='returned'?'Skicka för granskning igen':'Skicka till arbetsgivaren'}</button>${ok?'':' <span class="hint">Kryssa i alla delmoment först</span>'}</div>`:''}
     </div>`;
   }
@@ -1032,13 +1129,119 @@ function invBarHtml(o){
   if(inv) return `<div class="invbar"><span class="no">Faktura ${esc(inv.number)}</span>${invPill(inv)}<span style="font-family:var(--mono)">${money(calc(inv).toPay)}</span><button type="button" class="btn small primary" data-openinv="${esc(inv.id)}">Öppna faktura</button></div>`;
   const st=stateOf(o);
   if(st==='approved') return `<div class="invbar"><span class="no">Godkänd – faktura saknas</span><button type="button" class="btn small primary" data-mkinv="${o.id}">Skapa faktura</button></div>`;
-  if(st==='review') return `<div class="invbar" style="background:var(--warn-bg)"><span class="no" style="color:var(--ink);font-family:var(--body);font-weight:600">Arbetet är klart. Granska delmoment, foton, tid och material.</span>
+  if(st==='review') return `<div class="invbar" style="background:var(--warn-bg)"><span class="no" style="color:var(--ink);font-family:var(--body);font-weight:600">Arbetet är klart. Granska delmoment, foton, tid och material.${signoffOf(o.id)?' Kunden har signerat.':''}${atasOf(o.id).some(a=>a.status==='pending')?' En ÄTA väntar fortfarande på kunden.':''}</span>
     <button type="button" class="btn small" data-return="${o.id}" style="background:var(--surface);color:var(--ink)">Skicka tillbaka</button>
     <button type="button" class="btn small primary" data-approve="${o.id}">Godkänn och skapa faktura</button></div>`;
   if(st==='returned') return `<div class="invbar"><span class="no" style="color:var(--muted);font-family:var(--body)">Skickad tillbaka – väntar på att den anställde åtgärdar</span></div>`;
   if(st==='ready') return `<div class="invbar"><span class="no" style="color:var(--muted);font-family:var(--body)">Alla delmoment klara – den anställde granskar innan inskick</span></div>`;
   return '';
 }
+
+/* ---------- Planning helpers ---------- */
+function planSpan(o){ if(!o||!o.start) return []; const n=Math.max(1,Math.min(60,Math.round(num(o.days)||1))), out=[]; const d=new Date(o.start+'T12:00:00'); let g=0;
+  while(out.length<n && g<200){ const wd=d.getDay(), ds=localDate(d); if(!(wd===0||wd===6) || ds===o.start) out.push(ds); d.setDate(d.getDate()+1); g++; } return out; }
+const plannedOn=(o,ds)=>planSpan(o).includes(ds);
+function planLabel(o){ const s=planSpan(o); if(!s.length) return ''; const f=x=>new Date(x+'T12:00:00').toLocaleDateString('sv-SE',{weekday:'short',day:'numeric',month:'short'}); return s.length===1?f(s[0]):`${f(s[0])} – ${f(s[s.length-1])}`; }
+function canReassign(o){ const p=prog[o.id]||{}; return !Object.values(p.done||{}).some(Boolean) && !Object.keys(p.time||{}).length && !Object.values(timers).some(t=>t&&t.oid===o.id); }
+async function reassignOrder(o, nu){
+  const old={...o}, moved={...o, assignee:nu||null}; const {id,...data}=moved;
+  const pref=db.doc(progPath(old)); const ps=await pref.get(); const pdata=ps.exists?(ps.data()||{}):{done:{},photos:{},notes:{}};
+  await db.doc('orders/'+o.id).update({assignee:nu||null});
+  await db.doc(copyPath(moved)).set(data);
+  await db.doc(progPath(moved)).set(pdata);
+  if(copyPath(old)!==copyPath(moved)){ await db.doc(copyPath(old)).delete(); await pref.delete(); }
+}
+
+/* ---------- Timer (stämpelklocka) ---------- */
+let timers={};
+const myTimer=()=>timers[meId]||null;
+const durText=ms=>{ const m=Math.max(0,Math.floor(ms/60000)); return `${Math.floor(m/60)}:${String(m%60).padStart(2,'0')}`; };
+const timerLive=t=>`<span class="tlive" data-start="${+t.start}">${durText(Date.now()-t.start)}</span>`;
+setInterval(()=>{ document.querySelectorAll('.tlive').forEach(e=>{ e.textContent=durText(Date.now()-(+e.dataset.start)); }); }, 15000);
+async function startTimer(oid){
+  if(!db||!meId||!oid) return; const cur=myTimer(); if(cur&&cur.oid===oid) return;
+  if(cur){ const ok=await stopTimer(true); if(ok===false) return; }
+  const o=findOrder(oid);
+  try{ await db.doc(`work/${meId}/timer/current`).set({oid, start:Date.now()}); toast(`Tiden går på ${o?o.title:'ordern'}`); }catch(err){ writeErr(err); }
+}
+async function stopTimer(silent){
+  const t=myTimer(); if(!t) return;
+  const ms=Date.now()-t.start, hrs=Math.max(0.25, Math.round(ms/36e5*4)/4), date=localDate(new Date(t.start));
+  if(weekLocked(meId,weekKey(date))){ toast('Veckan är redan inskickad – ta tillbaka tidrapporten först'); return false; }
+  const o=findOrder(t.oid);
+  try{
+    if(o) await queued(t.oid, ()=>writeProgress(t.oid,{time:{[uid('t')]:{by:meId,at:Date.now(),hours:hrs,date,note:'Stämpelklocka'}}}));
+    await db.doc(`work/${meId}/timer/current`).delete();
+    if(!silent) toast(`${fmtNum(hrs)} h sparade${o?' på '+o.title:''}${ms>12*36e5?' – kontrollera tiden i tidrapporten':''}`);
+    return true;
+  }catch(err){ writeErr(err); return false; }
+}
+function timerRow(o){
+  if(owner||!editable(o)) return '';
+  const t=myTimer();
+  if(t&&t.oid===o.id) return `<div class="timerrow on">${ic('clock',18)}<span>Tiden går</span>${timerLive(t)}<button type="button" class="btn small primary" data-timer-stop style="margin-left:auto">Stoppa och spara</button></div>`;
+  return `<div class="timerrow">${ic('clock',18)}<span class="hint" style="flex:1">${t?'Stämpelklockan går på en annan order.':'Stämpla in när du börjar, ut när du slutar.'}</span><button type="button" class="btn small primary" data-timer-start="${o.id}">${t?'Byt hit och starta':'Starta tid'}</button></div>`;
+}
+
+/* ---------- ÄTA & signatures ---------- */
+const ATA_KIND={tillagg:'Tillägg',andring:'Ändring',avgaende:'Avgående'};
+const atasOf=id=>Object.entries((prog[id]&&prog[id].atas)||{}).filter(([,a])=>a&&a.text).map(([k,a])=>({id:k,...a})).sort((a,b)=>a.at-b.at);
+const signoffOf=id=>(prog[id]&&prog[id].signoff&&prog[id].signoff.name)?prog[id].signoff:null;
+function ataLines(o){ return atasOf(o.id).filter(a=>a.status==='approved').map(a=>{ const neg=a.kind==='avgaende', h=num(a.hours);
+  return {kind:'arbete', text:`${neg?'Avgående':'ÄTA'}: ${a.text}`, qty:(h||1)*(neg?-1:1), unit:h?'tim':'st', price:h?(num(company.rate)||''):''}; }); }
+function signedHtml(x, label){ return `<div class="signed">${x.sig?`<img src="${esc(x.sig)}" alt="Signatur">`:''}<span>${label} <b>${esc(x.custName||x.name||'kunden')}</b> ${x.signedAt||x.at?esc(dayLabel(localDate(new Date(x.signedAt||x.at))).toLowerCase())+' '+hhmm(x.signedAt||x.at):''}${x.via?` · ${esc(x.via)}`:''}</span></div>`; }
+function signoffHtml(o){ const so=signoffOf(o.id); return so?`<div class="signoffbox">${signedHtml(so,'Arbetet godkänt och signerat av')}</div>`:''; }
+function ataHtml(o){
+  const list=atasOf(o.id), can=canWrite && !o.approved;
+  if(!list.length && !can) return '';
+  const items=list.map(a=>{ const pill=a.status==='approved'?'<span class="pill ok">Godkänd av kund</span>':a.status==='declined'?'<span class="pill late">Avböjd av kund</span>':'<span class="pill go">Väntar på kund</span>';
+    return `<div class="ata"><div class="mh"><b>${ATA_KIND[a.kind]||'Tillägg'}</b>${pill}<span class="hint">${esc(nameOf(a.by))} · ${fmtTime(a.at)}</span></div><p>${esc(a.text)}</p>
+      ${a.hours||a.mat?`<span class="hint">${a.hours?`Uppskattad tid ${fmtNum(num(a.hours))} h`:''}${a.hours&&a.mat?' · ':''}${a.mat?`Material: ${esc(a.mat)}`:''}</span>`:''}
+      ${a.status==='approved'?signedHtml(a, a.sig?'Signerad av':'Godkänd av'):a.status==='declined'?`<span class="hint">Avböjd av ${esc(a.custName||'kunden')} ${a.signedAt?esc(dayLabel(localDate(new Date(a.signedAt))).toLowerCase()):''}</span>`:''}
+      ${a.status==='pending'&&can?`<div class="mact"><button type="button" class="btn small primary" data-ata-sign="${o.id}|${a.id}">Låt kunden godkänna</button>${owner?`<button type="button" class="btn small" data-ata-ok="${o.id}|${a.id}" style="background:var(--chip);color:var(--ink)">Godkänd via mejl eller telefon</button>`:''}<button type="button" class="linkbtn" data-ata-rm="${o.id}|${a.id}">Ta bort</button></div>`:''}</div>`; }).join('');
+  const k=x=>esc(keep[x+'-'+o.id]||'');
+  const form = !can ? '' : keep['ataOpen-'+o.id] ? `<div class="ataform">
+      <label class="f" for="ata-kind-${o.id}">Typ</label><select id="ata-kind-${o.id}" data-keep>${Object.entries(ATA_KIND).map(([v,t])=>`<option value="${v}"${(keep['ata-kind-'+o.id]||'tillagg')===v?' selected':''}>${t}</option>`).join('')}</select>
+      <label class="f" for="ata-text-${o.id}">Vad ska göras?</label><textarea id="ata-text-${o.id}" data-keep placeholder="T.ex. Kunden vill att vi målar även taket i hallen">${k('ata-text')}</textarea>
+      <div class="row2"><label class="f">Uppskattad extra tid (h)<input type="text" inputmode="decimal" id="ata-h-${o.id}" data-keep value="${k('ata-h')}" placeholder="t.ex. 3"></label><label class="f">Material (valfritt)<input type="text" id="ata-mat-${o.id}" data-keep value="${k('ata-mat')}" placeholder="t.ex. 2 l takfärg"></label></div>
+      <div class="mact"><button type="button" class="btn primary" data-ata-save="${o.id}">Spara ÄTA</button><button type="button" class="btn" data-ata-cancel="${o.id}" style="background:var(--chip);color:var(--ink)">Avbryt</button></div></div>`
+    : `<button type="button" class="btn ghost" data-ata-new="${o.id}">+ Ny ÄTA (extra arbete eller ändring)</button>`;
+  return `<div class="notes"><h4>ÄTA – ändrings- och tilläggsarbeten${list.length?` (${list.length})`:''}</h4>${items}${form}<span class="hint">Kunden godkänner direkt på skärmen. Godkända ÄTA hamnar automatiskt på fakturan.</span></div>`;
+}
+/* signature modal */
+let sigCtx=null, sigState=null, sigInk=false;
+function openSig(state){
+  sigState=state; sigInk=false;
+  const o=findOrder(state.oid);
+  if(state.mode==='ata'){ const a=atasOf(state.oid).find(x=>x.id===state.aid); $('#sigTitle').textContent='Kunden godkänner ÄTA'; $('#sigText').textContent=`${ATA_KIND[a.kind]||'Tillägg'} på ${o?o.title:'ordern'}:\n${a.text}${a.hours?`\nUppskattad extra tid: ${fmtNum(num(a.hours))} h`:''}\n\nArbetet debiteras enligt avtalade priser.`; $('#sigDecline').hidden=false; $('#sigOk').textContent='Godkänn och signera'; }
+  else { $('#sigTitle').textContent='Kunden godkänner utfört arbete'; $('#sigText').textContent=`${o?o.title:''}${o&&o.address?'\n'+o.address:''}\n\nJag har tagit del av det utförda arbetet.`; $('#sigDecline').hidden=true; $('#sigOk').textContent='Signera'; }
+  $('#sigName').value=(o&&o.customer&&!/^brf/i.test(o.customer))?o.customer:'';
+  const c=$('#sigCanvas'); sigCtx=c.getContext('2d'); sigCtx.clearRect(0,0,c.width,c.height); sigCtx.lineWidth=3; sigCtx.lineCap='round'; sigCtx.lineJoin='round'; sigCtx.strokeStyle='#14212B';
+  $('#sigModal').hidden=false; setTimeout(()=>$('#sigName').focus(),50);
+}
+function closeSig(){ $('#sigModal').hidden=true; sigState=null; }
+(()=>{ const c=$('#sigCanvas'); let down=false, last=null;
+  const pos=e=>{ const r=c.getBoundingClientRect(); return [(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]; };
+  c.addEventListener('pointerdown',e=>{ down=true; last=pos(e); c.setPointerCapture(e.pointerId); e.preventDefault(); });
+  c.addEventListener('pointermove',e=>{ if(!down||!sigCtx) return; const p=pos(e); sigCtx.beginPath(); sigCtx.moveTo(last[0],last[1]); sigCtx.lineTo(p[0],p[1]); sigCtx.stroke(); last=p; sigInk=true; e.preventDefault(); });
+  const up=()=>{ down=false; }; c.addEventListener('pointerup',up); c.addEventListener('pointercancel',up);
+})();
+$('#sigClear').addEventListener('click',()=>{ const c=$('#sigCanvas'); sigCtx&&sigCtx.clearRect(0,0,c.width,c.height); sigInk=false; });
+$('#sigCancel').addEventListener('click',closeSig);
+$('#sigModal').addEventListener('keydown',e=>{ if(e.key==='Escape') closeSig(); });
+async function sigSave(decline){
+  if(!sigState) return; const name=$('#sigName').value.trim(); const st=sigState;
+  if(!name){ toast('Skriv kundens namn'); $('#sigName').focus(); return; }
+  if(!decline && !sigInk){ toast('Kunden behöver signera i rutan'); return; }
+  const sig = decline ? '' : $('#sigCanvas').toDataURL('image/png'); const now=Date.now();
+  try{
+    if(st.mode==='ata') await queued(st.oid, ()=>writeProgress(st.oid,{atas:{[st.aid]:{status:decline?'declined':'approved', custName:name, sig, signedAt:now, decidedBy:meId}}}));
+    else await queued(st.oid, ()=>writeProgress(st.oid,{signoff:{name, sig, at:now, by:meId}}));
+    closeSig(); toast(decline?'ÄTA:n är markerad som avböjd':st.mode==='ata'?`ÄTA godkänd och signerad av ${name}`:`Signerat av ${name}`);
+  }catch(err){ writeErr(err); }
+}
+$('#sigOk').addEventListener('click',()=>sigSave(false));
+$('#sigDecline').addEventListener('click',()=>sigSave(true));
 
 /* ---------- Writes: master order + employee copy; progress one at a time per order ---------- */
 async function writeOrder(o, patch){
@@ -1137,7 +1340,9 @@ function startEdit(o){
   $('#f-custEmail').value=cp.email||''; $('#f-custId').value=cp.idno||'';
   parts=(o.parts||[]).map(p=>({id:p.id,text:p.text})); if(!parts.length) parts=[{id:null,text:''}]; renderPartsEditor();
   $('#formTitle').textContent='Ändra '+orderNo(o); $('#sendBtn').textContent='Spara ändringar'; $('#cancelEdit').hidden=false;
-  $('#picker').hidden=true; $('#assigneeChip').innerHTML=''; $('#assignHint').textContent=`Mottagare: ${nameOf(o.assignee)}. Mottagaren kan inte bytas – ta bort ordern och skapa en ny i stället.`;
+  $('#f-start').value=o.start||''; $('#f-days').value=o.days||1;
+  selectedAssignee=o.assignee||null; renderChip(); $('#picker').hidden=!!selectedAssignee;
+  $('#assignHint').textContent = canReassign(o) ? 'Du kan byta mottagare så länge ingen har börjat på ordern.' : `Mottagare: ${nameOf(o.assignee)}. Ordern är påbörjad, så mottagaren kan inte bytas.`;
   $('#newBack').href='#order-'+o.id; $('#newBack').textContent='← Tillbaka till ordern';
   go('ny-order');
 }
@@ -1163,10 +1368,14 @@ $('#orderForm').addEventListener('submit', async e=>{
   const btn=$('#sendBtn'); btn.disabled=true;
   const customer=$('#f-customer').value.trim(), address=$('#f-address').value.trim(), ce=$('#f-custEmail').value.trim(), ci=$('#f-custId').value.trim();
   const fields={ title, customer, address, description:$('#f-desc').value.trim(), due:$('#f-due').value||'', priority:$('#f-prio').value,
-    priceTpl:$('#f-pricetpl').value||null, rot:$('#f-rot').checked };
+    priceTpl:$('#f-pricetpl').value||null, rot:$('#f-rot').checked, start:$('#f-start').value||'', days:Math.max(1,Math.min(60,parseInt($('#f-days').value,10)||1)) };
   try{
     if(editingId){
-      const o=findOrder(editingId); if(!o) throw new Error('missing');
+      let o=findOrder(editingId); if(!o) throw new Error('missing');
+      if((selectedAssignee||null)!==(o.assignee||null)){
+        if(!canReassign(o)){ toast('Ordern är påbörjad – mottagaren kan inte bytas'); return; }
+        await reassignOrder(o, selectedAssignee||null); o={...o, assignee:selectedAssignee||null};
+      }
       await writeOrder(o,{...fields, parts:clean.map(p=>({id:p.id||uid('p'),text:p.text})), editedAt:Date.now()});
       await db.doc('custpriv/'+o.id).set({email:ce, idno:ci});
       toast('Ordern är uppdaterad');
@@ -1197,33 +1406,35 @@ async function render(){
   if(selectedAssignee) ids.add(selectedAssignee);
   if(user && ids.size){ const ps=await user.profiles([...ids]); if(my!==seq) return; Object.assign(names,ps); }
   VIEWS.forEach(v=>{ $('#v-'+v).hidden = view!==v; });
+  { const t=!owner&&myTimer(), c=$('#timerChip'); c.hidden=!t; if(t){ const o=findOrder(t.oid); c.href='#order-'+t.oid; c.title='Tiden går'+(o?' på '+o.title:''); c.innerHTML=ic('clock',16)+timerLive(t); } }
   renderNav();
   $('#roleLabel').textContent = owner ? (view==='worker' ? 'Så ser de anställda det' : 'Arbetsgivare') : 'Anställd';
   const a=document.activeElement, fid=a&&a.id, s1=a&&a.selectionStart, s2=a&&a.selectionEnd;
   if(view==='employer') renderEmployer(); else if(view==='invoices') renderInvoices(); else if(view==='worker') renderWorker();
   else if(view==='order') renderOrderDetail(); else if(view==='history') renderHistory();
   else if(view==='team') renderTeam(); else if(view==='join') renderJoin();
+  else if(view==='plan') renderPlan();
   else if(view==='timesheet') renderTimesheet(); else if(view==='sheets') renderSheets(); else if(view==='profile') renderProfile(); else if(view==='person') renderPerson();
   if(fid){ const n=document.getElementById(fid); if(n && n!==a){ n.focus(); try{ n.setSelectionRange(s1,s2); }catch(_){} } }
   if(selectedAssignee) renderChip();
 }
 const emptyBox = (h,sub) => `<div class="empty"><strong>${h}</strong>${sub}</div>`;
-const VIEWS=['employer','new','order','invoices','invoice','prices','company','history','worker','more','team','join','timesheet','sheets','profile','person'];
+const VIEWS=['employer','new','order','invoices','invoice','prices','company','history','worker','more','team','join','timesheet','sheets','profile','person','plan'];
 let detailId=null, histTab='handelser', histPerson='', histLimit=150;
 function navKey(){
-  return ({employer:'ordrar',new:'ny-order',order:'ordrar',invoices:'fakturor',invoice:'fakturor',prices:'prismallar',company:'foretaget',history:'historik',more:'mer',team:'anstallda',join:'ordrar',timesheet:'tidrapport',sheets:'tidrapporter',profile:'profil',person:'anstallda'})[view] || (owner?'anstalldas-vy':'ordrar');
+  return ({employer:'ordrar',new:'ny-order',order:'ordrar',invoices:'fakturor',invoice:'fakturor',prices:'prismallar',company:'foretaget',history:'historik',more:'mer',team:'anstallda',join:'ordrar',timesheet:'tidrapport',sheets:'tidrapporter',profile:'profil',person:'anstallda',plan:'planering'})[view] || (owner?'anstalldas-vy':'ordrar');
 }
 function renderNav(){
   const rev=orders.filter(o=>stateOf(o)==='review').length;
   const mineAct=myOrders().filter(o=>['returned','ready'].includes(stateOf(o))).length;
   const drafts=invoices.filter(i=>i.status==='utkast').length;
   const items = owner
-    ? [['ordrar','Ordrar','orders',rev],['ny-order','Ny order','plus'],['fakturor','Fakturor','invoice',drafts],['tidrapporter','Tidrapporter','clock',pendingSheets().length],['historik','Historik','history'],['anstallda','Anställda','users',invites.filter(i=>!i.revoked && !members.some(m=>m.code===i.id)).length+certAlerts().length],['prismallar','Prismallar','tag'],['foretaget','Företaget','building'],['profil','Min profil','user'],['anstalldas-vy','Anställdas vy','eye']]
+    ? [['ordrar','Ordrar','orders',rev],['ny-order','Ny order','plus'],['planering','Planering','calendar',orders.filter(o=>!o.approved&&!o.start).length],['fakturor','Fakturor','invoice',drafts],['tidrapporter','Tidrapporter','clock',pendingSheets().length],['historik','Historik','history'],['anstallda','Anställda','users',invites.filter(i=>!i.revoked && !members.some(m=>m.code===i.id)).length+certAlerts().length],['prismallar','Prismallar','tag'],['foretaget','Företaget','building'],['profil','Min profil','user'],['anstalldas-vy','Anställdas vy','eye']]
     : isLinked() ? [['ordrar','Mina ordrar','orders',mineAct],['tidrapport','Tidrapport','clock',sheetState(meId,weekKey(todayStr())).st==='returned'||Object.keys(sheets[meId]||{}).some(k=>sheetState(meId,k).st==='returned')?1:0],['historik','Historik','history'],['profil','Profil','user']] : [];
   const cur=navKey();
-  const link=([h,t,i,n],small)=>`<a href="#${h}"${h==='ny-order'?' data-new':''}${cur===h||(small&&h==='mer'&&['historik','anstallda','prismallar','foretaget','profil','anstalldas-vy','mer'].includes(cur))?' aria-current="page"':''}>${ic(i,small?22:18)}<span>${t}</span>${n?`<span class="badge">${n}</span>`:''}</a>`;
+  const link=([h,t,i,n],small)=>`<a href="#${h}"${h==='ny-order'?' data-new':''}${cur===h||(small&&h==='mer'&&['tidrapporter','historik','anstallda','prismallar','foretaget','profil','anstalldas-vy','mer'].includes(cur))?' aria-current="page"':''}>${ic(i,small?22:18)}<span>${t}</span>${n?`<span class="badge">${n}</span>`:''}</a>`;
   $('#navIn').innerHTML=items.map(x=>link(x,false)).join('');
-  const bottom = owner ? [...items.slice(0,4), ['mer','Mer','more',items.find(x=>x[0]==='anstallda')[3]]] : items;
+  const bottom = owner ? [...items.slice(0,4), ['mer','Mer','more',(items.find(x=>x[0]==='anstallda')[3]||0)+(items.find(x=>x[0]==='tidrapporter')[3]||0)]] : items;
   $('#bnav').innerHTML=bottom.map(x=>link(x,true)).join('');
   $('#bnav').hidden=!bottom.length; $('#nav').hidden=!items.length;
 }
@@ -1233,7 +1444,7 @@ function route(){
   if(h.startsWith('order-')){ v='order'; id=h.slice(6); }
   else if(h.startsWith('anstalld-')){ v=owner?'person':'worker'; id=h.slice(9); }
   else if(h.startsWith('faktura-')){ v='invoice'; id=h.slice(8); }
-  else v=({'ordrar':owner?'employer':'worker','ny-order':'new','fakturor':'invoices','prismallar':'prices','foretaget':'company','historik':'history','anstalldas-vy':'worker','mer':'more','anstallda':'team','tidrapport':owner?'sheets':'timesheet','tidrapporter':owner?'sheets':'timesheet','profil':'profile'})[h] || (owner?'employer':'worker');
+  else v=({'ordrar':owner?'employer':'worker','ny-order':'new','fakturor':'invoices','prismallar':'prices','foretaget':'company','historik':'history','anstalldas-vy':'worker','mer':'more','anstallda':'team','tidrapport':owner?'sheets':'timesheet','tidrapporter':owner?'sheets':'timesheet','profil':'profile','planering':owner?'plan':'worker'})[h] || (owner?'employer':'worker');
   if(!owner && !['worker','order','history','timesheet','profile'].includes(v)) v='worker';
   if(v==='profile' && (view!=='profile')) { profDraft=null; profDirty=false; }
   if(!owner && !isLinked()) v='join';
@@ -1247,7 +1458,7 @@ function route(){
   if(v==='new' && changed) setTimeout(()=>$('#f-title').focus({preventScroll:true}),0);
 }
 window.addEventListener('hashchange', route);
-$('#moreList').innerHTML=[['historik','history','Historik','Allt som hänt, avslutade ordrar och fakturor'],['anstallda','users','Anställda','Bjud in och hantera ditt team'],['profil','user','Min profil','Dina kontaktuppgifter som de anställda ser'],['prismallar','tag','Prismallar','Priser per timme, m², meter eller fast pris'],['foretaget','building','Företaget','Uppgifter som står på fakturan'],['anstalldas-vy','eye','Anställdas vy','Se appen som dina anställda ser den']].map(([h,i,t,d])=>`<a href="#${h}">${ic(i,24)}<span>${t}<small>${d}</small></span></a>`).join('');
+$('#moreList').innerHTML=[['tidrapporter','clock','Tidrapporter','Attestera de anställdas veckor och ta ut löneunderlag'],['historik','history','Historik','Allt som hänt, avslutade ordrar och fakturor'],['anstallda','users','Anställda','Bjud in och hantera ditt team'],['profil','user','Min profil','Dina kontaktuppgifter som de anställda ser'],['prismallar','tag','Prismallar','Priser per timme, m², meter eller fast pris'],['foretaget','building','Företaget','Uppgifter som står på fakturan'],['anstalldas-vy','eye','Anställdas vy','Se appen som dina anställda ser den']].map(([h,i,t,d])=>`<a href="#${h}">${ic(i,24)}<span>${t}<small>${d}</small></span></a>`).join('');
 
 function needsMe(o, isEmployer){ const st=stateOf(o); return isEmployer ? st==='review' : (st==='returned'||st==='ready'); }
 function isOpen(o, isEmployer){
@@ -1260,7 +1471,7 @@ function summaryHtml(o){
   const sub=[o.customer, o.address].filter(Boolean).join(' · ');
   return `<a class="sum" href="#order-${o.id}">
     <span class="sum-main"><span class="sum-title">${esc(o.title)}</span>${sub?`<span class="sum-sub">${esc(sub)}</span>`:''}</span>
-    <span class="sum-side"><span class="sum-due${late?' late':''}">${o.due?(late?'Försenad · ':'')+fmtDate(o.due):'Inget slutdatum'}</span><span class="minibar${s.complete?' done':''}" aria-hidden="true"><span style="width:${pct}%"></span></span><span>${s.n} av ${s.total} klara</span></span>
+    <span class="sum-side">${o.start?`<span class="sum-plan">${esc(planLabel(o))}</span>`:''}<span class="sum-due${late?' late':''}">${o.due?(late?'Försenad · ':'')+fmtDate(o.due):'Inget slutdatum'}</span><span class="minibar${s.complete?' done':''}" aria-hidden="true"><span style="width:${pct}%"></span></span><span>${s.n} av ${s.total} klara</span></span>
     <span class="arrow" aria-hidden="true">›</span></a>`;
 }
 function partsHtml(o, worker){
@@ -1307,6 +1518,8 @@ function renderEmployer(){
       + kpi('Att granska', rv, rv?'Väntar på dig':'Inget väntar', rv?'review':'', rv>0)
       + kpi(`Timmar v.${isoWeek(todayStr()).w}`, fmtNum(hoursThisWeek()), 'Alla anställda')
       + kpi('Obetalt', shortMoney(unpaid), od?`${od} förfallen`:'Skickade fakturor', 'invsent', od>0); }
+  { const live=Object.entries(timers).filter(([u,t])=>t&&t.oid&&team().some(x=>x.uid===u));
+    $('#liveNow').innerHTML = live.length ? `<div class="live"><span class="dot" aria-hidden="true"></span><b>Jobbar nu</b>${live.map(([u,t])=>{ const o=findOrder(t.oid); return `<a href="#order-${t.oid}">${avatarHtml(u)}${esc(nameOf(u))} · ${esc(o?o.title:'')} · ${timerLive(t)}</a>`; }).join('')}</div>` : ''; }
   const el=$('#empList');
   const active=orders.filter(o=>!o.approved);
   const rev=active.filter(o=>stateOf(o)==='review').length, flagCount=active.filter(openFlag).length;
@@ -1336,6 +1549,19 @@ function renderEmployer(){
 }
 
 const myOrders = () => orders.filter(o=>!o.assignee || o.assignee===meId);
+function renderToday(active){
+  const el=$('#workToday');
+  if(owner){ el.innerHTML=''; return; }
+  const t=myTimer(), td=todayStr(), today=active.filter(o=>plannedOn(o,td));
+  let card='';
+  if(t){ const o=findOrder(t.oid); card=`<div class="timercard on"><div><span class="lbl">Tiden går</span>${timerLive(t)}<a href="#order-${t.oid}">${esc(o?o.title:'Ordern')}</a></div><button type="button" class="btn primary" data-timer-stop>Stoppa och spara</button></div>`; }
+  else if(active.length){ const opts=[...today, ...active.filter(o=>!today.includes(o))]; const sel=keep.tcOrder&&opts.some(o=>o.id===keep.tcOrder)?keep.tcOrder:opts[0].id;
+    card=`<div class="timercard"><div><span class="lbl">Stämpelklocka</span><label class="hint" for="tc-order">Vilken order jobbar du på?</label><select id="tc-order">${opts.map(o=>`<option value="${o.id}"${o.id===sel?' selected':''}>${esc(o.title)}${plannedOn(o,td)?' · idag':''}</option>`).join('')}</select></div><button type="button" class="btn primary" data-timer-start-sel>Starta tid</button></div>`; }
+  const list = today.length ? `<h3 class="sect" style="margin-top:6px">Planerat idag</h3><div class="todaylist">${today.map(o=>`<a class="trow" href="#order-${o.id}"><span><b>${esc(o.title)}</b><small>${esc([o.customer,o.address].filter(Boolean).join(' · '))}</small></span>${statusPill(o)}</a>`).join('')}</div>` : '';
+  el.innerHTML=card+list;
+}
+$('#workToday').addEventListener('change', e=>{ if(e.target.id==='tc-order') keep.tcOrder=e.target.value; });
+$('#workToday').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; if(b.hasAttribute('data-timer-stop')) stopTimer(false); if(b.hasAttribute('data-timer-start-sel')) startTimer($('#tc-order').value); });
 function renderWorker(){
   const el=$('#workList'); const mine=myOrders();
   const isDone=o=>['review','approved'].includes(stateOf(o));
@@ -1348,8 +1574,10 @@ function renderWorker(){
   $('#workActions').innerHTML = actBtn(ret, `order skickad tillbaka – behöver åtgärdas`, 'w-open', 'bad')
     + actBtn(rdy, `order klar att granska och skicka in`, 'w-open')
     + actBtn(fresh, `ny${fresh>1?'a':''} order sedan du var här senast`, 'w-open', 'ok');
+  renderToday(mine.filter(o=>!isDone(o)));
   if(!loaded){ el.innerHTML=emptyBox('Hämtar dina ordrar…','Arbetsordrar som skickats till dig visas här.'); return; }
-  const list=mine.filter(o=>!isDone(o)).sort((a,b)=>(['returned','ready'].includes(stateOf(b)))-(['returned','ready'].includes(stateOf(a))) || (b.priority==='urgent')-(a.priority==='urgent') || (a.due||'9').localeCompare(b.due||'9'));
+  const td=todayStr(), planKey=o=>planSpan(o).find(d=>d>=td)||(o.start&&o.start<td?td:'9');
+  const list=mine.filter(o=>!isDone(o)).sort((a,b)=>(['returned','ready'].includes(stateOf(b)))-(['returned','ready'].includes(stateOf(a))) || planKey(a).localeCompare(planKey(b)) || (b.priority==='urgent')-(a.priority==='urgent') || (a.due||'9').localeCompare(b.due||'9'));
   if(!list.length){ el.innerHTML=emptyBox('Inget att göra just nu','Nya arbetsordrar dyker upp här direkt.'); return; }
   el.innerHTML=list.map(o=>`<article class="order${o.priority==='urgent'?' urgent':''}">
       <div class="ticket"><span class="no">${orderNo(o)}</span>${newPill(o,false)}${o.priority==='urgent'?'<span class="pill hot">Brådskande</span>':''}${statusPill(o)}</div>
@@ -1449,6 +1677,55 @@ $('#joinBox').addEventListener('submit', async e=>{
     toast(`Klart! Du är nu kopplad till ${publicInfo.name||'företaget'}`);
   }catch(err){ fail(err&&err.code==='invalid_argument'?'Du saknar behörighet. Be arbetsgivaren dela sidan med dig så att du kan redigera.':'Det gick inte att gå med. Försök igen.'); }
 });
+
+/* ---------- Planning board ---------- */
+let planWeek=null, planSel=null;
+function renderPlan(){
+  const el=$('#planBody'); if(!planWeek) planWeek=weekKey(todayStr());
+  const key=planWeek, days=weekDays(key), cur=weekKey(todayStr()), td=todayStr();
+  const rows=[...team().map(x=>({uid:x.uid,label:nameOf(x.uid)})), {uid:'',label:'Alla anställda'}];
+  const chipCls=o=>{ if(o.approved) return 'ok'; const st=stateOf(o); if(st==='review') return 'hot'; if(stats(o).n>0) return 'go'; return ''; };
+  const chip=o=>`<button type="button" class="pchip ${chipCls(o)}${planSel===o.id?' sel':''}" draggable="${o.approved?'false':'true'}" data-pchip="${o.id}" title="${esc(o.title)}${o.customer?' – '+esc(o.customer):''}"><b>${esc(o.title)}</b><span>${esc(o.customer||o.address||'')}</span></button>`;
+  const unplanned=orders.filter(o=>!o.approved && !o.start);
+  const sel=planSel&&findOrder(planSel);
+  const hrsPlanned=uid=>orders.filter(o=>(o.assignee||'')===uid && planSpan(o).some(d=>days.includes(d))).length;
+  el.innerHTML=`<div class="lhead"><div><h2>Planering</h2><p class="hint" style="margin:2px 0 0">Dra en order till en dag och person – eller tryck på ordern och sedan på dagen. Tryck på en tom ruta för att skapa en ny order där.</p></div><a class="btn primary" href="#ny-order" data-new>+ Ny arbetsorder</a></div>
+    <div class="weeknav"><button type="button" class="wbtn" data-pw="-1" aria-label="Föregående vecka">‹</button><span class="wl">Vecka ${Number(key.slice(6))}<small>${esc(weekLabel(key))}</small></span><button type="button" class="wbtn" data-pw="1" aria-label="Nästa vecka">›</button>${key!==cur?'<button type="button" class="btn small" data-pw="0" style="background:var(--chip);color:var(--ink)">Denna vecka</button>':''}</div>
+    ${sel?`<div class="planbar">Flyttar: ${esc(sel.title)} – tryck på en dag i tavlan. <a href="#order-${sel.id}">Öppna ordern</a><button type="button" data-plan-cancel>Avbryt</button></div>`:''}
+    ${!team().length?`<div class="statusbox wait" style="margin-bottom:10px"><b>Inga anställda kopplade än</b><p>Bjud in dem under <a href="#anstallda">Anställda</a> så får var och en en egen rad här.</p></div>`:''}
+    <div class="plan-wrap"><table class="plan"><thead><tr><th>Person</th>${days.map(d=>{ const dt=new Date(d+'T12:00:00'); return `<th class="${d===td?'today':''}"><span>${esc(dt.toLocaleDateString('sv-SE',{weekday:'short'}))}${d===td?' · idag':''}</span>${dt.getDate()}/${dt.getMonth()+1}</th>`; }).join('')}</tr></thead>
+      <tbody>${rows.map(r=>`<tr><th>${avatarHtml(r.uid)}${esc(r.label)}<small>${hrsPlanned(r.uid)} ordrar v.${Number(key.slice(6))}${r.uid&&timers[r.uid]?' · jobbar nu':''}</small></th>${days.map(d=>{ const dt=new Date(d+'T12:00:00'), we=dt.getDay()===0||dt.getDay()===6; const list=orders.filter(o=>(o.assignee||'')===r.uid && plannedOn(o,d));
+        return `<td data-cell="${r.uid}|${d}" class="${d===td?'today':''}${we?' we':''}">${list.map(chip).join('')}${list.length?'':'<span class="addhint" aria-hidden="true">+</span>'}</td>`; }).join('')}</tr>`).join('')}</tbody></table></div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>Ej påbörjad</span><span><i style="background:var(--signal)"></i>Pågår</span><span><i style="background:var(--warn)"></i>Väntar på granskning</span><span><i style="background:var(--ok)"></i>Godkänd</span></div>
+    <h3 class="sect">Ej planerade${unplanned.length?` (${unplanned.length})`:''}</h3>
+    ${unplanned.length?`<div class="unplanned" data-cell-unplanned>${unplanned.map(chip).join('')}</div>`:'<p class="hint">Alla aktiva ordrar är planerade.</p>'}`;
+}
+async function planMove(oid, uid, date){
+  let o=findOrder(oid); if(!o) return; planSel=null;
+  if(o.approved){ toast('Godkända ordrar kan inte flyttas'); render(); return; }
+  const sameRow=(o.assignee||'')===(uid||'');
+  if(!sameRow && !canReassign(o)){ toast(`${o.title} är påbörjad av ${nameOf(o.assignee)} – flytta den inom samma rad`); render(); return; }
+  try{
+    if(!sameRow){ await reassignOrder(o, uid||null); o={...o, assignee:uid||null}; }
+    await writeOrder(o,{start:date, days:o.days||1});
+    toast(`${o.title}: ${fmtDate(date)} · ${uid?nameOf(uid):'alla anställda'}`);
+  }catch(err){ toast('Kunde inte flytta ordern'); }
+  render();
+}
+$('#planBody').addEventListener('click', e=>{
+  const b=e.target.closest('button,td[data-cell]'); if(!b) return;
+  if(b.dataset.pw!=null){ const n=+b.dataset.pw; planWeek = n===0 ? weekKey(todayStr()) : shiftWeek(planWeek,n); render(); return; }
+  if(b.hasAttribute('data-plan-cancel')){ planSel=null; render(); return; }
+  if(b.dataset.pchip && planSel && planSel!==b.dataset.pchip){ const td=b.closest('td[data-cell]'); if(td){ const [u,d]=td.dataset.cell.split('|'); planMove(planSel,u,d); return; } }
+  if(b.dataset.pchip){ planSel = planSel===b.dataset.pchip ? null : b.dataset.pchip; if(planSel && findOrder(planSel)?.approved){ go('order-'+planSel); planSel=null; return; } render(); return; }
+  if(b.dataset.cell){ const [u,d]=b.dataset.cell.split('|');
+    if(planSel){ planMove(planSel,u,d); return; }
+    resetForm(); if(u){ selectedAssignee=u; renderChip(); } $('#f-start').value=d; $('#f-days').value=1; go('ny-order'); }
+});
+$('#planBody').addEventListener('dragstart', e=>{ const c=e.target.closest('[data-pchip]'); if(!c) return; e.dataTransfer.setData('text/plain', c.dataset.pchip); e.dataTransfer.effectAllowed='move'; });
+$('#planBody').addEventListener('dragover', e=>{ const td=e.target.closest('td[data-cell]'); if(!td) return; e.preventDefault(); document.querySelectorAll('td.drop').forEach(x=>x!==td&&x.classList.remove('drop')); td.classList.add('drop'); });
+$('#planBody').addEventListener('dragleave', e=>{ const td=e.target.closest('td[data-cell]'); if(td && !td.contains(e.relatedTarget)) td.classList.remove('drop'); });
+$('#planBody').addEventListener('drop', e=>{ const td=e.target.closest('td[data-cell]'); if(!td) return; e.preventDefault(); td.classList.remove('drop'); const oid=e.dataTransfer.getData('text/plain'); const [u,d]=td.dataset.cell.split('|'); if(oid) planMove(oid,u,d); });
 
 /* ---------- Time reporting ---------- */
 const cap=t=>t?t[0].toUpperCase()+t.slice(1):t;
@@ -1713,8 +1990,12 @@ function renderOrderDetail(){
       ${owner?invBarHtml(o):workerBanner(o)}
       ${o.description?`<p class="desc">${esc(o.description)}</p>`:''}
       ${barHtml(o)}
+      ${o.start?`<span class="sum-plan">Planerad ${esc(planLabel(o))}</span>`:''}
+      ${timerRow(o)}
       ${partsHtml(o,!owner)}
+      ${signoffHtml(o)}
       ${tmHtml(o,owner)}
+      ${ataHtml(o)}
       ${notesHtml(o,owner)}
       <div class="notes"><h4>Historik för ordern</h4>${evs.length?tlHtml(evs,{}):'<span class="hint">Inget har hänt än.</span>'}</div>
     </div></article>`;
@@ -1743,6 +2024,8 @@ function buildEvents(){
     notesOf(o.id).forEach(n=>add(n.at,n.by, n.kind==='return'?`skickade tillbaka ordern: ”${n.text}”` : n.flag?`rapporterade en avvikelse: ”${n.text}”`:`skrev: ”${n.text}”`,o, n.kind==='return'||n.flag?'bad':''));
     if(p.submittedAt) add(p.submittedAt,p.submittedBy||o.assignee,'skickade in arbetet för granskning',o,'sig');
     if(p.resubmittedAt) add(p.resubmittedAt,p.submittedBy||o.assignee,'skickade in arbetet igen',o,'sig');
+    atasOf(o.id).forEach(a=>{ add(a.at,a.by,`skapade ÄTA: ”${a.text}”`,o,'sig'); if(a.signedAt) add(a.signedAt,a.decidedBy, a.status==='approved'?`${a.sig?`fick ÄTA signerad av ${a.custName}`:`markerade ÄTA som godkänd av ${a.custName||'kunden'}`}: ”${a.text}”`:`noterade att ${a.custName||'kunden'} avböjde ÄTA: ”${a.text}”`,o,a.status==='approved'?'ok':'bad'); });
+    { const so=signoffOf(o.id); if(so) add(so.at,so.by,`fick arbetet signerat av ${so.name}`,o,'ok'); }
     if(o.approved) add(o.approved.at,o.approved.by,'godkände arbetet',o,'ok');
   });
   const wl=k=>`v.${Number(k.slice(6))}`;
@@ -1864,6 +2147,17 @@ $('#photoInput').addEventListener('change', async e=>{
 });
 async function onListClick(e){
   const t=e.target.closest('button'); if(!t) return;
+  if(t.hasAttribute('data-timer-stop')){ stopTimer(false); return; }
+  if(t.dataset.timerStart){ startTimer(t.dataset.timerStart); return; }
+  if(t.dataset.signoff){ openSig({mode:'signoff', oid:t.dataset.signoff}); return; }
+  if(t.dataset.ataNew){ keep['ataOpen-'+t.dataset.ataNew]=true; render(); setTimeout(()=>$('#ata-text-'+t.dataset.ataNew)?.focus(),0); return; }
+  if(t.dataset.ataCancel){ keep['ataOpen-'+t.dataset.ataCancel]=false; render(); return; }
+  if(t.dataset.ataSave){ const oid=t.dataset.ataSave, text=(keep['ata-text-'+oid]||'').trim(); if(!text){ toast('Beskriv vad som ska göras'); $('#ata-text-'+oid)?.focus(); return; }
+    const a={by:meId, at:Date.now(), text, kind:keep['ata-kind-'+oid]||'tillagg', hours:num(keep['ata-h-'+oid])||0, mat:(keep['ata-mat-'+oid]||'').trim(), status:'pending'};
+    queued(oid, ()=>writeProgress(oid,{atas:{[uid('a')]:a}})).then(()=>{ ['ata-text-','ata-h-','ata-mat-','ata-kind-'].forEach(x=>keep[x+oid]=''); keep['ataOpen-'+oid]=false; toast('ÄTA sparad – låt kunden godkänna den'); }).catch(writeErr).finally(render); return; }
+  if(t.dataset.ataSign){ const [oid,aid]=t.dataset.ataSign.split('|'); openSig({mode:'ata', oid, aid}); return; }
+  if(t.dataset.ataOk){ const [oid,aid]=t.dataset.ataOk.split('|'); const o=findOrder(oid); queued(oid, ()=>writeProgress(oid,{atas:{[aid]:{status:'approved', custName:(o&&o.customer)||'Kunden', sig:'', signedAt:Date.now(), decidedBy:meId, via:'godkänd via mejl eller telefon'}}})).then(()=>toast('ÄTA markerad som godkänd')).catch(writeErr); return; }
+  if(t.dataset.ataRm){ const [oid,aid]=t.dataset.ataRm.split('|'); queued(oid, ()=>writeProgress(oid,{atas:{[aid]:null}})).then(()=>toast('ÄTA borttagen')).catch(writeErr); return; }
   if(t.dataset.photo){ $('#lightImg').src=blobUrl(t.dataset.photo); $('#lightbox').hidden=false; return; }
   if(t.dataset.cam){ camTarget={oid:t.dataset.cam,pid:t.dataset.p}; $('#photoInput').click(); return; }
   if(t.dataset.send){
@@ -1925,9 +2219,9 @@ $('#lightbox').addEventListener('click', ()=>{ $('#lightbox').hidden=true; $('#l
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') $('#lightbox').hidden=true; });
 for(const id of ['#orderDetail']){
   $(id).addEventListener('click', onListClick);
-  $(id).addEventListener('change', e=>{ if(e.target.type==='date' && e.target.hasAttribute('data-keep')) keep[e.target.id]=e.target.value; });
+  $(id).addEventListener('change', e=>{ if(e.target.hasAttribute('data-keep')) keep[e.target.id]=e.target.value; });
   $(id).addEventListener('input', e=>{ const d=e.target.dataset.draft; if(d) drafts[d]=e.target.value; if(e.target.hasAttribute('data-keep')) keep[e.target.id]=e.target.value; });
-  $(id).addEventListener('keydown', e=>{ if(e.key!=='Enter'||!e.target.hasAttribute('data-keep')) return; e.preventDefault(); const row=e.target.closest('.tmin'); row&&row.querySelector('button')?.click(); });
+  $(id).addEventListener('keydown', e=>{ if(e.key!=='Enter'||!e.target.hasAttribute('data-keep')||e.target.tagName==='TEXTAREA') return; e.preventDefault(); const row=e.target.closest('.tmin'); row&&row.querySelector('button')?.click(); });
 }
 $('#orderDetail').addEventListener('change', e=>{
   const t=e.target;
@@ -1971,6 +2265,7 @@ document.addEventListener('click', e=>{
   if(g==='company'){ go('foretaget'); return; }
   if(g==='prices'){ go('prismallar'); return; }
   if(g==='team'){ go('anstallda'); return; }
+  if(g==='plan'){ go('planering'); return; }
   if(g==='sheets'){ shFilter='submitted'; go('tidrapporter'); return; }
   if(g==='timesheet'){ go('tidrapport'); return; }
 });
@@ -2020,7 +2315,7 @@ function tplLines(t,o){
   if(t.includeMaterials && o) matsOf(o.id).forEach(m=>lines.push({kind:'material',text:m.name,qty:num(m.qty)||1,unit:'st',price:''}));
   return lines;
 }
-function invoiceLines(o){ const t=priceTpls.find(x=>x.id===o.priceTpl); return t ? tplLines(t,o) : linesFromOrder(o); }
+function invoiceLines(o){ const t=priceTpls.find(x=>x.id===o.priceTpl); return [...(t ? tplLines(t,o) : linesFromOrder(o)), ...ataLines(o)]; }
 async function createInvoice(o, manual){
   if(!db || !owner) return;
   const active=invFor(o.id);
@@ -2352,7 +2647,8 @@ async function downloadPdf(inv){
   const rotOn=inv.rot&&inv.rot.on&&!inv.reverseVat;
   const cl=[inv.customer.name, inv.customer.address, inv.customer.idno&&'Person-/orgnr '+inv.customer.idno, inv.reverseVat&&inv.customer.vatno&&'Momsreg.nr '+inv.customer.vatno, rotOn&&inv.customer.property&&'Fastighet: '+inv.customer.property, rotOn&&inv.rot.buyers==2&&inv.customer.name2&&'Köpare 2: '+inv.customer.name2+' '+(inv.customer.idno2||'')].filter(Boolean);
   cl.forEach((l,i)=>T(l,L,y+5+i*5)); y+=5+cl.length*5+6;
-  doc.setFont('helvetica','bold'); T('Avser: '+inv.title,L,y); y+=8;
+  doc.setFont('helvetica','bold'); T('Avser: '+inv.title,L,y); y+=6;
+  { const so=signoffOf(inv.orderId); doc.setFont('helvetica','normal'); doc.setFontSize(9); if(so){ T(`Utfört arbete godkänt och signerat av ${so.name} ${localDate(new Date(so.at))}.`,L,y); y+=5; } const na=atasOf(inv.orderId||'').filter(a=>a.status==='approved').length; if(na){ T(`Varav ${na} ÄTA godkända av kund på plats.`,L,y); y+=5; } doc.setFontSize(10); doc.setFont('helvetica','bold'); y+=2; }
   doc.setFontSize(8); T('BESKRIVNING',L,y); T('ANTAL',125,y,{align:'right'}); T('ENHET',130,y); T('À-PRIS',163,y,{align:'right'}); T('BELOPP',R,y,{align:'right'});
   y+=2; doc.setLineWidth(.5); doc.line(L,y,R,y); y+=5;
   doc.setFont('helvetica','normal'); doc.setFontSize(10);
@@ -2398,7 +2694,8 @@ async function boot(){
   const subTime=uid=>{ if(!uid||subbed.has(uid)) return; subbed.add(uid);
     db.collection(`work/${uid}/time`).onSnapshot(sn=>{ const m={}; sn.docs.forEach(d=>m[d.id]=d.data()||{}); otherTime[uid]=m; render(); }, ()=>{});
     db.collection(`work/${uid}/sheets`).onSnapshot(sn=>{ const m={}; sn.docs.forEach(d=>m[d.id]=d.data()||{}); sheets[uid]=m; render(); }, ()=>{});
-    db.collection(`tsdecisions/${uid}/weeks`).onSnapshot(sn=>{ const m={}; sn.docs.forEach(d=>m[d.id]=d.data()||{}); decisions[uid]=m; render(); }, ()=>{}); };
+    db.collection(`tsdecisions/${uid}/weeks`).onSnapshot(sn=>{ const m={}; sn.docs.forEach(d=>m[d.id]=d.data()||{}); decisions[uid]=m; render(); }, ()=>{});
+    db.doc(`work/${uid}/timer/current`).onSnapshot(sn=>{ timers[uid]=sn.exists?(sn.data()||null):null; render(); }, ()=>{}); };
   window.__ptSubTime=subTime;
   if(owner){
     linkChecked=true;
