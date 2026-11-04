@@ -414,6 +414,9 @@ button.kpi:hover{box-shadow:var(--shadow-hover)}
 .stack{display:grid;gap:16px}
 @media (max-width:480px){.row2{grid-template-columns:1fr}.tabs{margin-left:0;width:100%}.tabs button{flex:1}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ---- overflow guards ---- */
+.sheetwrap,.sheet,.list,.stack,.days,.actions,.join{grid-template-columns:minmax(0,1fr)}
+.sheetwrap>*,.sheet>*,.list>*,.stack>*,.days>*,.obody>*,.panel>*{min-width:0}
 </style>
 
 </head>
@@ -1119,6 +1122,7 @@ function renderNav(){
   $('#navIn').innerHTML=items.map(x=>link(x,false)).join('');
   const bottom = owner ? [...items.slice(0,4), ['mer','Mer','more',items.find(x=>x[0]==='anstallda')[3]]] : items;
   $('#bnav').innerHTML=bottom.map(x=>link(x,true)).join('');
+  $('#bnav').hidden=!bottom.length; $('#nav').hidden=!items.length;
 }
 function route(){
   const h=decodeURIComponent((location.hash||'').slice(1));
