@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rymdakademin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: en enda rymdvärld. Stjärnhimmel bakom, kort som fönster i en rymdstation, tio lägen i en rullbar flikrad */
+  --space:#0a0d2b; --panel:#151a47; --panel-2:#20276a; --ink:#eef0ff; --muted:#a6acdf;
+  --sun:#ffc94a; --pink:#ff7aa8; --mint:#5fe0b0; --bad:#ff6b6b;
+  --display:"Fredoka","Nunito",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--space);
+  background-image:radial-gradient(60% 40% at 85% 10%,rgba(255,122,168,.18),transparent 70%),radial-gradient(50% 40% at 5% 80%,rgba(95,224,176,.12),transparent 70%);
+  background-attachment:fixed;color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.app{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:16px 16px 48px;display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.15}
+p{margin:0}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,.flip:focus-visible,a:focus-visible,input:focus-visible,.star-hit:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+canvas.art{display:block}
+
+/* Header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px}
+.brand .art{width:48px;height:48px}
+.brand h1{font-size:1.6rem;font-weight:700}
+.brand h1 span{color:var(--sun)}
+.top-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.hud{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid rgba(255,255,255,.08);padding:8px 12px;border-radius:999px}
+.hud .lvl{font-family:var(--display);font-weight:600;font-size:.95rem;white-space:nowrap}
+.hud .bar{width:84px;height:8px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.hud .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--sun),var(--pink));border-radius:99px;transition:width .5s}
+.hud .xp{font-variant-numeric:tabular-nums;color:var(--sun);font-weight:800;font-size:.9rem;white-space:nowrap}
+.iconbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.12);background:var(--panel);border-radius:999px;padding:8px 11px;font-weight:800;font-size:.85rem;color:var(--muted)}
+.iconbtn svg{width:18px;height:18px}
+.iconbtn[aria-pressed="true"]{color:var(--ink);border-color:var(--sun)}
+
+/* Tabs */
+.tabs{display:none;gap:6px;background:var(--panel);padding:6px;border-radius:18px;border:1px solid rgba(255,255,255,.08);overflow-x:auto;scrollbar-width:none;position:sticky;top:8px;z-index:5;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.tabs button{flex:0 0 auto;border:0;background:transparent;padding:9px 12px;border-radius:13px;font-family:var(--display);font-weight:600;font-size:.98rem;color:var(--muted);display:flex;align-items:center;gap:6px}
+.tabs button svg{width:19px;height:19px}
+.tabs button[aria-selected="true"]{background:var(--panel-2);color:var(--ink);box-shadow:inset 0 -3px 0 var(--sun)}
+
+.view{display:none;flex-direction:column;gap:16px}
+.view.on{display:flex}
+.card{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:20px}
+.lead{color:var(--muted);max-width:62ch}
+.vhead{display:flex;flex-direction:column;gap:4px}
+.vhead h2{font-size:1.6rem}
+
+/* Chips */
+.chips-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;flex-wrap:wrap}
+.chips-row.scroll{flex-wrap:nowrap}
+.chips-row button{flex:0 0 auto;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:var(--muted);border-radius:999px;padding:6px 12px;font-weight:800;font-size:.85rem}
+.chips-row button[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#2b0718}
+
+/* Dagens fakta */
+.daily{display:grid;grid-template-columns:72px 1fr;gap:14px;align-items:center;background:linear-gradient(110deg,rgba(255,201,74,.16),rgba(255,122,168,.1));border:1px solid rgba(255,201,74,.35);border-radius:22px;padding:12px 16px}
+.daily .art{width:72px;height:72px}
+.daily small{color:var(--sun);font-weight:800;letter-spacing:1px;text-transform:uppercase;font-size:.72rem}
+.daily p{margin:2px 0 6px}
+.linkbtn{border:0;background:none;padding:0;color:var(--pink);font-weight:800;text-decoration:underline;text-underline-offset:3px}
+
+/* Explore */
+.strip-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;color:var(--muted);font-size:.9rem}
+.strip-head b{color:var(--ink);font-family:var(--display);font-weight:600;font-size:1.05rem}
+.strip{display:flex;gap:6px;overflow-x:auto;padding:6px 2px 10px;scroll-snap-type:x proximity;scrollbar-width:thin}
+.body-btn{flex:0 0 auto;scroll-snap-align:center;border:2px solid transparent;background:rgba(255,255,255,.04);border-radius:18px;padding:6px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;width:84px;position:relative}
+.body-btn .art{width:64px;height:64px}
+.body-btn span{font-size:.76rem;font-weight:800;color:var(--muted);text-align:center;line-height:1.2}
+.body-btn[aria-current="true"]{border-color:var(--sun);background:rgba(255,201,74,.1)}
+.body-btn[aria-current="true"] span{color:var(--ink)}
+.body-btn .done{position:absolute;top:4px;right:6px;color:var(--sun);font-size:.85rem}
+.detail{display:grid;grid-template-columns:minmax(220px,1fr) 1.3fr;gap:20px;align-items:start}
+.hero{position:relative;display:grid;place-items:center;padding:8px}
+.hero .art{width:100%;max-width:320px;aspect-ratio:1;height:auto}
+.nav-arrows{display:flex;gap:8px;justify-content:center;margin-top:4px;flex-wrap:wrap}
+.nav-arrows button{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);border-radius:999px;padding:6px 14px;font-weight:800;font-size:.9rem}
+.info{display:flex;flex-direction:column;gap:14px;min-width:0}
+.kicker{color:var(--pink);font-weight:800;font-size:.8rem;letter-spacing:1.2px;text-transform:uppercase}
+.info h2{font-size:2.2rem;font-weight:700;overflow-wrap:anywhere}
+.tag{color:var(--muted);font-size:1.05rem;max-width:60ch}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.stat{background:rgba(10,13,43,.55);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:8px 12px}
+.stat small{display:block;color:var(--muted);font-size:.75rem;font-weight:600}
+.stat b{font-family:var(--display);font-weight:600;font-size:1.02rem;font-variant-numeric:tabular-nums}
+.facts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.facts li{display:flex;gap:10px;align-items:flex-start;max-width:65ch}
+.facts li::before{content:"";flex:0 0 10px;height:10px;margin-top:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 10px var(--mint)}
+.see{display:flex;gap:12px;align-items:flex-start;background:rgba(122,140,255,.12);border:1px solid rgba(122,140,255,.45);border-radius:18px;padding:12px 14px}
+.see svg{width:30px;height:30px;flex:0 0 auto;color:#a9b6ff}
+.see b{font-family:var(--display);font-weight:600;color:#c3ccff}
+.did{display:flex;gap:12px;align-items:center;background:rgba(255,201,74,.1);border:1px dashed rgba(255,201,74,.5);border-radius:18px;padding:10px 14px}
+.did svg{width:54px;height:60px;flex:0 0 auto}
+.did b{font-family:var(--display);font-weight:600;color:var(--sun)}
+.primary{border:0;border-radius:16px;padding:13px 18px;background:var(--sun);color:#2a1a00;font-family:var(--display);font-weight:600;font-size:1.05rem;box-shadow:0 5px 0 #c4901c;transition:transform .1s,box-shadow .1s}
+.primary:active{transform:translateY(3px);box-shadow:0 2px 0 #c4901c}
+.primary[disabled]{background:rgba(95,224,176,.18);color:var(--mint);box-shadow:none;cursor:default}
+.ghost{border:2px solid rgba(255,255,255,.18);background:transparent;border-radius:16px;padding:11px 16px;font-family:var(--display);font-weight:600;font-size:1rem}
+.ghost[disabled]{opacity:.45;cursor:default}
+
+/* Fördjupning */
+.deep-btn{display:flex;align-items:center;justify-content:center;gap:8px;border:2px solid var(--mint);background:rgba(95,224,176,.08);color:var(--mint);border-radius:16px;padding:11px 16px;font-family:var(--display);font-weight:600;font-size:1.02rem}
+.deep-btn svg{width:20px;height:20px}
+.deep-btn[aria-expanded="true"]{background:rgba(95,224,176,.18)}
+.deep{display:flex;flex-direction:column;gap:10px;background:rgba(10,13,43,.55);border:1px solid rgba(95,224,176,.3);border-radius:18px;padding:14px}
+.deep[hidden]{display:none}
+.deep section{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.deep .dnum{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--mint);color:#06281d;font-family:var(--display);font-weight:700}
+.deep h3{font-size:1.05rem;font-weight:600;color:var(--mint)}
+.deep p{max-width:62ch}
+
+/* Svåra ord */
+.term{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:help;text-decoration:underline dotted var(--mint) 2px;text-underline-offset:4px;border-radius:4px}
+.term:hover,.term.on{background:rgba(95,224,176,.18);color:var(--ink)}
+.term-demo{text-decoration:underline dotted var(--mint) 2px;text-underline-offset:4px;color:var(--ink)}
+.gl-hint{font-size:.82rem;color:var(--muted)}
+.termpop{position:fixed;z-index:40;background:#1d2468;border:2px solid var(--mint);border-radius:18px;padding:12px 14px;box-shadow:0 14px 40px rgba(0,0,0,.55);display:flex;flex-direction:column;gap:8px}
+.termpop[hidden]{display:none}
+.tp-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tp-head b{font-family:var(--display);font-weight:600;font-size:1.2rem;color:var(--mint)}
+.tp-head button{border:0;background:rgba(255,255,255,.1);width:30px;height:30px;border-radius:50%;font-size:1.2rem;line-height:1}
+.gloss .seen dt::after{content:"✓";color:var(--mint);margin-left:6px;font-size:.9rem}
+
+/* Uppläsning */
+.say{white-space:nowrap;display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--ink);border-radius:999px;padding:5px 11px 5px 9px;font-weight:800;font-size:.8rem;flex:0 0 auto;font-family:var(--body)}
+.say svg{width:16px;height:16px}
+.say.talking{background:var(--sun);color:#2a1a00;border-color:var(--sun);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(255,201,74,.2)}}
+.title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.deep-top{display:flex;justify-content:flex-end}
+.face .say{margin-top:4px}
+
+/* Stjärnkartan */
+.why-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.why{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:center;background:rgba(10,13,43,.5);border-radius:16px;padding:10px}
+.why .art{width:52px;height:52px}
+.why b{font-family:var(--display);font-weight:600;color:var(--sun)}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.step{display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:14px}
+.step>svg{width:100%;height:96px;background:rgba(10,13,43,.6);border-radius:14px;font-family:Nunito,sans-serif}
+.step>div{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.step .dnum{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--sun);color:#2a1a00;font-family:var(--display);font-weight:700}
+.step h3{font-size:1.15rem}
+#skymap{width:100%;max-width:600px;aspect-ratio:1;height:auto;display:block;cursor:crosshair;touch-action:manipulation}
+.sky-day{background:rgba(255,201,74,.12);border:1px solid rgba(255,201,74,.4);border-radius:14px;padding:8px 12px;font-weight:600}
+.sky-day[hidden]{display:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted);font-weight:700;justify-content:center}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{display:inline-block}
+.lg-dot{width:9px;height:9px;border-radius:50%;background:#fff}
+.lg-line{width:18px;border-top:2px solid #9fd0ff}
+.lg-ecl{width:18px;border-top:2px dashed #ffb05a}
+.lg-tri{width:18px;border-top:2px dotted #ffc94a}
+.lg-pl{width:12px;height:12px;border-radius:50%;background:#ffe6c0;outline:1.5px dashed #ffc94a;outline-offset:2px}
+.lg-moon{width:12px;height:12px;border-radius:50%;background:linear-gradient(90deg,#2a2f55 50%,#f4f2e8 50%)}
+.sky-planets{font-size:.9rem;color:var(--muted)}
+.sky-planets b{color:var(--sun)}
+.lg-mw{width:18px;height:8px;border-radius:4px;background:rgba(200,210,255,.3)}
+.sky-card{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;background:rgba(255,201,74,.1);border:1px solid rgba(255,201,74,.4);border-radius:16px;padding:12px 14px}
+.sky-card b{font-family:var(--display);font-weight:600;font-size:1.15rem;color:var(--sun)}
+.tasks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.tasks li{display:flex;gap:10px;align-items:center;background:rgba(10,13,43,.5);border-radius:12px;padding:8px 12px}
+.tasks .tick{flex:0 0 22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.3);display:grid;place-items:center;font-weight:800;font-size:.8rem}
+.tasks li.ok{color:var(--mint)}
+.tasks li.ok .tick{background:var(--mint);border-color:var(--mint);color:#06281d}
+
+/* Navigering */
+.sr{position:absolute;left:-9999px}
+.app{padding-bottom:110px}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;gap:2px;padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:rgba(15,19,58,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.1)}
+.bnav button{flex:1;max-width:130px;border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;border-radius:14px;font-weight:800;font-size:.74rem;position:relative}
+.bnav svg{width:24px;height:24px}
+.bnav button[aria-current="page"]{color:var(--sun);background:rgba(255,201,74,.1)}
+.bnav button[aria-current="page"]::before{content:"";position:absolute;top:-7px;left:30%;right:30%;height:3px;border-radius:3px;background:var(--sun)}
+.crumb{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--muted)}
+.crumb[hidden]{display:none}
+.crumb button{border:1px solid rgba(255,255,255,.18);background:var(--panel);border-radius:999px;padding:7px 14px;font-weight:800;color:var(--ink)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.tile{display:grid;grid-template-columns:48px 1fr 18px;gap:12px;align-items:center;text-align:left;border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,var(--panel-2),var(--panel));border-radius:20px;padding:12px 14px;min-height:72px;transition:transform .12s,border-color .2s}
+.tile:hover{border-color:var(--sun);transform:translateY(-2px)}
+.ticon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:rgba(255,201,74,.14);color:var(--sun)}
+.ticon svg{width:26px;height:26px}
+.ttext b{display:block;font-family:var(--display);font-weight:600;font-size:1.1rem}
+.ttext small{color:var(--muted);font-size:.85rem;line-height:1.3}
+.tarrow{font-size:1.6rem;color:var(--muted);font-weight:800}
+.tile.miss .ticon{background:rgba(255,107,107,.18);color:var(--bad)}
+.mer{display:flex;flex-direction:column;gap:10px}
+.ghead{font-size:1rem;color:var(--muted);font-weight:600;margin-top:6px}
+.hello{background:linear-gradient(120deg,#2b2f86,#1a1f5c 60%,#3b2a6e);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:18px}
+.hello small{color:var(--sun);font-weight:800;letter-spacing:1px;text-transform:uppercase;font-size:.72rem}
+.hello h2{font-size:1.8rem;margin:2px 0 10px}
+.hstats{display:flex;flex-wrap:wrap;gap:6px}
+.hstats span{background:rgba(10,13,43,.55);border-radius:999px;padding:5px 11px;font-size:.85rem;color:var(--muted)}
+.hstats b{color:var(--ink)}
+.cont{display:flex;justify-content:space-between;align-items:center;gap:14px;background:rgba(255,201,74,.1);border:2px solid rgba(255,201,74,.5);border-radius:22px;padding:14px 16px}
+.cont small{color:var(--sun);font-weight:800;letter-spacing:1px;text-transform:uppercase;font-size:.72rem}
+.cont h3{font-size:1.2rem;margin:2px 0}
+.cont p{color:var(--muted);font-size:.92rem}
+.cont .primary{flex:0 0 auto}
+.gear svg{width:20px;height:20px}
+.top-right{position:relative}
+.settings{position:absolute;right:0;top:calc(100% + 8px);z-index:35;background:#1d2468;border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:210px;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+.settings[hidden]{display:none}
+.settings b{font-family:var(--display);font-weight:600}
+.settings .iconbtn{justify-content:flex-start;padding:10px 12px;font-size:.92rem}
+.settings .iconbtn span{display:inline!important}
+.settings .iconbtn[aria-pressed="true"]::after{content:"På";margin-left:auto;color:var(--mint);font-size:.8rem}
+.settings .iconbtn[aria-pressed="false"]::after{content:"Av";margin-left:auto;font-size:.8rem}
+.toast{bottom:96px}
+
+/* Profil */
+.pf{display:flex;flex-direction:column;gap:18px}
+.pf-sec{display:flex;flex-direction:column;gap:8px}
+.pf-sec h3{font-size:1.2rem}
+.pf-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:10px}
+.pf label{display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:.9rem}
+.pf input{width:100%;min-width:0;box-sizing:border-box;padding:11px 12px;border-radius:14px;border:2px solid rgba(255,255,255,.2);background:rgba(10,13,43,.6);font-size:1.05rem;font-family:var(--body)}
+.lvgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.lvcard{text-align:left;border:2px solid rgba(255,255,255,.14);background:rgba(10,13,43,.5);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:4px;position:relative}
+.lvcard b{font-family:var(--display);font-weight:600;font-size:1.15rem}
+.lvcard small{color:var(--muted);font-size:.84rem;line-height:1.3}
+.lvcard .ages{color:var(--sun);font-weight:800}
+.lvcard.on{border-color:var(--sun);background:rgba(255,201,74,.12)}
+.lvbars{display:flex;gap:3px}
+.lvbars i{width:14px;height:6px;border-radius:4px;background:rgba(255,255,255,.15)}
+.lvbars i.f{background:var(--sun)}
+.sugg{align-self:flex-start;margin-top:4px;background:var(--mint);color:#06281d;font-weight:800;font-size:.72rem;border-radius:999px;padding:2px 8px}
+.avbuilder{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:start}
+.avprev{background:radial-gradient(circle,#2b3290,#141a52 70%);border-radius:22px;display:grid;place-items:center;padding:10px}
+.avprev svg{width:120px;height:140px}
+.avopts{display:flex;flex-direction:column;gap:10px}
+.avrow{display:flex;flex-direction:column;gap:5px;font-weight:800;font-size:.9rem}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.2)}
+.sw.on{border-color:var(--sun);box-shadow:0 0 0 3px rgba(255,201,74,.3)}
+.hello{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.hello-ava svg{width:90px;height:105px;animation:bob 4s ease-in-out infinite}
+.onboard{position:fixed;inset:0;z-index:60;background:rgba(6,8,30,.85);backdrop-filter:blur(6px);overflow-y:auto;padding:16px}
+.onboard[hidden]{display:none}
+.ob-card{max-width:760px;margin:0 auto;background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid rgba(255,255,255,.12);border-radius:26px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.ob-head{display:flex;gap:14px;align-items:center}
+.ob-head svg{width:84px;height:98px;flex:0 0 auto;animation:bob 4s ease-in-out infinite}
+.ob-head h2{font-size:1.5rem}
+.ob-foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+/* Astronaut-hjälparen */
+.buddy{position:fixed;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:32;width:66px;height:72px;border:0;padding:0;border-radius:24px;background:radial-gradient(circle at 50% 40%,#3a43a8,#1a1f5c);box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 0 3px rgba(255,201,74,.5)}
+.buddy svg{width:58px;height:66px;animation:bob 4s ease-in-out infinite}
+.buddy-say{position:fixed;right:86px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:32;max-width:min(280px,calc(100% - 110px));background:#f4f6ff;color:#1b1640;border-radius:18px 18px 4px 18px;padding:10px 13px;font-weight:700;font-size:.92rem;box-shadow:0 8px 24px rgba(0,0,0,.4);cursor:pointer}
+.buddy-say[hidden]{display:none}
+.buddy-panel{position:fixed;right:12px;bottom:calc(164px + env(safe-area-inset-bottom));z-index:34;width:min(360px,calc(100% - 24px));background:#1d2468;border:2px solid var(--sun);border-radius:22px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 18px 50px rgba(0,0,0,.55)}
+.buddy-panel[hidden]{display:none}
+.bp-head{display:grid;grid-template-columns:46px 1fr 32px;gap:10px;align-items:center}
+.bp-head svg{width:46px;height:54px}
+.bp-head b{font-family:var(--display);font-weight:600;font-size:1.15rem;display:block}
+.bp-head small{color:var(--muted);font-weight:700}
+.bp-head button{border:0;background:rgba(255,255,255,.1);width:32px;height:32px;border-radius:50%;font-size:1.2rem}
+.bp-text{background:#f4f6ff;color:#1b1640;border-radius:16px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;align-items:flex-start;max-height:40vh;overflow-y:auto}
+.bp-text p{font-weight:600;line-height:1.45}
+.bp-text .say{color:#1b1640;border-color:rgba(27,22,64,.3);background:rgba(27,22,64,.06)}
+.bp-actions{display:flex;flex-wrap:wrap;gap:6px}
+.bp-actions button{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);border-radius:999px;padding:8px 12px;font-weight:800;font-size:.85rem}
+.bp-actions button:first-child{background:var(--sun);color:#2a1a00;border-color:var(--sun)}
+.opt.struck{opacity:.35;text-decoration:line-through}
+@media (max-width:600px){.avbuilder{grid-template-columns:1fr}.avprev svg{width:100px;height:116px}.pf-grid{grid-template-columns:1fr 110px}}
+
+/* 3D */
+.s3-wrap{position:relative;height:68vh;min-height:380px;border-radius:22px;overflow:hidden;background:#03040f;border:1px solid rgba(255,255,255,.1)}
+.s3-wrap canvas{width:100%;height:100%;display:block;touch-action:none}
+.s3-wrap.max{position:fixed;inset:0;height:auto;z-index:55;border-radius:0}
+body.s3max .bnav,body.s3max .buddy,body.s3max .buddy-say{display:none}
+.s3-labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.s3l{position:absolute;left:0;top:0;margin:10px 0 0 8px;pointer-events:auto;border:0;background:rgba(10,13,43,.6);color:#eef0ff;font-weight:800;font-size:.75rem;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.s3l.moon{font-size:.66rem;color:#c8cce8}
+.s3l.on{background:var(--sun);color:#2a1a00}
+.s3-msg{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px;font-weight:800;color:var(--muted);pointer-events:none}
+.s3-date{position:absolute;left:10px;top:10px;background:rgba(10,13,43,.7);border-radius:999px;padding:4px 10px;font-weight:800;font-size:.8rem;font-variant-numeric:tabular-nums}
+.s3-date:empty{display:none}
+.s3-full{position:absolute;right:10px;top:10px;border:1px solid rgba(255,255,255,.2);background:rgba(10,13,43,.7);border-radius:999px;padding:5px 12px;font-weight:800;font-size:.8rem}
+.s3-info{position:absolute;left:10px;right:10px;bottom:10px;display:flex;gap:10px;justify-content:space-between;align-items:flex-start;background:rgba(15,19,58,.82);border:1px solid rgba(255,201,74,.5);border-radius:16px;padding:8px 12px;max-height:34%;overflow-y:auto}
+.s3-info p{font-size:.84rem!important;line-height:1.35}
+.s3-info[hidden]{display:none}
+.s3-info b{font-family:var(--display);font-weight:600;color:var(--sun);font-size:1.1rem}
+.s3-info p{font-size:.9rem}
+.s3dist{color:var(--mint);font-weight:700;margin-top:4px}
+
+/* Lärväg */
+.path{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;position:relative}
+.pstep{display:grid;grid-template-columns:46px 1fr;gap:12px;position:relative;padding-bottom:14px}
+.pstep::before{content:"";position:absolute;left:21px;top:46px;bottom:0;width:4px;border-radius:4px;background:rgba(255,255,255,.12)}
+.pstep:last-child::before{display:none}
+.pstep.done::before{background:var(--mint)}
+.pnode{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:1.15rem;background:var(--panel);border:3px solid rgba(255,255,255,.2);position:relative;z-index:1}
+.pstep.done .pnode{background:var(--mint);border-color:var(--mint);color:#06281d}
+.pstep.here .pnode{border-color:var(--sun);box-shadow:0 0 0 6px rgba(255,201,74,.2);color:var(--sun)}
+.pcard{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.pstep.locked .pcard{opacity:.5}
+.pstep.here .pcard{border-color:rgba(255,201,74,.5)}
+.pcard h3{font-size:1.15rem}
+.got{font-size:.72rem;font-weight:800;color:var(--mint);letter-spacing:.8px;text-transform:uppercase}
+.lock{font-size:.72rem;font-weight:800;color:var(--muted);letter-spacing:.8px;text-transform:uppercase}
+.pbodies{display:flex;gap:6px;flex-wrap:wrap}
+.pbody{border:2px solid rgba(255,255,255,.12);background:rgba(10,13,43,.5);border-radius:14px;padding:4px 8px 4px 4px;display:flex;align-items:center;gap:6px;font-weight:800;font-size:.82rem}
+.pbody .art{width:34px;height:34px}
+.pbody.read{border-color:var(--mint)}
+.pbody.read span::after{content:" ✓";color:var(--mint)}
+.pbody[disabled]{cursor:default}
+.ptest{background:rgba(10,13,43,.5);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.primary[disabled]:not(#learn){background:rgba(255,255,255,.08);color:var(--muted);box-shadow:none;cursor:default}
+
+/* Dagens uppdrag */
+.mission{background:linear-gradient(110deg,rgba(95,224,176,.12),rgba(122,140,255,.1));border:1px solid rgba(95,224,176,.35);border-radius:22px;padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+.mhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mhead small{color:var(--mint);font-weight:800;letter-spacing:1px;text-transform:uppercase;font-size:.72rem}
+.mhead h3{font-size:1.05rem}
+.streak{display:flex;align-items:center;gap:4px;background:rgba(10,13,43,.6);border-radius:999px;padding:4px 10px 4px 6px;font-size:.8rem;color:var(--muted);font-weight:800;white-space:nowrap}
+.streak svg{width:22px;height:22px}
+.streak b{font-family:var(--display);font-size:1.1rem;color:var(--ink)}
+.mlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.mlist li{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;font-size:.92rem}
+.mlist .tick{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.3);display:grid;place-items:center;font-weight:800;font-size:.75rem}
+.mlist li.ok .tick{background:var(--mint);border-color:var(--mint);color:#06281d}
+.mlist b{font-variant-numeric:tabular-nums;font-size:.85rem}
+.mbar{height:6px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:3px}
+.mbar i{display:block;height:100%;background:var(--mint);border-radius:9px;transition:width .4s}
+
+/* Quiz extra */
+.miss-chip{border-color:var(--bad)!important;color:#ffb0b0!important}
+.miss-chip[aria-pressed="true"]{background:var(--bad)!important;color:#2b0707!important}
+.turn{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border-radius:14px;padding:8px 12px;font-size:.88rem;font-variant-numeric:tabular-nums}
+.turn b{font-family:var(--display);font-size:1.05rem}
+.turn.p1{background:rgba(255,122,168,.18);border:1px solid var(--pink)}
+.turn.p2{background:rgba(95,224,176,.15);border:1px solid var(--mint)}
+.duel{display:flex;gap:12px}
+.duel div{border-radius:16px;padding:10px 20px;text-align:center}
+.duel small{display:block;font-weight:800;font-size:.8rem}
+.duel b{font-family:var(--display);font-size:2.2rem}
+.duel .p1{background:rgba(255,122,168,.18);border:1px solid var(--pink)}
+.duel .p2{background:rgba(95,224,176,.15);border:1px solid var(--mint)}
+
+/* Förklaringar */
+.ex-card{display:flex;flex-direction:column;gap:12px}
+.ex-card h3{font-size:1.3rem}
+.ex-text{max-width:65ch}
+.ex-canvas{width:100%;height:auto;aspect-ratio:100/62;display:block;background:rgba(10,13,43,.55);border-radius:18px}
+
+/* Karta */
+.map-wrap{position:relative;display:grid;place-items:center}
+#map{width:100%;max-width:640px;aspect-ratio:1;height:auto;display:block;cursor:pointer;touch-action:manipulation}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center}
+.controls label{display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:.85rem;color:var(--muted);min-width:220px;flex:1;max-width:340px}
+input[type=range]{accent-color:var(--sun);width:100%}
+.readout{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.readout span{background:rgba(10,13,43,.6);border-radius:999px;padding:6px 12px;font-weight:800;font-size:.9rem;font-variant-numeric:tabular-nums}
+.readout b{color:var(--sun)}
+
+/* Skala */
+.scale-row{display:flex;align-items:flex-end;gap:18px;overflow-x:auto;padding:10px 4px 6px;min-height:300px}
+.scale-item{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:6px}
+.scale-item .art{flex:0 0 auto}
+.scale-item b{font-family:var(--display);font-weight:600;font-size:.95rem}
+.scale-item small{color:var(--muted);font-size:.75rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sun-edge{flex:0 0 auto;width:120px;height:280px;border-radius:0 280px 280px 0/0 50% 50% 0;background:radial-gradient(circle at -120% 50%,#fff4c0 0%,#fbb32c 55%,#f07818 70%,#b83a0a 76%);box-shadow:0 0 40px rgba(255,170,40,.6);display:flex;align-items:center;padding:12px;color:#3a1800;font-weight:800;font-size:.7rem;line-height:1.25;padding-right:14px}
+.dist-track{position:relative;overflow-x:auto;padding:10px 0 4px}
+.dist-inner{position:relative;height:150px}
+.dist-line{position:absolute;left:0;right:0;top:64px;border-top:2px dashed rgba(255,255,255,.2)}
+.dist-mark{position:absolute;top:40px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.dist-mark .art{width:46px;height:46px}
+.dist-mark b{font-size:.78rem;font-weight:800;white-space:nowrap}
+.dist-mark small{font-size:.7rem;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.dist-sun{position:absolute;left:-70px;top:4px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#fff4c0,#fbb32c 50%,#f07818 70%,rgba(240,120,24,0) 72%);box-shadow:0 0 30px rgba(255,170,40,.5)}
+.photon{position:absolute;top:58px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#fff;box-shadow:0 0 10px 4px #fff7c0,0 0 30px 8px rgba(255,201,74,.7);display:none}
+.photon.on{display:block}
+.dist-table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.92rem}
+.dist-table th,.dist-table td{text-align:left;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.08)}
+.dist-table th{color:var(--muted);font-size:.78rem;font-weight:800}
+.table-wrap{overflow-x:auto}
+
+/* Våg */
+.weigh-in{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.weigh-in label{font-weight:800}
+.weigh-in input[type=number]{width:110px;padding:10px 12px;border-radius:14px;border:2px solid rgba(255,255,255,.2);background:rgba(10,13,43,.6);font-family:var(--display);font-size:1.3rem;font-weight:600}
+.wrows{display:flex;flex-direction:column;gap:8px}
+.wrow{display:grid;grid-template-columns:46px 110px 1fr auto;gap:12px;align-items:center;background:rgba(10,13,43,.45);border-radius:16px;padding:6px 12px 6px 6px}
+.wrow .art{width:46px;height:46px}
+.wrow b{font-family:var(--display);font-weight:600}
+.wbar{height:12px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.wbar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--mint),var(--sun));transition:width .4s}
+.wval{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.wval b{font-size:1.05rem}
+.wval small{display:block;color:var(--muted);font-size:.75rem}
+
+/* Kort */
+.fc-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;color:var(--muted)}
+.fc-top b{color:var(--ink)}
+.flip{perspective:1200px;cursor:pointer;width:100%;max-width:560px;margin:0 auto;aspect-ratio:4/3.3;min-height:320px}
+.flip .inner{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.3,1.3,.5,1);transform-style:preserve-3d}
+.flip.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:26px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;border:1px solid rgba(255,255,255,.1)}
+.face.front{background:linear-gradient(160deg,#252d7a,#151a47)}
+.face.back{background:linear-gradient(160deg,#3b2a6e,#1b1c55);transform:rotateY(180deg)}
+.face .art{width:130px;height:130px}
+.face h3{font-size:1.4rem;font-weight:600;max-width:24ch}
+.face .hint{color:var(--muted);font-size:.85rem}
+.face .ans{font-family:var(--display);font-weight:700;font-size:1.9rem;color:var(--sun)}
+.face p{max-width:40ch}
+.boxes{display:flex;gap:4px;align-items:center;font-size:.78rem;color:var(--muted);font-weight:800}
+.boxes i{width:14px;height:6px;border-radius:9px;background:rgba(255,255,255,.15)}
+.boxes i.on{background:var(--mint)}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.row button{min-width:150px}
+.leit{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.leit span{background:rgba(10,13,43,.6);border-radius:12px;padding:6px 10px;font-size:.82rem;font-weight:800;font-variant-numeric:tabular-nums}
+
+/* Quiz */
+.track{position:relative;height:56px;border-radius:999px;background:rgba(10,13,43,.6);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;padding:0 6px}
+.track .art{width:48px;height:48px;position:relative;z-index:1}
+.track .path{position:absolute;left:52px;right:52px;top:50%;border-top:2px dashed rgba(255,255,255,.2)}
+.rocket{position:absolute;top:50%;width:40px;height:40px;transform:translate(-50%,-50%);transition:left .7s cubic-bezier(.3,1.4,.5,1);z-index:2}
+.q-head{display:flex;justify-content:space-between;color:var(--muted);font-weight:800;font-size:.9rem;font-variant-numeric:tabular-nums}
+.q-body{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center}
+.q-body .art{width:120px;height:120px}
+.q-body h3{font-size:1.45rem;font-weight:600}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opt{border:2px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);border-radius:16px;padding:14px;text-align:left;font-weight:800;font-size:1rem;transition:transform .1s,background .2s,border-color .2s}
+.opt:hover:not([disabled]){border-color:var(--sun);transform:translateY(-2px)}
+.opt.right{background:rgba(95,224,176,.2);border-color:var(--mint)}
+.opt.wrong{background:rgba(255,107,107,.18);border-color:var(--bad)}
+.opt[disabled]{cursor:default}
+.feedback{display:flex;gap:12px;align-items:center;border-radius:18px;padding:12px 14px;background:rgba(10,13,43,.6)}
+.feedback svg{width:58px;height:64px;flex:0 0 auto}
+.feedback b{font-family:var(--display);font-weight:600;font-size:1.15rem}
+.feedback.ok b{color:var(--mint)} .feedback.no b{color:var(--bad)}
+.result{text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+.result .stars{font-size:3rem;letter-spacing:6px;color:var(--sun);text-shadow:0 0 18px rgba(255,201,74,.6)}
+.result .stars .off{color:rgba(255,255,255,.15);text-shadow:none}
+.result svg.nova{width:110px;height:124px}
+.setup{display:flex;flex-direction:column;gap:16px}
+.setup h3{font-size:1.05rem;color:var(--muted);font-weight:600}
+.levels{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.levels button{border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);border-radius:18px;padding:14px;text-align:left}
+.levels button b{display:block;font-family:var(--display);font-weight:600;font-size:1.15rem}
+.levels button small{color:var(--muted)}
+.levels button[aria-pressed="true"]{border-color:var(--sun);background:rgba(255,201,74,.12)}
+
+/* Stjärnbilder */
+.const-board{position:relative;max-width:560px;width:100%;margin:0 auto}
+.const-board svg{width:100%;height:auto;display:block;background:radial-gradient(circle at 50% 40%,#1b2160,#0a0d2b 75%);border-radius:22px;border:1px solid rgba(255,255,255,.1);touch-action:manipulation}
+.star-hit{cursor:pointer}
+.cline{stroke:#9fd0ff;stroke-width:.7;stroke-linecap:round;filter:drop-shadow(0 0 1.2px #9fd0ff);stroke-dasharray:100;animation:drawline .5s ease-out forwards}
+@keyframes drawline{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+.target-ring{fill:none;stroke:var(--sun);stroke-width:.6;transform-box:fill-box;transform-origin:center;animation:ping 1.2s ease-out infinite}
+@keyframes ping{from{transform:scale(.6);opacity:1}to{transform:scale(1.8);opacity:0}}
+.const-info{display:flex;gap:12px;align-items:center;background:rgba(95,224,176,.1);border:1px solid rgba(95,224,176,.4);border-radius:18px;padding:12px 14px}
+.const-info svg{width:54px;height:60px;flex:0 0 auto}
+
+/* Tidslinje */
+.tl{list-style:none;margin:0;padding:0 0 0 8px;display:flex;flex-direction:column;gap:12px;position:relative}
+.tl::before{content:"";position:absolute;left:39px;top:6px;bottom:6px;width:3px;border-radius:3px;background:linear-gradient(var(--sun),var(--pink),#7a8cff)}
+.tl li{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:start;position:relative}
+.tl .yr{font-family:var(--display);font-weight:700;font-size:.95rem;background:var(--panel-2);border:2px solid var(--sun);border-radius:999px;text-align:center;padding:4px 0;position:relative;z-index:1;font-variant-numeric:tabular-nums}
+.tl .ev{background:rgba(10,13,43,.5);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:10px 14px}
+.tl .ev b{font-family:var(--display);font-weight:600;font-size:1.05rem}
+.tl .ev p{color:var(--muted);font-size:.95rem}
+.tl .se b::after{content:" · Sverige";color:var(--sun);font-size:.8rem}
+
+.tl details{margin-top:6px}
+.tl summary{cursor:pointer;color:var(--mint);font-weight:800;font-size:.88rem;list-style:none;display:inline-flex;align-items:center;gap:6px}
+.tl summary::-webkit-details-marker{display:none}
+.tl summary::before{content:"+";display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--mint);color:#06281d;font-weight:800;line-height:1}
+.tl details[open] summary::before{content:"–"}
+.tl .more{color:var(--ink);font-size:.95rem;margin-top:6px;padding-left:10px;border-left:3px solid var(--mint)}
+
+/* Ordlista */
+.search{width:100%;padding:12px 14px;border-radius:16px;border:2px solid rgba(255,255,255,.18);background:rgba(10,13,43,.6);font-size:1rem}
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin:0}
+.gloss div{background:rgba(10,13,43,.5);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:12px 14px}
+.gloss dt{font-family:var(--display);font-weight:600;font-size:1.1rem;color:var(--sun)}
+.gloss dd{margin:2px 0 0;color:var(--ink)}
+
+/* Märken */
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.badge{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;background:rgba(10,13,43,.5);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:14px 10px}
+.medal{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#3a428e,#151a47);border:4px solid var(--sun);box-shadow:0 0 18px rgba(255,201,74,.35)}
+.medal .art{width:76px;height:76px}
+.badge b{font-family:var(--display);font-weight:600}
+.badge small{color:var(--muted);font-size:.8rem;line-height:1.3}
+.badge.locked{opacity:.55}
+.badge.locked .medal{border-color:rgba(255,255,255,.2);box-shadow:none;filter:grayscale(1)}
+.badge .got{font-size:.72rem;font-weight:800;color:var(--mint);letter-spacing:.8px;text-transform:uppercase}
+
+/* Effekter */
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,40px);opacity:0;background:var(--pink);color:#2b0718;font-family:var(--display);font-weight:600;padding:10px 18px;border-radius:999px;z-index:20;transition:.35s;pointer-events:none;box-shadow:0 8px 30px rgba(255,122,168,.4);text-align:center;max-width:calc(100% - 32px)}
+.toast.show{transform:translate(-50%,0);opacity:1}
+.spark{position:fixed;z-index:30;pointer-events:none;color:var(--sun);font-size:18px;animation:spark .9s ease-out forwards}
+@keyframes spark{to{transform:translate(var(--dx),var(--dy)) scale(.4) rotate(180deg);opacity:0}}
+.float{animation:bob 6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 140s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.comet-svg .tail{animation:shimmer 3.4s ease-in-out infinite}
+@keyframes shimmer{50%{opacity:.7}}
+.comet-svg .coma{transform-box:fill-box;transform-origin:center;animation:glow 2.6s ease-in-out infinite}
+@keyframes glow{50%{transform:scale(1.15)}}
+.comet-svg .drift{animation:cdrift 7s ease-in-out infinite}
+@keyframes cdrift{50%{transform:translate(-3px,2px)}}
+.comet-svg .flash{transform-box:fill-box;transform-origin:center;animation:glow 1s ease-in-out infinite}
+.neb{animation:breathe 16s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.05) rotate(2deg);filter:brightness(1.18)}}
+.pop{animation:pop .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{from{transform:scale(.8);opacity:0}}
+
+@media (max-width:700px){
+  .detail{grid-template-columns:1fr}
+  .hero .art{max-width:240px}
+  .info h2{font-size:1.9rem}
+  .q-body{grid-template-columns:80px 1fr}
+  .q-body .art{width:80px;height:80px}
+  .q-body h3{font-size:1.2rem}
+  .opts{grid-template-columns:1fr}
+  .hud .bar{width:56px}
+  .brand h1{font-size:1.35rem}
+  .wrow{grid-template-columns:40px 1fr auto;row-gap:4px}
+  .wrow .art{width:40px;height:40px}
+  .wrow .wbar{grid-column:2/4;grid-row:2}
+  .wrow .art{grid-row:1/3}
+  .levels{grid-template-columns:1fr}
+  .ex-canvas{aspect-ratio:100/70}
+  .iconbtn span{display:none}
+  .iconbtn{padding:9px}
+  .hud{padding:7px 10px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+.hero{position:relative}
+.photo{position:absolute;inset:0;margin:0;border-radius:22px;overflow:hidden;background:#000;display:grid;place-items:center;z-index:2}
+.photo[hidden]{display:none}
+.photo img{width:100%;height:100%;object-fit:contain}
+.photo figcaption{position:absolute;left:0;right:0;bottom:0;padding:6px 10px;font-size:.72rem;color:#dfe3ff;background:linear-gradient(transparent,rgba(0,0,0,.75))}
+.photo-btn{position:absolute;top:10px;right:10px;z-index:3;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(10,12,40,.7);color:var(--ink);font:600 .85rem/1 Nunito,sans-serif;cursor:pointer}
+.photo-btn svg{width:18px;height:18px}
+.fsrow{display:flex;align-items:center;gap:6px;padding:4px 2px}.fsrow span{flex:1;font-size:.92rem}
+.fsrow button{width:38px;height:38px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:var(--panel-2);color:var(--ink);font-family:var(--display);cursor:pointer}
+.fsrow button[aria-pressed="true"]{background:var(--sun);color:#1a1a3a}
+.settings .iconbtn.noflag::after{content:none!important}
+html.readable body,html.readable button,html.readable input,html.readable select,html.readable textarea,html.readable h1,html.readable h2,html.readable h3,html.readable b{font-family:'Atkinson Hyperlegible',Verdana,Arial,sans-serif!important;letter-spacing:.02em}
+html.readable p,html.readable li{line-height:1.7;word-spacing:.08em}
+.rep-grid{display:grid;gap:14px}
+.rep-card{background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:16px}
+.rep-card h3{font-family:var(--display);font-weight:600;margin:0 0 10px}
+.rep-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.rep-kpis div{background:var(--panel-2);border-radius:14px;padding:10px}.rep-kpis small{display:block;color:var(--muted);font-size:.78rem}.rep-kpis b{font-size:1.25rem}
+.rep-bar{display:grid;grid-template-columns:minmax(110px,1fr) 2fr auto;gap:10px;align-items:center;margin:8px 0;font-size:.92rem}
+.rep-bar .bar{height:10px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}.rep-bar .bar i{display:block;height:100%;border-radius:99px;background:var(--mint)}
+.rep-bar .bar i.low{background:var(--bad)}.rep-bar .bar i.mid{background:var(--sun)}
+.rep-list{margin:0;padding-left:18px;color:var(--ink)}.rep-list li{margin:6px 0}.rep-list small{color:var(--muted)}
+.rep-tags{display:flex;flex-wrap:wrap;gap:6px}.rep-tags span{padding:4px 10px;border-radius:99px;background:var(--panel-2);font-size:.82rem}.rep-tags span.no{opacity:.45}
+.plist{display:grid;gap:8px;margin:10px 0}.prow{display:flex;align-items:center;gap:10px;background:var(--panel-2);border-radius:14px;padding:8px 12px}.prow .astro{width:40px;height:44px}.prow b{flex:1}
+.prow .cur{color:var(--mint);font-size:.82rem}
+.xfer textarea{width:100%;min-height:90px;border-radius:12px;background:#0d1140;color:var(--ink);border:1px solid rgba(255,255,255,.18);padding:10px;font:.8rem/1.4 monospace;box-sizing:border-box}
+.textpop{position:fixed;inset:0;z-index:80;background:rgba(5,7,25,.7);display:grid;place-items:center;padding:16px}.textpop[hidden]{display:none}
+.tp-box{background:var(--panel);border-radius:20px;padding:18px;width:min(520px,100%);display:grid;gap:10px}.tp-box h3{margin:0}.tp-box textarea{min-height:200px;border-radius:12px;background:#0d1140;color:var(--ink);border:1px solid rgba(255,255,255,.18);padding:10px;font:.8rem/1.4 monospace}
+@media print{body{background:#fff!important;color:#000!important}.top,.bnav,#buddy,#buddy-say,#buddy-panel,#sky,.crumb,#rep-copy,#rep-print,.vhead .lead{display:none!important}.rep-card{border:1px solid #999;background:#fff!important;color:#000!important}.rep-kpis div,.rep-tags span{background:#eee!important;color:#000}.rep-list,.rep-list small,.rep-kpis small{color:#000!important}}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="app">
+  <header class="top">
+    <div class="brand"><span id="logo"></span><h1>Rymd<span>akademin</span></h1></div>
+    <div class="top-right">
+      <div class="hud" aria-live="polite"><span class="lvl" id="lvl">Rymdkadett</span><span class="bar"><i id="bar" style="width:0%"></i></span><span class="xp" id="xp">0 XP</span></div>
+      <button class="iconbtn gear" id="gear" aria-expanded="false" aria-controls="settings" aria-label="Inställningar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+      <div class="settings" id="settings" hidden>
+        <b>Inställningar</b>
+        <button class="iconbtn" id="snd" aria-pressed="true" aria-label="Ljudeffekter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><span>Ljud</span></button>
+        <button class="iconbtn" id="mus" aria-pressed="false" aria-label="Rymdmusik"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span>Musik</span></button>
+        <button class="iconbtn" id="lite" aria-pressed="false" aria-label="Spara batteri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="16" height="10" rx="2"/><path d="M21 11v2M7 10v4M10 10v4"/></svg><span>Spara batteri</span></button>
+        <div class="fsrow" role="group" aria-label="Textstorlek"><span>Textstorlek</span><button data-fs="1" aria-label="Normal text">A</button><button data-fs="1.15" aria-label="Större text" style="font-size:1.1em">A</button><button data-fs="1.3" aria-label="Störst text" style="font-size:1.25em">A</button></div>
+        <button class="iconbtn" id="readable" aria-pressed="false" aria-label="Lättläst typsnitt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19 9 5h1l5 14M6 14h7M17 10v9M17 10a3 3 0 1 1 0 0"/></svg><span>Lättläst typsnitt</span></button>
+        <button class="iconbtn" id="remind-btn" hidden aria-pressed="false" aria-label="Påminnelse om dagens uppdrag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><span>Påminnelse</span></button>
+        <button class="iconbtn noflag" id="report-bug"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17v.5"/></svg><span>Rapportera problem</span></button>
+      </div>
+    </div>
+  </header>
+  <div class="crumb" id="crumb" hidden></div>
+
+  <section class="view" id="v-hem">
+    <div class="hello" id="hello"></div>
+    <div id="continue"></div>
+    <div class="mission" id="mission"></div>
+    <div class="daily" id="daily"></div>
+    <div class="tiles" id="home-tiles"></div>
+  </section>
+
+  <section class="view" id="v-ova">
+    <div class="vhead"><h2>Öva</h2><p class="lead">Testa vad du kan och plugga in det du missar.</p></div>
+    <div class="tiles" id="ova-tiles"></div>
+  </section>
+
+  <section class="view" id="v-mer">
+    <div class="vhead"><h2>Mer att göra</h2></div>
+    <div id="mer-tiles" class="mer"></div>
+  </section>
+
+  <section class="view" id="v-utforska">
+    <label for="bsearch" class="sr">Sök himlakropp</label>
+    <input class="search" id="bsearch" type="search" placeholder="Sök, till exempel Mars eller komet" autocomplete="off">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="strip-head"><b>Välj något att utforska</b><span id="learned-count"></span></div>
+      <div class="chips-row scroll" id="filters" role="group" aria-label="Filtrera"></div>
+      <div class="strip" id="strip"></div>
+    </div>
+    <div class="card" id="detail"></div>
+  </section>
+
+  <section class="view" id="v-larvag">
+    <div class="vhead"><h2>Lärväg</h2><p class="lead" id="path-lead"></p></div>
+    <ol class="path" id="path"></ol>
+  </section>
+
+  <section class="view" id="v-karta">
+    <div class="vhead"><h2>Solsystemet just nu</h2><p class="lead">Planeterna står ungefär där de är i verkligheten idag. Spola framåt och se dem åka runt solen. Tryck på en planet för att läsa om den.</p></div>
+    <div class="card" style="display:flex;flex-direction:column;gap:14px">
+      <div class="map-wrap"><canvas id="map" aria-label="Animerad karta över solsystemet"></canvas></div>
+      <div class="readout" id="map-read"></div>
+      <div class="controls">
+        <button class="primary" id="map-play">Pausa</button>
+        <label for="map-speed">Hastighet: <span id="map-speed-lbl"></span><input type="range" id="map-speed" min="0" max="100" value="55"></label>
+        <button class="ghost" id="map-today">Tillbaka till idag</button>
+        <button class="ghost" id="map-zoom" aria-pressed="false">Zooma in: inre planeter</button>
+        <button class="ghost" id="map-names" aria-pressed="true">Namn: på</button>
+      </div>
+      <p class="lead" style="font-size:.85rem">Avstånden är hoptryckta så att allt får plats. Halleys komet åker åt andra hållet runt solen, och svansen pekar alltid bort från solen.</p>
+    </div>
+  </section>
+
+  <section class="view" id="v-skala">
+    <div class="vhead"><h2>Hur stort och hur långt?</h2><p class="lead">Här är allt ritat i rätt skala mot varandra.</p></div>
+    <div class="chips-row" id="scale-mode" role="group" aria-label="Välj skala"><button data-m="size" aria-pressed="true">Storlek</button><button data-m="dist" aria-pressed="false">Avstånd</button></div>
+    <div class="card" id="scale-size">
+      <p class="lead" style="margin-bottom:8px">Jupiter är 11 jordar bred, och solen är så stor att bara kanten får plats. Svep åt sidan.</p>
+      <div class="scale-row" id="scale-row"></div>
+    </div>
+    <div class="card" id="scale-dist" hidden>
+      <p class="lead" style="margin-bottom:8px">Ljuset är det snabbaste som finns: 300 000 km i sekunden. Skicka iväg en ljusstråle från solen och se hur lång tid det tar att nå planeterna.</p>
+      <div class="controls" style="justify-content:flex-start;margin-bottom:8px">
+        <button class="primary" id="light-go">Skicka en ljusstråle</button>
+        <div class="chips-row" id="light-speed" role="group" aria-label="Uppspelningsfart"><button data-s="100" aria-pressed="true">100 × snabbare</button><button data-s="1000" aria-pressed="false">1 000 × snabbare</button></div>
+      </div>
+      <div class="readout" id="light-read" style="justify-content:flex-start"></div>
+      <div class="dist-track" id="dist-track"><div class="dist-inner" id="dist-inner"></div></div>
+      <div class="table-wrap"><table class="dist-table" id="dist-table"></table></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-forklaringar">
+    <div class="vhead"><h2>Förklaringar med animation</h2><p class="lead">Två saker som är lättare att förstå när man ser dem röra sig.</p></div>
+    <div class="card ex-card">
+      <div class="title-row"><h3>Varför har månen faser?</h3><span data-say-ex="moon"></span></div>
+      <p class="ex-text" id="ex-moon-text">Månen lyser inte själv. Solen lyser alltid upp den halva av månen som är vänd mot solen. När månen åker runt jorden, ett varv på ungefär 29,5 dygn, ser vi olika mycket av den belysta halvan. Står månen mellan jorden och solen ser vi bara den mörka sidan. Det kallas nymåne. Står den på andra sidan jorden ser vi hela den ljusa sidan, och då är det fullmåne.</p>
+      <canvas id="ex-moon" class="ex-canvas" aria-label="Animation av månens faser"></canvas>
+      <div class="readout" id="ex-moon-read"></div>
+      <div class="controls"><button class="primary" id="ex-moon-play">Pausa</button><label for="ex-moon-day">Dag i månens varv<input type="range" id="ex-moon-day" min="0" max="29.5" step="0.1" value="7"></label></div>
+    </div>
+    <div class="card ex-card">
+      <div class="title-row"><h3>Varför har vi årstider?</h3><span data-say-ex="season"></span></div>
+      <p class="ex-text" id="ex-season-text">Årstiderna beror inte på avståndet till solen. Jorden är faktiskt närmast solen i början av januari! De beror på att jordaxeln lutar 23,5°. När norra halvklotet lutar mot solen står solen högt på himlen, dagarna blir långa och det blir sommar i Sverige. Ett halvår senare lutar vi bort från solen. Då står solen lågt, dagarna blir korta och det blir vinter.</p>
+      <canvas id="ex-season" class="ex-canvas" aria-label="Animation av jorden runt solen och årstiderna"></canvas>
+      <div class="readout ex-read" id="ex-season-read"></div>
+      <div class="controls"><label for="ex-season-day">Dag på året<input type="range" id="ex-season-day" min="0" max="364" value="172"></label></div>
+      <div class="chips-row" style="justify-content:center"><button data-season="79">Vårdagjämning</button><button data-season="172">Midsommar</button><button data-season="265">Höstdagjämning</button><button data-season="354">Julen</button></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-kort">
+    <div class="vhead"><h2>Minneskort</h2><p class="lead">Korten du kan flyttas upp en låda och kommer tillbaka mer sällan. Korten du missar kommer snart igen.</p></div>
+    <div class="chips-row" id="fc-topic" role="group" aria-label="Ämne"></div>
+    <div class="fc-top"><span>Tryck på kortet för att vända det.</span><span><b id="fc-left">0</b> kort redo nu</span></div>
+    <div id="fc"></div>
+  </section>
+
+  <section class="view" id="v-quiz"><div class="card" id="quiz"></div></section>
+
+  <section class="view" id="v-vag">
+    <div class="vhead"><h2>Vad väger du i rymden?</h2><p class="lead">Tyngdkraften är olika stark på olika himlakroppar. Skriv in din vikt och se vad vågen skulle visa, och hur högt du skulle kunna hoppa.</p></div>
+    <div class="card" style="display:flex;flex-direction:column;gap:14px">
+      <div class="weigh-in"><label for="kg">Din vikt på jorden</label><input type="number" id="kg" min="1" max="250" inputmode="decimal"><span style="font-weight:800">kg</span></div>
+      <div class="wrows" id="wrows"></div>
+      <p class="lead" style="font-size:.85rem">Du består fortfarande av lika mycket. Det är bara dragningen nedåt som ändras. Gasjättar och solen har ingen fast yta, så där är det tyngden högst upp i molnen som räknas.</p>
+    </div>
+  </section>
+
+  <section class="view" id="v-stjarnbilder">
+    <div class="vhead"><h2>Stjärnbilder</h2><p class="lead">Dra streck mellan stjärnorna genom att trycka på den som blinkar. Alla de här kan du hitta på himlen i Sverige.</p></div>
+    <div class="chips-row" id="const-pick" role="group" aria-label="Välj stjärnbild"></div>
+    <div class="card" style="display:flex;flex-direction:column;gap:14px"><div class="const-board" id="const-board"></div><div id="const-info"></div></div>
+  </section>
+
+  <section class="view" id="v-stjarnkarta">
+    <div class="vhead"><h2>Lär dig läsa stjärnkartan</h2><p class="lead">En stjärnkarta hjälper dig att hitta rätt på natthimlen. Här lär du dig hur den fungerar, och sedan provar du på en riktig karta över himlen från Sverige.</p></div>
+    <div class="card"><div class="title-row" style="margin-bottom:12px"><h3 style="font-size:1.3rem">Varför är det bra att kunna?</h3><span id="sky-why-say"></span></div><div class="why-grid" id="sky-why"></div></div>
+    <div class="vhead"><h2 style="font-size:1.35rem">Så läser du kartan</h2></div>
+    <ol class="steps" id="sky-steps"></ol>
+    <div class="card" style="display:flex;flex-direction:column;gap:14px">
+      <div class="vhead"><h2 style="font-size:1.35rem">Prova själv: himlen över Sverige</h2><p class="lead">Kartan visar himlen sedd från Stockholm, med planeterna och månen där de står på riktigt. Välj datum och tid. Tryck på stjärnor och planeter för att se vad de heter.</p></div>
+      <p class="readout" style="justify-content:flex-start"><span id="sky-when"></span></p>
+      <p class="sky-day" id="sky-day" hidden></p>
+      <p class="sky-planets" id="sky-planets"></p>
+      <div class="map-wrap"><canvas id="skymap" aria-label="Interaktiv stjärnkarta"></canvas></div>
+      <div class="controls">
+        <label for="sky-date">Datum<input type="range" id="sky-date" min="0" max="364"></label>
+        <label for="sky-time">Klockslag<input type="range" id="sky-time" min="0" max="95"></label>
+        <button class="ghost" id="sky-now">Just nu</button>
+      </div>
+      <div class="chips-row" id="sky-toggles" role="group" aria-label="Visa på kartan"><button data-t="lines" aria-pressed="true">Linjer</button><button data-t="names" aria-pressed="true">Namn</button><button data-t="ecl" aria-pressed="true">Ekliptikan</button><button data-t="mw" aria-pressed="true">Vintergatan</button><button data-t="grid" aria-pressed="false">Koordinatnät</button></div>
+      <div class="legend"><span><i class="lg-dot"></i>Stjärna, större = ljusare</span><span><i class="lg-line"></i>Stjärnbild</span><span><i class="lg-ecl"></i>Ekliptikan</span><span><i class="lg-tri"></i>Sommartriangeln</span><span><i class="lg-mw"></i>Vintergatan</span><span><i class="lg-pl"></i>Planet</span><span><i class="lg-moon"></i>Månen</span></div>
+      <div id="sky-info"></div>
+      <div><h3 style="font-size:1.1rem;margin-bottom:8px">Uppdrag</h3><ul class="tasks" id="sky-tasks"></ul></div>
+    </div>
+    <div class="card"><div class="vhead" style="margin-bottom:12px"><h2 style="font-size:1.35rem">Lärkoll</h2><p class="lead">Klarar du 5 av 6 får du 20 XP. Klarar du också alla uppdrag får du märket Stjärnnavigatör.</p></div><div id="sky-quiz"></div></div>
+  </section>
+
+  <section class="view" id="v-profil">
+    <div class="vhead"><h2>Din profil</h2><p class="lead">Allt sparas bara i den här webbläsaren.</p></div>
+    <div class="card" id="profile-form"></div>
+    <div class="card" id="profiles-box" style="margin-top:16px"></div>
+    <div class="card" id="transfer-box" style="margin-top:16px"></div>
+  </section>
+
+  <section class="view" id="v-rapport">
+    <div class="vhead"><h2>För vuxna: framsteg</h2><p class="lead">En översikt för förälder eller lärare. Allt finns bara på den här enheten.</p></div>
+    <div id="report"></div>
+  </section>
+
+  <section class="view" id="v-rymd3d">
+    <div class="vhead"><h2>3D-rymdresa</h2><p class="lead" id="s3-modeinfo">Flyg runt i rymden.</p></div>
+    <div class="chips-row" id="s3-modes" role="group" aria-label="Välj vy"><button data-m="sol" aria-pressed="true">Solsystemet</button><button data-m="real" aria-pressed="false">Verklig skala</button><button data-m="stars" aria-pressed="false">Närmaste stjärnorna</button><button data-m="galax" aria-pressed="false">Vintergatan</button></div>
+    <div class="s3-wrap" id="s3-wrap"><canvas id="s3" aria-label="3D-vy av rymden"></canvas><div class="s3-labels" id="s3-labels"></div><div class="s3-msg" id="s3-msg"></div><div class="s3-date" id="s3-date"></div><button class="s3-full" id="s3-full">Helskärm</button><div class="s3-info" id="s3-info" hidden></div></div>
+    <div class="controls" style="justify-content:flex-start"><button class="primary" id="s3-tour">Guidad tur</button><button class="ghost" id="s3-home">Visa allt</button></div>
+    <div><h3 class="ghead">Tid</h3><div class="chips-row" id="s3-speed" role="group" aria-label="Tidens fart"><button data-s="0" aria-pressed="false">Stilla</button><button data-s="1" aria-pressed="true">1 dygn per sekund</button><button data-s="7" aria-pressed="false">1 vecka per sekund</button><button data-s="30" aria-pressed="false">1 månad per sekund</button><button data-s="365" aria-pressed="false">1 år per sekund</button></div></div>
+    <div><h3 class="ghead">Flyg till</h3><div class="chips-row" id="s3-targets"></div></div>
+    <p class="lead" style="font-size:.88rem">Dra med fingret för att snurra, nyp för att zooma och dra med två fingrar för att flytta.</p>
+  </section>
+
+  <section class="view" id="v-tidslinje">
+    <div class="vhead"><h2>Rymdresornas historia</h2><p class="lead">Från den första satelliten till rymdteleskopet James Webb.</p></div>
+    <ol class="tl" id="tl"></ol>
+  </section>
+
+  <section class="view" id="v-ordlista">
+    <div class="vhead"><h2>Ordlista</h2><p class="lead">Ord du stöter på i rymden, förklarade enkelt.</p></div>
+    <label for="gsearch" style="position:absolute;left:-9999px">Sök i ordlistan</label>
+    <input class="search" id="gsearch" type="search" placeholder="Sök, till exempel ljusår">
+    <dl class="gloss" id="gloss"></dl>
+  </section>
+
+  <section class="view" id="v-marken">
+    <div class="vhead"><h2>Dina märken</h2><p class="lead" id="badge-lead"></p></div>
+    <div class="badges" id="badges"></div>
+  </section>
+</div>
+<nav class="bnav" id="bnav" aria-label="Huvudmeny"></nav>
+<button class="buddy" id="buddy" aria-label="Fråga din astronaut om hjälp" aria-expanded="false" aria-controls="buddy-panel"></button>
+<div class="buddy-say" id="buddy-say" hidden role="status"></div>
+<div class="buddy-panel" id="buddy-panel" hidden role="dialog" aria-labelledby="bp-name">
+  <div class="bp-head"><span id="bp-ava"></span><div><b id="bp-name">Nova</b><small>Din astronaut</small></div><button id="bp-close" aria-label="Stäng">×</button></div>
+  <div class="bp-text" id="bp-text"></div>
+  <div class="bp-actions" id="bp-actions"></div>
+</div>
+<div class="onboard" id="onboard" hidden></div>
+<div class="toast" id="toast" role="status"></div>
+<div class="termpop" id="termpop" role="dialog" aria-labelledby="tp-word" hidden><div class="tp-head"><b id="tp-word"></b><button id="tp-close" type="button" aria-label="Stäng">×</button></div><p id="tp-def"></p><div id="tp-say"></div></div>

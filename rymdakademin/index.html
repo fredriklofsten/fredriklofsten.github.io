@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
-<style>@font-face{font-family:'Fredoka';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/fredoka-latin-500-normal.woff2) format('woff2')}@font-face{font-family:'Fredoka';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/fredoka-latin-600-normal.woff2) format('woff2')}@font-face{font-family:'Fredoka';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/fredoka-latin-700-normal.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/nunito-latin-400-normal.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/nunito-latin-600-normal.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/nunito-latin-800-normal.woff2) format('woff2')}
+<style>@font-face{font-family:'Fredoka';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/fredoka-latin-500-normal.woff2) format('woff2')}@font-face{font-family:'Fredoka';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/fredoka-latin-600-normal.woff2) format('woff2')}@font-face{font-family:'Fredoka';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/fredoka-latin-700-normal.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/nunito-latin-400-normal.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/nunito-latin-600-normal.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/nunito-latin-800-normal.woff2) format('woff2')}@font-face{font-family:'Atkinson Hyperlegible';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format('woff2')}@font-face{font-family:'Atkinson Hyperlegible';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format('woff2')}
 .top{padding-top:env(safe-area-inset-top)}</style>
 
 <style>
@@ -550,6 +550,35 @@ input[type=range]{accent-color:var(--sun);width:100%}
   .hud{padding:7px 10px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+.hero{position:relative}
+.photo{position:absolute;inset:0;margin:0;border-radius:22px;overflow:hidden;background:#000;display:grid;place-items:center;z-index:2}
+.photo[hidden]{display:none}
+.photo img{width:100%;height:100%;object-fit:contain}
+.photo figcaption{position:absolute;left:0;right:0;bottom:0;padding:6px 10px;font-size:.72rem;color:#dfe3ff;background:linear-gradient(transparent,rgba(0,0,0,.75))}
+.photo-btn{position:absolute;top:10px;right:10px;z-index:3;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(10,12,40,.7);color:var(--ink);font:600 .85rem/1 Nunito,sans-serif;cursor:pointer}
+.photo-btn svg{width:18px;height:18px}
+.fsrow{display:flex;align-items:center;gap:6px;padding:4px 2px}.fsrow span{flex:1;font-size:.92rem}
+.fsrow button{width:38px;height:38px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:var(--panel-2);color:var(--ink);font-family:var(--display);cursor:pointer}
+.fsrow button[aria-pressed="true"]{background:var(--sun);color:#1a1a3a}
+.settings .iconbtn.noflag::after{content:none!important}
+html.readable body,html.readable button,html.readable input,html.readable select,html.readable textarea,html.readable h1,html.readable h2,html.readable h3,html.readable b{font-family:'Atkinson Hyperlegible',Verdana,Arial,sans-serif!important;letter-spacing:.02em}
+html.readable p,html.readable li{line-height:1.7;word-spacing:.08em}
+.rep-grid{display:grid;gap:14px}
+.rep-card{background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:16px}
+.rep-card h3{font-family:var(--display);font-weight:600;margin:0 0 10px}
+.rep-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.rep-kpis div{background:var(--panel-2);border-radius:14px;padding:10px}.rep-kpis small{display:block;color:var(--muted);font-size:.78rem}.rep-kpis b{font-size:1.25rem}
+.rep-bar{display:grid;grid-template-columns:minmax(110px,1fr) 2fr auto;gap:10px;align-items:center;margin:8px 0;font-size:.92rem}
+.rep-bar .bar{height:10px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}.rep-bar .bar i{display:block;height:100%;border-radius:99px;background:var(--mint)}
+.rep-bar .bar i.low{background:var(--bad)}.rep-bar .bar i.mid{background:var(--sun)}
+.rep-list{margin:0;padding-left:18px;color:var(--ink)}.rep-list li{margin:6px 0}.rep-list small{color:var(--muted)}
+.rep-tags{display:flex;flex-wrap:wrap;gap:6px}.rep-tags span{padding:4px 10px;border-radius:99px;background:var(--panel-2);font-size:.82rem}.rep-tags span.no{opacity:.45}
+.plist{display:grid;gap:8px;margin:10px 0}.prow{display:flex;align-items:center;gap:10px;background:var(--panel-2);border-radius:14px;padding:8px 12px}.prow .astro{width:40px;height:44px}.prow b{flex:1}
+.prow .cur{color:var(--mint);font-size:.82rem}
+.xfer textarea{width:100%;min-height:90px;border-radius:12px;background:#0d1140;color:var(--ink);border:1px solid rgba(255,255,255,.18);padding:10px;font:.8rem/1.4 monospace;box-sizing:border-box}
+.textpop{position:fixed;inset:0;z-index:80;background:rgba(5,7,25,.7);display:grid;place-items:center;padding:16px}.textpop[hidden]{display:none}
+.tp-box{background:var(--panel);border-radius:20px;padding:18px;width:min(520px,100%);display:grid;gap:10px}.tp-box h3{margin:0}.tp-box textarea{min-height:200px;border-radius:12px;background:#0d1140;color:var(--ink);border:1px solid rgba(255,255,255,.18);padding:10px;font:.8rem/1.4 monospace}
+@media print{body{background:#fff!important;color:#000!important}.top,.bnav,#buddy,#buddy-say,#buddy-panel,#sky,.crumb,#rep-copy,#rep-print,.vhead .lead{display:none!important}.rep-card{border:1px solid #999;background:#fff!important;color:#000!important}.rep-kpis div,.rep-tags span{background:#eee!important;color:#000}.rep-list,.rep-list small,.rep-kpis small{color:#000!important}}
 </style>
 </head>
 <body>
@@ -565,6 +594,10 @@ input[type=range]{accent-color:var(--sun);width:100%}
         <button class="iconbtn" id="snd" aria-pressed="true" aria-label="Ljudeffekter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><span>Ljud</span></button>
         <button class="iconbtn" id="mus" aria-pressed="false" aria-label="Rymdmusik"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span>Musik</span></button>
         <button class="iconbtn" id="lite" aria-pressed="false" aria-label="Spara batteri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="16" height="10" rx="2"/><path d="M21 11v2M7 10v4M10 10v4"/></svg><span>Spara batteri</span></button>
+        <div class="fsrow" role="group" aria-label="Textstorlek"><span>Textstorlek</span><button data-fs="1" aria-label="Normal text">A</button><button data-fs="1.15" aria-label="Större text" style="font-size:1.1em">A</button><button data-fs="1.3" aria-label="Störst text" style="font-size:1.25em">A</button></div>
+        <button class="iconbtn" id="readable" aria-pressed="false" aria-label="Lättläst typsnitt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19 9 5h1l5 14M6 14h7M17 10v9M17 10a3 3 0 1 1 0 0"/></svg><span>Lättläst typsnitt</span></button>
+        <button class="iconbtn" id="remind-btn" hidden aria-pressed="false" aria-label="Påminnelse om dagens uppdrag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><span>Påminnelse</span></button>
+        <button class="iconbtn noflag" id="report-bug"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17v.5"/></svg><span>Rapportera problem</span></button>
       </div>
     </div>
   </header>
@@ -709,6 +742,13 @@ input[type=range]{accent-color:var(--sun);width:100%}
   <section class="view" id="v-profil">
     <div class="vhead"><h2>Din profil</h2><p class="lead">Allt sparas bara i den här webbläsaren.</p></div>
     <div class="card" id="profile-form"></div>
+    <div class="card" id="profiles-box" style="margin-top:16px"></div>
+    <div class="card" id="transfer-box" style="margin-top:16px"></div>
+  </section>
+
+  <section class="view" id="v-rapport">
+    <div class="vhead"><h2>För vuxna: framsteg</h2><p class="lead">En översikt för förälder eller lärare. Allt finns bara på den här enheten.</p></div>
+    <div id="report"></div>
   </section>
 
   <section class="view" id="v-rymd3d">
@@ -750,6 +790,8 @@ input[type=range]{accent-color:var(--sun);width:100%}
 <div class="toast" id="toast" role="status"></div>
 <div class="termpop" id="termpop" role="dialog" aria-labelledby="tp-word" hidden><div class="tp-head"><b id="tp-word"></b><button id="tp-close" type="button" aria-label="Stäng">×</button></div><p id="tp-def"></p><div id="tp-say"></div></div>
 <script>
+window.__errs=[];addEventListener('error',e=>{try{__errs.push((e.message||'fel')+' @'+(e.filename||'').split('/').pop()+':'+(e.lineno||''));}catch(_){}});
+addEventListener('unhandledrejection',e=>{try{__errs.push('Promise: '+(e.reason&&e.reason.message||e.reason));}catch(_){}});
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 const B = {
   sun:{name:'Solen',type:'Vår stjärna',cat:'stjarna',c1:'#fff6b0',c2:'#ff9a1f',face:'cool',
@@ -798,7 +840,7 @@ const B = {
   saturn:{name:'Saturnus',type:'Planet nr 6',c1:'#fbecc0',c2:'#cf9f55',dy:-8,rings:{c:'#ead39a',c2:'#b8945a'},
     bands:[[18,6,'#e8c47e',.6],[30,4,'#f6dfa6',.5],[70,6,'#d9ad66',.6],[82,6,'#e8c47e',.6]],
     tag:'Planeten med de vackraste ringarna.',
-    stats:[['Avstånd till solen','1,4 miljarder km'],['Ett år','29 jordår'],['Ett dygn','ca 10,5 timmar'],['Månar','274, flest av alla']],
+    stats:[['Avstånd till solen','1,4 miljarder km'],['Ett år','29 jordår'],['Ett dygn','ca 10,5 timmar'],['Månar','285']],
     facts:['Ringarna består av miljarder bitar is och sten, från dammkorn till husstora block.','Saturnus har lägre densitet än vatten. I ett jättebadkar skulle den flyta.','Månen Titan har sjöar, fast av flytande metan i stället för vatten.'],
     did:'Ringarna sträcker sig ungefär 280 000 km från kant till kant, men är oftast bara runt 10 meter tjocka.'},
   uranus:{name:'Uranus',type:'Planet nr 7',c1:'#c9fbf6',c2:'#4fbccc',uring:true,
@@ -1203,31 +1245,153 @@ const DEEP={
 };
 
 /* Fler fakta och Så ser du den */
-const MORE={"sun": ["Solen består mest av väte och helium.", "Det skulle rymmas ungefär 1,3 miljoner jordar inuti solen.", "Vid ekvatorn snurrar solen ett varv på ungefär 25 dygn, men långsammare vid polerna.", "Solens yttersta lager, koronan, syns med blotta ögat bara under en total solförmörkelse."], "sirius": ["Sirius är en av de närmaste stjärnorna vi kan se med blotta ögat.", "Sirius A är ungefär dubbelt så tung som solen.", "Sirius B upptäcktes 1862 av Alvan Graham Clark.", "Sirius blinkar ofta i olika färger när den står lågt, eftersom luften bryter ljuset."], "polaris": ["Polstjärnan är en gul superjätte, mycket större och ljusare än solen.", "Den är den närmaste stjärnan av sitt slag, en så kallad cepheid som pulserar.", "I norra Sverige står Polstjärnan högre på himlen än i södra Sverige.", "Från södra halvklotet kan man inte se Polstjärnan alls."], "betelgeuse": ["Betelgeuse lyser ungefär 100 000 gånger starkare än solen.", "Den väger ungefär 15–20 gånger mer än solen.", "Namnet kommer från arabiskan.", "Ljusstyrkan ändras hela tiden, så ibland är den ljusare än Rigel och ibland svagare."], "mercury": ["Merkurius är bara lite större än vår måne.", "Merkurius krymper långsamt när den svalnar, och ytan har fått långa rynkor av klippbranter.", "Planeten har fått sitt namn efter romarnas snabba budbärargud.", "Merkurius har ingen måne."], "venus": ["Venus är nästan lika stor som jorden och kallas ibland jordens tvilling.", "Venus har inga månar.", "Venus kallas morgonstjärnan eller aftonstjärnan, fast den är en planet.", "Venus har fler vulkaner än någon annan planet i solsystemet."], "earth": ["Jorden är den tätaste planeten i solsystemet.", "Jorden är den största av de fyra steniga planeterna.", "Det högsta berget, Mount Everest, är nästan 8 850 meter högt.", "Jordens omkrets runt ekvatorn är ungefär 40 000 km."], "moon": ["Månen är ungefär en fjärdedel så bred som jorden.", "De mörka fläckarna kallas maria, latin för hav, men är stelnad lava.", "I kratrar vid månens poler, där solen aldrig lyser, finns is.", "Vid en månförmörkelse hamnar månen i jordens skugga och kan bli kopparröd."], "mars": ["Mars är ungefär hälften så bred som jorden.", "Solnedgångar på Mars ser blåaktiga ut.", "Mars har årstider, eftersom axeln lutar nästan lika mycket som jordens.", "Inga människor har varit på Mars ännu, men flera robotar har landat där."], "vesta": ["Vesta upptäcktes av Heinrich Olbers år 1807.", "Efter Ceres är Vesta det tyngsta föremålet i asteroidbältet.", "Ett dygn på Vesta är bara drygt 5 timmar.", "Vesta är inte helt rund utan lite tillplattad."], "ceres": ["Ceres står för ungefär en fjärdedel av all massa i asteroidbältet.", "Ceres är den enda dvärgplaneten som ligger innanför Neptunus bana.", "Ett dygn på Ceres är ungefär 9 timmar.", "Namnet kommer från den romerska gudinnan för åkerbruk."], "bennu": ["Bennu snurrar ett varv på ungefär 4,3 timmar.", "Bennu upptäcktes år 1999.", "Bennu passerar nära jorden ungefär vart sjätte år.", "Bennu är ungefär lika hög som en riktigt hög skyskrapa."], "jupiter": ["Jupiter har 95 kända månar.", "Jupiter har det starkaste magnetfältet av alla planeter.", "De fyra största månarna kallas de galileiska månarna, efter Galileo Galilei.", "Jupiter syns ofta som en av de ljusaste prickarna på natthimlen."], "io": ["Io är ungefär lika stor som vår måne.", "Io har nästan inga kratrar, eftersom ny lava hela tiden täcker över dem.", "Io är den innersta av Jupiters fyra stora månar.", "Material från Ios vulkaner bildar en ring av laddade partiklar runt Jupiter."], "europa": ["Europa är lite mindre än vår måne.", "Isytan är en av de slätaste i hela solsystemet.", "Vid ytan är det minus 160 °C eller ännu kallare.", "Europa är en av de platser där forskare tror att liv skulle kunna finnas."], "ganymede": ["Ganymedes är den tredje av Jupiters fyra stora månar, räknat inifrån.", "Ytan har både mörka, gamla områden och ljusare, randiga områden.", "Ganymedes består ungefär till hälften av is och till hälften av sten.", "Månen är uppkallad efter en person i grekisk mytologi."], "titan": ["Titan är den näst största månen i solsystemet.", "Titan är större än planeten Merkurius.", "Vid Titans yta är det ungefär minus 180 °C.", "Det orange diset gör att ytan inte går att se med vanliga kameror."], "saturn": ["Saturnus är den näst största planeten.", "Ringarna syns redan i ett litet teleskop.", "Vindarna runt ekvatorn kan blåsa i 1 800 km/h.", "Månen Enceladus sprutar ut vatten från ett hav under isen."], "uranus": ["Uranus har 29 kända månar, och många är uppkallade efter figurer hos Shakespeare.", "Uranus är ungefär fyra gånger så bred som jorden.", "Uranus snurrar baklänges jämfört med de flesta planeter.", "Ett dygn på Uranus är ungefär 17 timmar."], "neptune": ["Neptunus har 16 kända månar.", "Den blå färgen kommer från metan i atmosfären.", "Neptunus är ungefär fyra gånger så bred som jorden.", "Neptunus är den planet som ligger längst från solen."], "pluto": ["Pluto har berg av vattenis som är flera kilometer höga.", "Pluto har en tunn atmosfär av kväve.", "Banan är avlång, och ibland är Pluto närmare solen än Neptunus.", "Namnet föreslogs av en 11-årig flicka i England, Venetia Burney."], "halley": ["Halleys komet åker runt solen åt motsatt håll mot planeterna.", "När den är som längst bort är den bortom Neptunus bana.", "Nästa gång den är närmast solen är sommaren 2061.", "Halley är den enda kometen med kort omloppstid som brukar synas tydligt med blotta ögat."], "halebopp": ["Förra gången den var nära solen var för ungefär 4 200 år sedan.", "Hale-Bopp syntes som tydligast i mars och april 1997.", "Kärnan är flera gånger större än Halleys.", "Den kommer från Oorts moln, ett jättelikt moln av kometer långt utanför planeterna."], "c67p": ["Rosetta var en rymdsond från den europeiska rymdorganisationen ESA.", "Kometen är mycket mörk, nästan som kol.", "Tyngdkraften är så svag att ett hopp skulle kunna skicka ut dig i rymden.", "Kometen upptäcktes 1969 av Klim Tjurjumov och Svetlana Gerasimenko."], "sl9": ["De största bitarna var upp till ungefär två kilometer stora.", "Ett av nedslagen var starkare än alla kärnvapen på jorden tillsammans.", "I teleskop såg kometen ut som ett pärlband av små kometer.", "Fläckarna efter nedslagen syntes i teleskop från jorden."], "neowise": ["NEOWISE var den ljusaste kometen på norra halvklotet sedan Hale-Bopp 1997.", "När den var som ljusast gick den aldrig ner under horisonten sett från Sverige.", "NEOWISE hade också en svag svans av natrium.", "Den syntes bäst strax efter skymningen och före gryningen."], "encke": ["Enckes komet har setts vid fler varv runt solen än någon annan komet.", "Den åker aldrig så långt ut som till Jupiters bana.", "Rymdsonden MESSENGER fotograferade kometen år 2013.", "Kärnan är ungefär 5 km stor."], "tempel1": ["Kometen åker runt solen mellan Mars och Jupiters banor.", "Projektilen från Deep Impact krockade i ungefär 37 000 km/h.", "Tempel 1 var den första kometen som två olika rymdsonder har besökt.", "Kärnan är mörk och formad ungefär som en potatis."], "hyakutake": ["Hyakutake passerade nära Polstjärnan på himlen.", "Kärnan var ganska liten, bara några kilometer.", "Den kallas Den stora kometen 1996.", "Den syntes tydligt med blotta ögat bara ett år före Hale-Bopp."], "milkyway": ["Vintergatans skiva är ungefär 1 000 ljusår tjock.", "Solsystemet åker runt Vintergatans mitt med ungefär 800 000 km/h.", "Vintergatan är minst 13 miljarder år gammal.", "Två små granngalaxer, Stora och Lilla magellanska molnet, syns från södra halvklotet."], "andromeda": ["Andromeda syns som en suddig, avlång fläck med blotta ögat.", "Den persiske astronomen al-Sufi beskrev den redan på 900-talet.", "Andromeda är den största galaxen i vår lokala galaxgrupp.", "Mitt i Andromeda finns ett supermassivt svart hål som är mycket tyngre än Vintergatans."], "orion": ["Orionnebulosan kallas också M42.", "Gasen består mest av väte som lyser rött.", "I en kikare ser den ut som ett litet ljust moln.", "Den är en av de få nebulosor man kan se med blotta ögat."], "crab": ["Krabbnebulosan ligger i stjärnbilden Oxen.", "Den fick sitt namn för att en tidig teckning av den liknade en krabba.", "Pulsaren i mitten är bara ungefär 20 km bred.", "Nebulosan är ungefär 11 ljusår bred."], "blackhole": ["Ett svart hål går inte att se direkt, bara det som händer runt det.", "Det finns troligen miljontals svarta hål bara i Vintergatan.", "Sagittarius A* väger ungefär 4 miljoner gånger mer än solen.", "De närmaste kända svarta hålen ligger mer än tusen ljusår bort, så jorden är inte i fara."]};
+const MORE={"sun": ["Solen består mest av väte och helium.", "Det skulle rymmas ungefär 1,3 miljoner jordar inuti solen.", "Vid ekvatorn snurrar solen ett varv på ungefär 25 dygn, men långsammare vid polerna.", "Solens yttersta lager, koronan, syns med blotta ögat bara under en total solförmörkelse."], "sirius": ["Sirius är en av de närmaste stjärnorna vi kan se med blotta ögat.", "Sirius A är ungefär dubbelt så tung som solen.", "Sirius B upptäcktes 1862 av Alvan Graham Clark.", "Sirius blinkar ofta i olika färger när den står lågt, eftersom luften bryter ljuset."], "polaris": ["Polstjärnan är en gul superjätte, mycket större och ljusare än solen.", "Den är den närmaste stjärnan av sitt slag, en så kallad cepheid som pulserar.", "I norra Sverige står Polstjärnan högre på himlen än i södra Sverige.", "Från södra halvklotet kan man inte se Polstjärnan alls."], "betelgeuse": ["Betelgeuse lyser ungefär 100 000 gånger starkare än solen.", "Den väger ungefär 15–20 gånger mer än solen.", "Namnet kommer från arabiskan.", "Ljusstyrkan ändras hela tiden, så ibland är den ljusare än Rigel och ibland svagare."], "mercury": ["Merkurius är bara ungefär 40 % bredare än vår måne.", "Merkurius krymper långsamt när den svalnar, och ytan har fått långa rynkor av klippbranter.", "Planeten har fått sitt namn efter romarnas snabba budbärargud.", "Merkurius har ingen måne."], "venus": ["Venus är nästan lika stor som jorden och kallas ibland jordens tvilling.", "Venus har inga månar.", "Venus kallas morgonstjärnan eller aftonstjärnan, fast den är en planet.", "Venus har fler vulkaner än någon annan planet i solsystemet."], "earth": ["Jorden är den tätaste planeten i solsystemet.", "Jorden är den största av de fyra steniga planeterna.", "Det högsta berget, Mount Everest, är nästan 8 850 meter högt.", "Jordens omkrets runt ekvatorn är ungefär 40 000 km."], "moon": ["Månen är ungefär en fjärdedel så bred som jorden.", "De mörka fläckarna kallas maria, latin för hav, men är stelnad lava.", "I kratrar vid månens poler, där solen aldrig lyser, finns is.", "Vid en månförmörkelse hamnar månen i jordens skugga och kan bli kopparröd."], "mars": ["Mars är ungefär hälften så bred som jorden.", "Solnedgångar på Mars ser blåaktiga ut.", "Mars har årstider, eftersom axeln lutar nästan lika mycket som jordens.", "Inga människor har varit på Mars ännu, men flera robotar har landat där."], "vesta": ["Vesta upptäcktes av Heinrich Olbers år 1807.", "Efter Ceres är Vesta det tyngsta föremålet i asteroidbältet.", "Ett dygn på Vesta är bara drygt 5 timmar.", "Vesta är inte helt rund utan lite tillplattad."], "ceres": ["Ceres står för ungefär en fjärdedel av all massa i asteroidbältet.", "Ceres är den enda dvärgplaneten som ligger innanför Neptunus bana.", "Ett dygn på Ceres är ungefär 9 timmar.", "Namnet kommer från den romerska gudinnan för åkerbruk."], "bennu": ["Bennu snurrar ett varv på ungefär 4,3 timmar.", "Bennu upptäcktes år 1999.", "Bennu passerar nära jorden ungefär vart sjätte år.", "Bennu är ungefär lika hög som en riktigt hög skyskrapa."], "jupiter": ["Jupiter har 101 kända månar (mars 2026). Bara Saturnus har fler.", "Jupiter har det starkaste magnetfältet av alla planeter.", "De fyra största månarna kallas de galileiska månarna, efter Galileo Galilei.", "Jupiter syns ofta som en av de ljusaste prickarna på natthimlen."], "io": ["Io är ungefär lika stor som vår måne.", "Io har nästan inga kratrar, eftersom ny lava hela tiden täcker över dem.", "Io är den innersta av Jupiters fyra stora månar.", "Material från Ios vulkaner bildar en ring av laddade partiklar runt Jupiter."], "europa": ["Europa är lite mindre än vår måne.", "Isytan är en av de slätaste i hela solsystemet.", "Vid ytan är det minus 160 °C eller ännu kallare.", "Europa är en av de platser där forskare tror att liv skulle kunna finnas."], "ganymede": ["Ganymedes är den tredje av Jupiters fyra stora månar, räknat inifrån.", "Ytan har både mörka, gamla områden och ljusare, randiga områden.", "Ganymedes består ungefär till hälften av is och till hälften av sten.", "Månen är uppkallad efter en person i grekisk mytologi."], "titan": ["Titan är den näst största månen i solsystemet.", "Titan är större än planeten Merkurius.", "Vid Titans yta är det ungefär minus 180 °C.", "Det orange diset gör att ytan inte går att se med vanliga kameror."], "saturn": ["Saturnus är den näst största planeten och har flest kända månar av alla, 285 stycken (mars 2026).", "Ringarna syns redan i ett litet teleskop.", "Vindarna runt ekvatorn kan blåsa i 1 800 km/h.", "Månen Enceladus sprutar ut vatten från ett hav under isen."], "uranus": ["Uranus har 29 kända månar, och många är uppkallade efter figurer hos Shakespeare.", "Uranus är ungefär fyra gånger så bred som jorden.", "Uranus snurrar baklänges jämfört med de flesta planeter.", "Ett dygn på Uranus är ungefär 17 timmar."], "neptune": ["Neptunus har 16 kända månar.", "Den blå färgen kommer från metan i atmosfären.", "Neptunus är ungefär fyra gånger så bred som jorden.", "Neptunus är den planet som ligger längst från solen."], "pluto": ["Pluto har berg av vattenis som är flera kilometer höga.", "Pluto har en tunn atmosfär av kväve.", "Banan är avlång, och ibland är Pluto närmare solen än Neptunus.", "Namnet föreslogs av en 11-årig flicka i England, Venetia Burney."], "halley": ["Halleys komet åker runt solen åt motsatt håll mot planeterna.", "När den är som längst bort är den bortom Neptunus bana.", "Nästa gång den är närmast solen är sommaren 2061.", "Halley är den enda kometen med kort omloppstid som brukar synas tydligt med blotta ögat."], "halebopp": ["Förra gången den var nära solen var för ungefär 4 200 år sedan.", "Hale-Bopp syntes som tydligast i mars och april 1997.", "Kärnan är flera gånger större än Halleys.", "Den kommer från Oorts moln, ett jättelikt moln av kometer långt utanför planeterna."], "c67p": ["Rosetta var en rymdsond från den europeiska rymdorganisationen ESA.", "Kometen är mycket mörk, nästan som kol.", "Tyngdkraften är så svag att ett hopp skulle kunna skicka ut dig i rymden.", "Kometen upptäcktes 1969 av Klim Tjurjumov och Svetlana Gerasimenko."], "sl9": ["De största bitarna var upp till ungefär två kilometer stora.", "Ett av nedslagen var starkare än alla kärnvapen på jorden tillsammans.", "I teleskop såg kometen ut som ett pärlband av små kometer.", "Fläckarna efter nedslagen syntes i teleskop från jorden."], "neowise": ["NEOWISE var den ljusaste kometen på norra halvklotet sedan Hale-Bopp 1997.", "När den var som ljusast gick den aldrig ner under horisonten sett från Sverige.", "NEOWISE hade också en svag svans av natrium.", "Den syntes bäst strax efter skymningen och före gryningen."], "encke": ["Enckes komet har setts vid fler varv runt solen än någon annan komet.", "Den åker aldrig så långt ut som till Jupiters bana.", "Rymdsonden MESSENGER fotograferade kometen år 2013.", "Kärnan är ungefär 5 km stor."], "tempel1": ["Kometen åker runt solen mellan Mars och Jupiters banor.", "Projektilen från Deep Impact krockade i ungefär 37 000 km/h.", "Tempel 1 var den första kometen som två olika rymdsonder har besökt.", "Kärnan är mörk och formad ungefär som en potatis."], "hyakutake": ["Hyakutake passerade nära Polstjärnan på himlen.", "Kärnan var ganska liten, bara några kilometer.", "Den kallas Den stora kometen 1996.", "Den syntes tydligt med blotta ögat bara ett år före Hale-Bopp."], "milkyway": ["Vintergatans skiva är ungefär 1 000 ljusår tjock.", "Solsystemet åker runt Vintergatans mitt med ungefär 800 000 km/h.", "Vintergatan är minst 13 miljarder år gammal.", "Två små granngalaxer, Stora och Lilla magellanska molnet, syns från södra halvklotet."], "andromeda": ["Andromeda syns som en suddig, avlång fläck med blotta ögat.", "Den persiske astronomen al-Sufi beskrev den redan på 900-talet.", "Andromeda är den största galaxen i vår lokala galaxgrupp.", "Mitt i Andromeda finns ett supermassivt svart hål som är mycket tyngre än Vintergatans."], "orion": ["Orionnebulosan kallas också M42.", "Gasen består mest av väte som lyser rött.", "I en kikare ser den ut som ett litet ljust moln.", "Den är en av de få nebulosor man kan se med blotta ögat."], "crab": ["Krabbnebulosan ligger i stjärnbilden Oxen.", "Den fick sitt namn för att en tidig teckning av den liknade en krabba.", "Pulsaren i mitten är bara ungefär 20 km bred.", "Nebulosan är ungefär 11 ljusår bred."], "blackhole": ["Ett svart hål går inte att se direkt, bara det som händer runt det.", "Det finns troligen miljontals svarta hål bara i Vintergatan.", "Sagittarius A* väger ungefär 4 miljoner gånger mer än solen.", "De närmaste kända svarta hålen ligger mer än tusen ljusår bort, så jorden är inte i fara."]};
 const SEE={"sun": "Titta aldrig direkt på solen, inte ens med solglasögon. Använd särskilda solförmörkelseglasögon, eller låt solen lysa genom ett litet hål i ett papper och titta på bilden på marken.", "sirius": "Lågt i söder på vinterkvällar. Följ Orions bälte snett nedåt åt vänster så kommer du rakt på den.", "polaris": "Hitta Karlavagnen och följ de två främre stjärnorna uppåt, ungefär fem gånger avståndet mellan dem. Polstjärnan står alltid åt norr.", "betelgeuse": "Vinterkvällar: den rödaktiga stjärnan uppe till vänster i Orion.", "mercury": "Svår att se. Leta lågt i väster strax efter solnedgången eller lågt i öster före gryningen, de veckor när den står längst från solen.", "venus": "Lätt att se! Den är det ljusaste på himlen efter solen och månen, lågt i väster på kvällen eller i öster på morgonen.", "earth": "Du står på den! Astronauterna på rymdstationen ISS ser ungefär 16 soluppgångar varje dygn.", "moon": "Lätt att se. Med en vanlig kikare syns kratrarna tydligast vid halvmåne, längs gränsen mellan ljus och mörker.", "mars": "Leta efter en orangeröd prick som inte blinkar. Ungefär vartannat år står Mars extra nära jorden och lyser starkt.", "vesta": "Ibland precis synlig med blotta ögat på en mycket mörk himmel, men lättare med kikare. En stjärnapp visar var den står.", "ceres": "Syns inte med blotta ögat, men i en kikare som en liten stjärna som flyttar sig från natt till natt.", "bennu": "För liten och mörk för att ses utan stora teleskop.", "jupiter": "Lätt att se som en mycket ljus prick. Håll en kikare stilla mot något, så kan du se upp till fyra små månar bredvid.", "io": "I en kikare syns Io som en liten prick bredvid Jupiter.", "europa": "I en kikare syns Europa som en liten prick bredvid Jupiter.", "ganymede": "I en kikare syns Ganymedes som en liten prick bredvid Jupiter. Den är den ljusaste av Jupiters månar.", "titan": "Syns som en liten prick bredvid Saturnus i ett litet teleskop.", "saturn": "Syns som en gulvit prick som inte blinkar. Ringarna syns redan i ett litet teleskop.", "uranus": "Precis på gränsen för vad ögat klarar. Lättare i kikare om du vet var du ska leta, till exempel med en stjärnapp.", "neptune": "Bara i kikare eller teleskop. Använd en stjärnapp för att hitta den.", "pluto": "Kräver ett ganska stort teleskop och mycket mörk himmel.", "halley": "Nästa gång den syns är 2061. Då är du vuxen!", "halebopp": "Den kommer inte tillbaka förrän runt år 4385.", "c67p": "Syns bara i stora teleskop.", "sl9": "Den finns inte längre, eftersom den krockade med Jupiter.", "neowise": "Den kommer inte tillbaka på tusentals år.", "encke": "Själva kometen kräver teleskop, men dess stjärnfall, Tauriderna, kan du se i oktober och november.", "tempel1": "Syns bara i teleskop.", "hyakutake": "Den kommer inte tillbaka på tiotusentals år.", "milkyway": "Bäst en mörk natt i augusti eller september, långt från gatlampor. Den syns som ett ljust band genom Svanen och Kassiopeja.", "andromeda": "Höstkvällar högt på himlen nära Kassiopeja. I kikare syns den som en avlång dimfläck.", "orion": "Vinterkvällar under Orions bälte. Med blotta ögat ser den ut som en suddig stjärna i svärdet, och i kikare som ett litet moln.", "crab": "Behöver teleskop. Den står nära stjärnan Zeta Tauri i stjärnbilden Oxen.", "blackhole": "Går inte att se. Forskare hittar svarta hål genom att se hur stjärnor och gas rör sig runt dem."};
 
-/* Automatiska frågor från faktarutorna, så att quizet räcker till många omgångar */
+/* ===================== Nya ämnen: rymdfart, exoplaneter, ISS, astronauter ===================== */
+Object.assign(B,{
+ exoplanet:{name:'Exoplaneter',short:'Exoplaneter',type:'Planeter runt andra stjärnor',cat:'tema',icon:'exo',c1:'#8fd3ff',c2:'#ff7aa8',
+  tag:'Planeter som kretsar runt andra stjärnor än solen. Vi har hittat över 6 000 av dem.',
+  stats:[['Bekräftade','över 6 000'],['Första runt en sollik stjärna','1995'],['Närmaste','Proxima b, ca 4,2 ljusår'],['Vanligaste sättet att hitta dem','Stjärnan mörknar lite']],
+  facts:['När en planet passerar framför sin stjärna blir stjärnan en aning mörkare. Så har de flesta exoplaneter hittats.','Det finns heta jupitrar, jättar som ligger så nära sin stjärna att ett år bara tar några dygn.','Stjärnan TRAPPIST-1 har sju planeter ungefär lika stora som jorden.'],
+  did:'Nästan varje stjärna du ser på natthimlen har troligen minst en planet. Det betyder att det finns fler planeter än stjärnor i Vintergatan!'},
+ rocket:{name:'Raketer',short:'Raketer',type:'Så tar vi oss ut i rymden',cat:'tema',icon:'rocket',c1:'#ffd98a',c2:'#ff7a45',
+  tag:'En raket kastar ut het gas bakåt i väldig fart. Då trycks raketen framåt, ända ut i rymden.',
+  stats:[['Fart för att stanna i bana','ca 28 000 km/h'],['Första satelliten','1957'],['Månraketen Saturn V','111 m hög'],['Uppskjutning till bana','ca 9 minuter']],
+  facts:['En raket fungerar som en ballong som man släpper. Luften åker ut åt ena hållet och ballongen åker åt andra.','De flesta raketer har flera steg. När ett steg är tomt släpps det, så att raketen blir lättare.','I dag kan vissa raketsteg landa igen och användas flera gånger.'],
+  did:'En raket behöver inte luft att trycka mot. Den fungerar till och med bättre i rymden, där inget bromsar.'},
+ iss:{name:'Rymdstationen ISS',short:'ISS',type:'Ett hem i rymden',cat:'tema',icon:'iss',c1:'#e9ecff',c2:'#5d7cff',
+  tag:'Ett stort laboratorium som kretsar runt jorden. Astronauter har bott där hela tiden sedan år 2000.',
+  stats:[['Höjd','ca 400 km'],['Ett varv runt jorden','ca 90 minuter'],['Fart','ca 28 000 km/h'],['Bemannad sedan','november 2000']],
+  facts:['ISS är ungefär lika lång som en fotbollsplan, med solpaneler på sidorna.','Astronauterna sover i sovsäckar som sitter fast i väggen, så att de inte svävar iväg.','Du kan se ISS med blotta ögat som en stark prick som glider över himlen utan att blinka.'],
+  did:'Astronauterna på ISS ser ungefär 16 soluppgångar och 16 solnedgångar varje dygn.'},
+ astronaut:{name:'Bli astronaut',short:'Astronaut',type:'Ett jobb i rymden',cat:'tema',icon:'astro',c1:'#e9ecff',c2:'#ffc94a',
+  tag:'Astronauter är vanliga människor som har tränat väldigt mycket. Två svenskar har varit i rymden.',
+  stats:[['Svenskar i rymden','2'],['Första människan','Jurij Gagarin, 1961'],['Längst bort','ca 406 800 km (Artemis II, 2026)'],['Rymdorganisation för Sverige','ESA']],
+  facts:['Christer Fuglesang var den första svensken i rymden, år 2006. Marcus Wandt var den andra, år 2024.','Astronauter tränar rymdpromenader under vatten i en jättelik bassäng, där det känns nästan som att sväva.','I rymden blir man lite längre, eftersom ryggraden inte trycks ihop av tyngdkraften.'],
+  did:'Många astronauter har först varit piloter, läkare, ingenjörer eller forskare. Att vara nyfiken och kunna samarbeta är superviktigt!'}});
+['exoplanet','rocket','iss','astronaut'].forEach(k=>ORDER.push(k));
+CATS.push(['tema','Rymdfart & mer']);
+
+Object.assign(MORE,{
+ exoplanet:['Den första exoplaneten runt en stjärna som liknar solen heter 51 Pegasi b och hittades 1995.','Rymdteleskopen Kepler och TESS har hittat tusentals exoplaneter.','James Webb-teleskopet kan undersöka luften på vissa exoplaneter.','En del exoplaneter ligger i den beboeliga zonen, där det varken är för varmt eller för kallt för flytande vatten.'],
+ rocket:['Den sovjetiska raketen som skickade upp Sputnik 1957 var den första som nådde omloppsbana.','Saturn V tog astronauterna till månen mellan 1969 och 1972.','Den 1 april 2026 skickade NASA:s SLS-raket upp fyra astronauter i Artemis II mot månen.','Från Esrange utanför Kiruna skjuter Sverige upp forskningsraketer.'],
+ iss:['ISS byggdes ihop i rymden av många delar, som ett jättelikt lego.','USA, Ryssland, Europa, Japan och Kanada samarbetar om ISS.','På ISS återvinns nästan allt vatten, även svett och kiss, till dricksvatten.','Planen är att ISS ska tas ner och brinna upp i atmosfären runt år 2030.'],
+ astronaut:['Jurij Gagarin var den första människan i rymden, år 1961.','Neil Armstrong var den första människan på månen, år 1969.','Valentina Teresjkova var den första kvinnan i rymden, år 1963.','I april 2026 flög Artemis II runt månen. Det var första gången sedan 1972 som människor reste till månen.']});
+Object.assign(SEE,{
+ exoplanet:'Exoplaneterna syns inte, men du kan se deras stjärnor. Stjärnan 51 Pegasi står i Pegasus, som syns på höstkvällar.',
+ rocket:'Uppskjutningar sänds ofta direkt på nätet. Ibland kan du se forskningsraketer från Esrange i norra Sverige.',
+ iss:'Leta efter en stark, vit prick som glider jämnt över himlen i några minuter strax efter skymningen eller före gryningen. Appar visar när den passerar.',
+ astronaut:'Följ ESA och NASA på nätet. Där kan du se astronauterna jobba på rymdstationen.'});
+Object.assign(DEEP,{
+ exoplanet:[['Hur hittar man dem?','Transitmetoden mäter när stjärnan mörknar lite. Med radialhastighetsmetoden ser man att stjärnan vickar fram och tillbaka när planeten drar i den.'],['Konstiga världar','Det finns planeter som kretsar runt två solar, planeter täckta av hav och planeter som är hetare än lava.'],['Finns det liv?','Forskare letar efter gaser i exoplaneternas luft som skulle kunna komma från liv. Hittills har inget säkert spår hittats.']],
+ rocket:[['Newtons tredje lag','Varje kraft har en lika stor motkraft. Gasen trycks bakåt, raketen trycks framåt.'],['Snabbt i sidled','För att stanna i bana måste man flyga så fort i sidled att man hela tiden faller runt jorden utan att träffa den.'],['Bränsle','Många raketer bränner flytande väte eller fotogen tillsammans med flytande syre. Det mesta av raketens vikt vid starten är bränsle.']],
+ iss:[['Ständigt fall','Astronauterna svävar inte för att tyngdkraften är borta. De och stationen faller hela tiden runt jorden tillsammans.'],['Forskning','På ISS gör man experiment om kroppen, växter, material och eld i tyngdlöshet.'],['Träning varje dag','Utan tyngdkraft blir muskler och skelett svagare. Därför tränar astronauterna ungefär två timmar om dagen.']],
+ astronaut:[['Hur blir man vald?','ESA söker nya astronauter ungefär vart tionde år. Senast sökte över 22 000 personer och 17 valdes ut år 2022.'],['Lång utbildning','Utbildningen tar flera år. Man lär sig om rymdfarkoster, rymdpromenader, första hjälpen, ryska och överlevnad i vildmarken.'],['Vad ska jag plugga?','Naturvetenskap, teknik, matematik eller medicin är bra vägar. Bra hälsa, lugn under stress och lagarbete är också viktigt.']]});
+ITEMS.push(
+ {k:'exoplanet',q:'Vad är en exoplanet?',a:'En planet runt en annan stjärna',w:['En planet utan måne','En planet som har exploderat','En stor asteroid'],ex:'Exo betyder utanför. Exoplaneter finns utanför vårt solsystem.'},
+ {k:'exoplanet',q:'Hur hittar man oftast exoplaneter?',a:'Stjärnan blir lite mörkare',w:['Man ser dem med blotta ögat','Man hör dem i radio','De lyser rött'],ex:'När planeten passerar framför sin stjärna blockerar den lite ljus.'},
+ {k:'exoplanet',q:'Ungefär hur många exoplaneter är bekräftade?',a:'Över 6 000',w:['Ungefär 10','Ungefär 100','Exakt 8'],ex:'NASA passerade 6 000 bekräftade exoplaneter år 2025.',hard:1},
+ {k:'exoplanet',q:'Hur många jordstora planeter har stjärnan TRAPPIST-1?',a:'7',w:['1','3','12'],ex:'TRAPPIST-1 har sju planeter ungefär lika stora som jorden.',hard:1},
+ {k:'rocket',q:'Varför åker en raket framåt?',a:'Den sprutar ut gas bakåt',w:['Den trycker mot luften','Vingarna lyfter den','Magneter drar den'],ex:'Gasen trycks bakåt och raketen trycks framåt. Det fungerar även i rymden.'},
+ {k:'rocket',q:'Varför har raketer flera steg?',a:'Tomma steg släpps så raketen blir lättare',w:['För att det ser coolt ut','För att astronauterna ska kunna byta plats','För att bromsa'],ex:'En lättare raket kan komma snabbare och längre med mindre bränsle.'},
+ {k:'rocket',q:'Vilken raket tog astronauterna till månen 1969?',a:'Saturn V',w:['Sputnik','Falcon 9','Ariane 6'],ex:'Saturn V var 111 meter hög.',hard:1},
+ {k:'rocket',q:'Varifrån skjuter Sverige upp forskningsraketer?',a:'Esrange vid Kiruna',w:['Göteborg','Gotland','Stockholm'],ex:'Esrange ligger i norra Sverige.',hard:1},
+ {k:'iss',q:'Hur lång tid tar ett varv runt jorden för ISS?',a:'Ungefär 90 minuter',w:['Ett dygn','En vecka','Ett år'],ex:'ISS åker i ungefär 28 000 km/h.'},
+ {k:'iss',q:'Varför svävar astronauterna på ISS?',a:'De faller runt jorden hela tiden',w:['Det finns ingen tyngdkraft där','De har magnetskor','De väger ingenting'],ex:'Tyngdkraften finns kvar, men stationen och astronauterna faller tillsammans runt jorden.',hard:1},
+ {k:'iss',q:'Hur ser ISS ut på himlen?',a:'En stark prick som glider fram',w:['En röd blinkande lampa','Ett suddigt moln','Den syns inte alls'],ex:'Den blinkar inte och rör sig jämnt över himlen i några minuter.'},
+ {k:'iss',q:'Ungefär hur högt upp åker ISS?',a:'400 km',w:['10 km','4 000 km','400 000 km'],ex:'Det är ungefär som avståndet från Stockholm till Göteborg.',hard:1},
+ {k:'astronaut',q:'Vem var den första svensken i rymden?',a:'Christer Fuglesang',w:['Marcus Wandt','Neil Armstrong','Jurij Gagarin'],ex:'Christer Fuglesang flög år 2006.'},
+ {k:'astronaut',q:'Var tränar astronauter rymdpromenader?',a:'I en stor bassäng',w:['I en bastu','På en fotbollsplan','I en hiss'],ex:'Under vatten känns det nästan som att sväva.'},
+ {k:'astronaut',q:'Vem var den första människan i rymden?',a:'Jurij Gagarin',w:['Neil Armstrong','Christer Fuglesang','Valentina Teresjkova'],ex:'Gagarin åkte ett varv runt jorden 1961.'},
+ {k:'astronaut',q:'Vad hände med Artemis II i april 2026?',a:'Fyra astronauter flög runt månen',w:['Den landade på Mars','Den byggde en månbas','Den hämtade en komet'],ex:'Det var första gången sedan 1972 som människor reste till månen.',hard:1});
+ITEMS.forEach(it=>it.id=it.id||it.q);
+GLOSSARY.push(
+ ['Exoplanet','En planet som kretsar runt en annan stjärna än solen.'],
+ ['Beboelig zon','Området runt en stjärna där det varken är för varmt eller för kallt för flytande vatten.'],
+ ['Raketsteg','En del av en raket med egen motor och eget bränsle. Den släpps när bränslet är slut.'],
+ ['Tyngdlöshet','När man faller fritt och därför känns viktlös, som astronauterna på ISS.'],
+ ['Rymdpromenad','När en astronaut går ut ur rymdfarkosten i rymddräkt.']);
+TIMELINE.push([2026,'Artemis II','Fyra astronauter flyger runt månen.','Den 1–10 april 2026 flög Reid Wiseman, Victor Glover, Christina Koch och Jeremy Hansen runt månen. De kom ungefär 406 800 km från jorden, längre än någon människa varit tidigare.']);
+
+/* ---------- Lättlästa texter för Nybörjare (6–8 år) ---------- */
+const KID={
+ sun:['Solen är en jättestor, het boll av gas. Den ger oss ljus och värme.','Solen är en stjärna, precis som stjärnorna på natten.','Solen är så stor att mer än en miljon jordar skulle få plats inuti.','Titta aldrig rakt på solen. Det är farligt för ögonen.'],
+ sirius:['Sirius är den ljusaste stjärnan på natthimlen.','Sirius är egentligen två stjärnor som snurrar runt varandra.','Den syns bäst på vintern.','Sirius kallas ibland Hundstjärnan.'],
+ polaris:['Polstjärnan visar alltid var norr är.','Den står nästan stilla på himlen medan andra stjärnor snurrar runt.','Förr använde sjömän den för att hitta rätt.','Du hittar den med hjälp av Karlavagnen.'],
+ betelgeuse:['Betelgeuse är en jättestor röd stjärna i Orion.','Om den låg där solen ligger skulle den nå förbi Mars.','En dag kommer den att explodera, men kanske inte på väldigt länge.','Den syns på vinterkvällar.'],
+ mercury:['Merkurius är den minsta planeten och ligger närmast solen.','På dagen är det jättevarmt och på natten iskallt.','Merkurius har massor av gropar som kallas kratrar.','Den åker snabbast av alla planeter runt solen.'],
+ venus:['Venus är den hetaste planeten. Den är täckt av tjocka moln.','Venus är nästan lika stor som jorden.','Venus är ofta det ljusaste du ser på himlen, efter månen.','På Venus går solen upp i väster.'],
+ earth:['Jorden är vårt hem. Här finns vatten, luft och liv.','Jorden snurrar ett varv på ett dygn. Det ger dag och natt.','Ett varv runt solen tar ett år.','Det mesta av jorden är täckt av hav.'],
+ moon:['Månen åker runt jorden. Den har inget eget ljus utan lyser av solen.','Tolv astronauter har gått på månen.','Månen ser ut att ändra form. Det kallas månens faser.','Det finns gropar på månen som kallas kratrar.'],
+ mars:['Mars är den röda planeten. Marken är röd som rost.','På Mars finns den högsta vulkanen vi känner till.','Robotbilar kör runt på Mars och tar bilder.','Mars har två små månar.'],
+ vesta:['Vesta är en stor sten i rymden, en asteroid.','Den finns mellan Mars och Jupiter.','Vesta har en jättestor grop på sydpolen.','Små bitar av Vesta har landat på jorden.'],
+ ceres:['Ceres är en liten rund värld, en dvärgplanet.','Den bor i asteroidbältet mellan Mars och Jupiter.','På Ceres finns ljusa fläckar av salt.','En rymdsond som hette Dawn har hälsat på där.'],
+ bennu:['Bennu är en liten asteroid, ungefär som ett högt berg.','En rymdsond hämtade sten från Bennu och skickade hem den.','Bennu ser ut som en snurrsnurra.','Den är full av stenar och grus.'],
+ jupiter:['Jupiter är den största planeten. Den är gjord av gas.','Jupiter har en jättestor storm som heter Stora röda fläcken.','Stormen är större än hela jorden.','Jupiter har väldigt många månar.'],
+ io:['Io är en måne till Jupiter med massor av vulkaner.','Den är gul och orange, nästan som en pizza.','Vulkanerna sprutar högt upp i rymden.','Io är ungefär lika stor som vår måne.'],
+ europa:['Europa är en måne till Jupiter täckt av is.','Under isen finns ett stort hav.','Forskare undrar om det kan finnas liv i havet.','En rymdsond är på väg dit nu.'],
+ ganymede:['Ganymedes är den största månen i hela solsystemet.','Den är större än planeten Merkurius.','Under isen finns kanske ett hav.','Ganymedes är en måne till Jupiter.'],
+ titan:['Titan är Saturnus största måne. Den har tjock orange luft.','På Titan regnar det, men inte vatten.','Där finns sjöar och floder.','En flygande robot ska åka dit.'],
+ saturn:['Saturnus är planeten med de vackra ringarna.','Ringarna är gjorda av is och sten.','Saturnus är så lätt att den skulle kunna flyta i ett jättestort badkar.','Saturnus har flest månar av alla planeter.'],
+ uranus:['Uranus är en kall, blågrön planet.','Den ligger på sidan och rullar runt solen.','Uranus är väldigt långt borta.','Den har tunna ringar.'],
+ neptune:['Neptunus är den planet som ligger längst bort från solen.','Den är blå och det blåser jättemycket där.','Ett år på Neptunus är 165 jordår långt.','Bara en rymdsond har hälsat på där.'],
+ pluto:['Pluto är en liten, kall dvärgplanet långt borta.','Pluto har ett stort ljust område som ser ut som ett hjärta.','Förr kallades Pluto planet.','Pluto har fem månar.'],
+ halley:['Halleys komet är en smutsig snöboll som åker runt solen.','Den kommer tillbaka ungefär vart 76:e år.','Nästa gång den syns är år 2061.','När den kommer nära solen får den en lång svans.'],
+ halebopp:['Hale-Bopp är en stor komet med två svansar.','Den syntes jättetydligt år 1997.','Många människor kunde se den utan kikare.','Den kommer inte tillbaka på flera tusen år.'],
+ c67p:['67P är en komet som ser ut som en gummianka.','En liten robot landade på den.','Kometen är mörk som kol.','Den är gjord av is och damm.'],
+ sl9:['Shoemaker-Levy 9 var en komet som krockade med Jupiter.','Kometen gick sönder i flera bitar först.','Bitarna gjorde stora mörka fläckar på Jupiter.','Det hände år 1994.'],
+ neowise:['NEOWISE var en komet som syntes år 2020.','Den hade en lång, fin svans.','Man kunde se den från Sverige på sommarnätterna.','Den kommer inte tillbaka på mycket länge.'],
+ encke:['Enckes komet åker runt solen ofta, ungefär vart tredje år.','Den lämnar damm efter sig.','Dammet blir stjärnfall på hösten.','Den är svår att se utan teleskop.'],
+ tempel1:['Tempel 1 är en komet som forskare skickade en kula på.','Kulan gjorde ett hål så att man kunde se vad som fanns inuti.','Kometen ser ut som en potatis.','Det hände år 2005.'],
+ hyakutake:['Hyakutake var en komet med en jättelång svans.','Den syntes år 1996.','Den kom nära jorden.','Den kommer inte tillbaka på väldigt länge.'],
+ milkyway:['Vintergatan är vår galax. Där bor solen och jorden.','Den består av miljarder stjärnor.','En mörk natt kan du se den som ett ljust band på himlen.','Vintergatan snurrar långsamt runt.'],
+ andromeda:['Andromeda är en annan galax, en granne till oss.','Den är så långt bort att ljuset tar 2,5 miljoner år att komma hit.','Du kan se den som en suddig fläck.','Den är ungefär lika stor som vår galax.'],
+ orion:['Orionnebulosan är ett moln där nya stjärnor föds.','Den syns som en suddig stjärna i Orions svärd.','Molnet lyser i rött och lila.','Det är en stjärnfabrik.'],
+ crab:['Krabbnebulosan är det som blev kvar när en stjärna exploderade.','Explosionen syntes på jorden för nästan tusen år sedan.','I mitten snurrar en liten stjärna jättefort.','Den syns bara i teleskop.'],
+ blackhole:['Ett svart hål drar i allt runt sig, till och med ljus.','Därför är det helt svart.','Svarta hål finns långt bort från oss.','I mitten av vår galax finns ett jättestort svart hål.'],
+ exoplanet:['Exoplaneter är planeter som snurrar runt andra stjärnor.','Forskare har hittat tusentals av dem.','Vi letar efter planeter som liknar jorden.','Kanske finns det liv någon annanstans!'],
+ rocket:['En raket sprutar ut het gas bakåt och åker då uppåt.','Raketer tar astronauter och satelliter till rymden.','Raketer är jättesnabba.','Vissa raketer kan landa och flyga igen.'],
+ iss:['ISS är ett hus i rymden där astronauter bor.','Den åker runt jorden på en och en halv timme.','Där svävar allt omkring.','Du kan se den som en ljus prick på himlen.'],
+ astronaut:['En astronaut är någon som reser ut i rymden.','Astronauter tränar jättemycket, bland annat i en stor pool.','Två svenskar har varit i rymden.','Kanske kan du bli astronaut en dag!']};
+const kidOK=k=>LVc()===LV.nyb&&KID[k];
+const bodyTag=k=>kidOK(k)?KID[k][0]:B[k].tag;
+const bodyFacts=k=>kidOK(k)?KID[k].slice(1):B[k].facts.concat(MORE[k]||[]).slice(0,LVc().facts);
+
+/* ---------- Ikoner för temaämnen ---------- */
+function themeSVG(k,id,cls){const p=B[k];let g='';
+ if(p.icon==='exo')g=`<defs><radialGradient id="${id}s"><stop offset="0" stop-color="#fff6c8"/><stop offset=".5" stop-color="#ffb03a"/><stop offset="1" stop-color="#ff7a1f" stop-opacity="0"/></radialGradient><radialGradient id="${id}p" cx=".35" cy=".35"><stop offset="0" stop-color="#9ef0d4"/><stop offset="1" stop-color="#1c6a8a"/></radialGradient></defs>
+  <circle cx="34" cy="40" r="30" fill="url(#${id}s)"/><ellipse cx="50" cy="52" rx="44" ry="12" fill="none" stroke="#8ea0ff" stroke-width="1.2" stroke-dasharray="3 4" opacity=".7"/><circle cx="78" cy="58" r="11" fill="url(#${id}p)"/><circle cx="20" cy="62" r="5" fill="#ff9ab8"/>`;
+ if(p.icon==='rocket')g=`<path d="M50 6c14 10 18 30 14 50H36C32 36 36 16 50 6z" fill="#eef1ff"/><path d="M50 6c6 4 10 10 12 18H38c2-8 6-14 12-18z" fill="#ff5d73"/><circle cx="50" cy="36" r="7" fill="#3a4bd8" stroke="#b9c6ff" stroke-width="2.5"/>
+  <path d="M36 44 22 62l14-2zM64 44l14 18-14-2z" fill="#ff5d73"/><rect x="40" y="56" width="20" height="6" rx="2" fill="#9aa3c7"/><path d="M42 62q8 30 16 0z" fill="#ffc94a"/><path d="M45 62q5 18 10 0z" fill="#fff6c8"/>`;
+ if(p.icon==='iss')g=`<g fill="#5d7cff" stroke="#b9c6ff" stroke-width="1"><rect x="4" y="22" width="18" height="22"/><rect x="4" y="56" width="18" height="22"/><rect x="78" y="22" width="18" height="22"/><rect x="78" y="56" width="18" height="22"/></g>
+  <g stroke="#3a4bd8" stroke-width=".8" opacity=".7"><path d="M4 33h18M4 67h18M78 33h18M78 67h18M13 22v22M13 56v22M87 22v22M87 56v22"/></g><rect x="12" y="47" width="76" height="6" rx="2" fill="#d8dcf0"/><rect x="38" y="36" width="24" height="28" rx="6" fill="#eef1ff"/><rect x="44" y="28" width="12" height="44" rx="5" fill="#cfd5ef"/><circle cx="50" cy="50" r="4" fill="#ffc94a"/>`;
+ if(p.icon==='astro')return astro('wave',`art ${cls}`,{suit:'#e9ecff',visor:'#262c78',glow:'#ffc94a',acc:'flag'});
+ return `<svg class="art ${cls}" viewBox="0 0 100 100" role="img" aria-label="${p.name}">${g}</svg>`;}
+
+/* ---------- Automatiska frågor från faktarutorna ---------- */
 (function(){
   const T={
-   'Avstånd till solen':[n=>`Hur långt från solen ligger ${n}?`,v=>`Vilken himlakropp ligger ${v} från solen?`],
-   'Ett år':[n=>`Hur lång tid tar ett år på ${n}?`,v=>`Var tar ett år ${v}?`],
-   'Ett dygn':[n=>`Hur långt är ett dygn på ${n}?`,v=>`Var är ett dygn ${v} långt?`],
-   'Månar':[n=>`Hur många månar har ${n}?`,null],
-   'Upptäckt':[n=>`Vilket år upptäcktes ${n}?`,v=>`Vad upptäcktes år ${v}?`],
-   'Diameter':[n=>`Hur bred är ${n}?`,v=>`Vilken himlakropp är ${v} bred?`],
-   'Temperatur':[n=>`Vilken temperatur är det på ${n}?`,null],
-   'Avstånd':[n=>`Hur långt bort är ${n}?`,v=>`Vad ligger ${v} bort?`],
-   'Omloppstid':[n=>`Hur lång tid tar ett varv runt solen för ${n}?`,v=>`Vilken komet åker ett varv runt solen på ${v}?`],
-   'Storlek':[n=>`Hur stor är ${n}?`,null],
-   'Färg':[n=>`Vilken färg har ${n}?`,null],
-   'Rymdsond':[n=>`Vilken rymdsond besökte ${n}?`,v=>`Vad besökte rymdsonden ${v}?`]};
-  const by={};ORDER.forEach(k=>B[k].stats.forEach(([l,v])=>{if(T[l])(by[l]=by[l]||[]).push([k,v]);}));
+   'Avstånd till solen':[n=>`Hur långt från solen ligger ${n}?`,v=>`Vilken himlakropp ligger ${v} från solen?`,(n,v)=>`${n} ligger ${v} från solen.`],
+   'Ett år':[n=>`Hur lång tid tar det för ${n} att åka ett varv runt solen?`,v=>`På vilken himlakropp är ett år ${v} långt?`,(n,v)=>`Ett år på ${n} är ${v} långt.`],
+   'Ett dygn':[n=>`Hur långt är ett dygn på ${n}?`,v=>`På vilken himlakropp är ett dygn ${v} långt?`,(n,v)=>`Ett dygn på ${n} är ${v} långt.`],
+   'Månar':[n=>`Hur många kända månar har ${n}?`,null,(n,v)=>`${n} har ${v} kända månar.`],
+   'Upptäckt':[n=>`Vilket år upptäcktes ${n}?`,v=>`Vilken himlakropp upptäcktes år ${v}?`,(n,v)=>`${n} upptäcktes år ${v}.`],
+   'Diameter':[n=>`Hur bred är ${n}?`,v=>`Vilken himlakropp är ${v} bred?`,(n,v)=>`${n} är ${v} bred.`],
+   'Temperatur':[n=>`Hur varmt eller kallt är det på ${n}?`,null,(n,v)=>`På ${n} är det ${v}.`],
+   'Avstånd':[n=>`Hur långt bort är ${n}?`,v=>`Vad ligger ${v.replace(/\s*\(.*?\)/,"")} bort från oss?`,(n,v)=>`${n} ligger ${v} bort.`],
+   'Omloppstid':[n=>`Hur ofta kommer ${n} tillbaka till solen?`,v=>`Vilken komet åker ett varv runt solen på ${v}?`,(n,v)=>`${n} åker ett varv runt solen på ${v}.`],
+   'Rymdsond':[n=>`Vilken rymdsond besökte ${n}?`,v=>`Vad besökte rymdsonden ${v}?`,(n,v)=>`Rymdsonden ${v} besökte ${n}.`]};
+  const by={};ORDER.forEach(k=>{if(catOf(k)==='tema')return;B[k].stats.forEach(([l,v])=>{if(T[l])(by[l]=by[l]||[]).push([k,v]);});});
   for(const l in by){const rows=by[l],vals=[...new Set(rows.map(r=>r[1]))];if(vals.length<4)continue;
-    rows.forEach(([k,v])=>{const n=B[k].name,others=shuffle(vals.filter(x=>x!==v)).slice(0,3);
-      ITEMS.push({gen:1,hard:1,k,q:T[l][0](n),a:v,w:others,ex:`${n}: ${l.toLowerCase()} ${v}.`,id:'g1:'+k+':'+l});
+    rows.forEach(([k,v])=>{const n=B[k].name,others=shuffle(vals.filter(x=>x!==v)).slice(0,3),ex=T[l][2](n,v);
+      ITEMS.push({gen:1,hard:1,k,q:T[l][0](n),a:v,w:others,ex,id:'g1:'+k+':'+l});
       if(T[l][1]&&rows.filter(r=>r[1]===v).length===1){const wn=shuffle(rows.filter(r=>r[0]!==k).map(r=>B[r[0]].name)).slice(0,3);
-        if(wn.length===3)ITEMS.push({gen:1,k,q:T[l][1](v),a:n,w:wn,ex:`${n}: ${l.toLowerCase()} ${v}.`,id:'g2:'+k+':'+l});}});}
+        if(wn.length===3)ITEMS.push({gen:1,k,q:T[l][1](v),a:n,w:wn,ex,id:'g2:'+k+':'+l});}});}
 })();
+
+/* ---------- Riktiga foton (NASA, fri användning) ---------- */
+const PHOTO={"andromeda": ["PIA04921", "NASA/JPL-Caltech (GALEX, ultraviolett ljus)"], "ceres": ["PIA21906", "NASA/JPL-Caltech/UCLA/MPS/DLR/IDA (Dawn)"], "crab": ["PIA03606", "NASA/ESA/Hubble"], "earth": ["GSFC_20171208_Archive_e001386", "NASA Goddard (Blue Marble)"], "europa": ["PIA19048", "NASA/JPL-Caltech/SETI Institute (Galileo)"], "exoplanet": ["PIA22093", "NASA/JPL-Caltech (målning, inte foto)"], "ganymede": ["PIA24681", "NASA/JPL-Caltech/SwRI/MSSS (Juno)"], "halley": ["PIA17485", "ESA/Giotto via NASA"], "io": ["PIA02308", "NASA/JPL/University of Arizona (Galileo)"], "iss": ["iss066e080166", "NASA (foto från Crew Dragon)"], "jupiter": ["PIA04866", "NASA/JPL/Space Science Institute (Cassini)"], "mars": ["PIA00407", "NASA/JPL/USGS (Viking)"], "mercury": ["PIA15160", "NASA/JHUAPL/Carnegie (MESSENGER)"], "milkyway": ["PIA12348", "NASA/JPL-Caltech/ESA/CXC/STScI (mitten av Vintergatan)"], "moon": ["GSFC_20171208_Archive_e001861", "NASA Goddard (LRO)"], "neptune": ["PIA01492", "NASA/JPL (Voyager 2)"], "orion": ["PIA04227", "NASA/Hubble Heritage Team (del av Orionnebulosan)"], "rocket": ["NHQ202211160030", "NASA/Bill Ingalls (Artemis I)"], "saturn": ["PIA11141", "NASA/JPL/Space Science Institute (Cassini)"], "sun": ["GSFC_20171208_Archive_e002035", "NASA/SDO (ultraviolett ljus)"], "tempel1": ["PIA02137", "NASA/JPL-Caltech/UMD (Deep Impact)"], "titan": ["PIA14602", "NASA/JPL-Caltech/Space Science Institute (Cassini)"], "uranus": ["PIA18182", "NASA/JPL-Caltech (Voyager 2)"], "venus": ["PIA23791", "NASA/JPL-Caltech (Mariner 10)"], "vesta": ["PIA14778", "NASA/JPL-Caltech/UCLA/MPS/DLR/IDA (Dawn)"]};
 
 /* ===================== Motor: brus, texturer, 3D-sfärer ===================== */
 const PI=Math.PI, TAU=PI*2;
@@ -1441,7 +1605,7 @@ function galaxySVG(p,id,cls){const andro=p.galaxy==='andromeda',R=seeded(andro?1
   const body=andro?`<ellipse cx="50" cy="50" rx="78" ry="34" fill="url(#${id}h)" transform="rotate(-35 50 50)"/><g transform="translate(50 50) rotate(-35) scale(1 .36) translate(-50 -50)"><g class="spin">${dots}${core}</g></g><circle cx="70" cy="58" r="4" fill="url(#${id}g)"/><ellipse cx="26" cy="30" rx="6" ry="3.5" fill="url(#${id}g)" opacity=".7"/>`
     :`<ellipse cx="50" cy="50" rx="74" ry="48" fill="url(#${id}h)"/><g transform="rotate(-18 50 50)"><g class="spin">${dots}${core}${you}</g></g>`;
   return `<svg class="art ${cls}" viewBox="-30 -30 160 160" role="img" aria-label="${p.name}">${defs}${body}</svg>`;}
-function art(k,cls='',style=''){const p=B[k],id='a'+(uid++);let h;if(p.comet)h=cometSVG(p,id,cls);else if(p.galaxy)h=galaxySVG(p,id,cls);
+function art(k,cls='',style=''){const p=B[k],id='a'+(uid++);let h;if(p.icon)h=themeSVG(k,id,cls);else if(p.comet)h=cometSVG(p,id,cls);else if(p.galaxy)h=galaxySVG(p,id,cls);
   else h=`<canvas class="art body3d ${p.nebula?'neb ':''}${cls}" data-body="${k}" role="img" aria-label="${p.name}"></canvas>`;
   return style?h.replace(/^<(\w+) /,`<$1 style="${style}" `):h;}
 
@@ -1455,10 +1619,13 @@ const ROCKET=`<svg class="rocket" viewBox="0 0 40 40" aria-hidden="true"><path d
 /* ---------- Tillstånd ---------- */
 const LEVELS=['Rymdkadett','Månpilot','Astronaut','Rymdkapten','Kometjägare','Galaxutforskare','Stjärnamiral'];
 const PER=80;
-let S={xp:0,learned:[],box:{},badges:[],consts:[],cardsKnown:0,perfect:false,hardGood:false,weighed:false,lightNeptune:false,mapYear:false,timeline:false,sound:true,music:false,weight:35,deep:[],skyTasks:[],skyQuiz:false,terms:[],path:{},missed:[],qSeen:[],profile:null,greeted:'',daily:null,streak:0,lastDay:'',bestStreak:0,lite:false};
-try{const r=localStorage.getItem('rymdakademin-v1');if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}
+let S={xp:0,learned:[],box:{},badges:[],consts:[],cardsKnown:0,perfect:false,hardGood:false,weighed:false,lightNeptune:false,mapYear:false,timeline:false,sound:true,music:false,weight:35,deep:[],skyTasks:[],skyQuiz:false,terms:[],path:{},missed:[],qSeen:[],profile:null,greeted:'',daily:null,streak:0,lastDay:'',bestStreak:0,lite:false,stats:{},rounds:[],fsize:1,readable:false,remind:null};
+const PKEY='rymdakademin-profiles',SDEF=JSON.stringify(S);let PIDX=null;try{PIDX=JSON.parse(localStorage.getItem(PKEY)||'null');}catch(e){}
+if(!PIDX||!PIDX.list||!PIDX.list.length){PIDX={cur:'p1',list:[{id:'p1',name:''}]};try{const old=localStorage.getItem('rymdakademin-v1');if(old){localStorage.setItem('rymdakademin-p-p1',old);try{PIDX.list[0].name=(JSON.parse(old).profile||{}).name||'';}catch(_){}}localStorage.setItem(PKEY,JSON.stringify(PIDX));}catch(e){}}
+const SKEY=()=>'rymdakademin-p-'+PIDX.cur;
+try{const r=localStorage.getItem(SKEY());if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}
 S.learned=S.learned.filter(k=>B[k]);if(!Array.isArray(S.deep))S.deep=[];if(!Array.isArray(S.skyTasks))S.skyTasks=[];if(!Array.isArray(S.terms))S.terms=[];if(!S.path||typeof S.path!=='object')S.path={};if(!Array.isArray(S.missed))S.missed=[];if(!Array.isArray(S.qSeen))S.qSeen=[];
-function save(){try{localStorage.setItem('rymdakademin-v1',JSON.stringify(S));}catch(e){}}
+function save(){try{localStorage.setItem(SKEY(),JSON.stringify(S));const me=PIDX.list.find(p=>p.id===PIDX.cur),n=(S.profile&&S.profile.name)||'';if(me&&me.name!==n){me.name=n;localStorage.setItem(PKEY,JSON.stringify(PIDX));}}catch(e){}}
 const lvl=()=>Math.min(LEVELS.length-1,Math.floor(S.xp/PER));
 function renderHUD(){const L=lvl();$('lvl').textContent=LEVELS[L];$('xp').textContent=S.xp+' XP';$('bar').style.width=(L===LEVELS.length-1?100:(S.xp%PER)/PER*100)+'%';}
 function addXP(n,el){const before=lvl();S.xp+=n;save();renderHUD();burst(el);if(lvl()>before){toast('Ny nivå: du är nu '+LEVELS[lvl()]+'!');SFX.badge();buddySay(`Wow, ${pname()}! Du är nu ${LEVELS[lvl()]}!`,'wow',5000);}checkBadges();}
@@ -1582,12 +1749,13 @@ const IC={
  forklaringar:'<circle cx="8" cy="12" r="4"/><path d="M8 8a4 4 0 0 1 0 8z" fill="currentColor"/><circle cx="18" cy="12" r="2.5"/><path d="M2 12h1M13 12h2"/>',
  tidslinje:'<path d="M3 12h18"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/>',
  ordlista:'<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>',
+ rapport:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
  marken:'<circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/>'};
-const VIEWS=[['hem','Hem'],['utforska','Utforska'],['larvag','Lärväg'],['ova','Öva'],['mer','Mer'],['karta','Solsystemet just nu'],['skala','Storlek och avstånd'],['forklaringar','Förklaringar'],['kort','Minneskort'],['quiz','Quiz'],['vag','Rymdvågen'],['stjarnbilder','Stjärnbilder'],['stjarnkarta','Stjärnkartan'],['tidslinje','Tidslinje'],['ordlista','Ordlista'],['marken','Märken'],['profil','Din profil'],['rymd3d','3D-rymdresa']];
+const VIEWS=[['hem','Hem'],['utforska','Utforska'],['larvag','Lärväg'],['ova','Öva'],['mer','Mer'],['karta','Solsystemet just nu'],['skala','Storlek och avstånd'],['forklaringar','Förklaringar'],['kort','Minneskort'],['quiz','Quiz'],['vag','Rymdvågen'],['stjarnbilder','Stjärnbilder'],['stjarnkarta','Stjärnkartan'],['tidslinje','Tidslinje'],['ordlista','Ordlista'],['marken','Märken'],['profil','Din profil'],['rapport','För vuxna: framsteg'],['rymd3d','3D-rymdresa']];
 Object.assign(IC,{hem:'<path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',ova:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>',rymd3d:'<path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/>',profil:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',mer:'<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>'});
 const NAV=[['hem','Hem'],['larvag','Lär dig'],['utforska','Utforska'],['ova','Öva'],['mer','Mer']];
-const PARENT={quiz:'ova',kort:'ova',karta:'mer',skala:'mer',forklaringar:'mer',vag:'mer',stjarnbilder:'mer',stjarnkarta:'mer',tidslinje:'mer',ordlista:'mer',marken:'mer',profil:'mer',rymd3d:'mer'};
-const DESC={larvag:'Lektioner i ordning, med test efter varje steg',utforska:'Fakta om alla 34 himlakroppar',quiz:'Testa dig själv, ensam eller mot en kompis',kort:'Plugga med smart repetition',karta:'Se var planeterna är just nu',skala:'Hur stora och hur långt bort?',forklaringar:'Månens faser och årstiderna, animerat',vag:'Vad väger du på Mars eller månen?',stjarnbilder:'Rita stjärnbilder genom att trycka på stjärnor',stjarnkarta:'Lär dig läsa natthimlen',tidslinje:'Rymdresornas historia',ordlista:'Svåra ord förklarade enkelt',marken:'Dina belöningar',profil:'Namn, nivå och din astronaut',rymd3d:'Flyg runt bland planeter, stjärnor och galaxen'};
+const PARENT={quiz:'ova',kort:'ova',karta:'mer',skala:'mer',forklaringar:'mer',vag:'mer',stjarnbilder:'mer',stjarnkarta:'mer',tidslinje:'mer',ordlista:'mer',marken:'mer',profil:'mer',rapport:'mer',rymd3d:'mer'};
+const DESC={larvag:'Lektioner i ordning, med test efter varje steg',utforska:'Fakta om himlakroppar, raketer och rymdfart',quiz:'Testa dig själv, ensam eller mot en kompis',kort:'Plugga med smart repetition',karta:'Se var planeterna är just nu',skala:'Hur stora och hur långt bort?',forklaringar:'Månens faser och årstiderna, animerat',vag:'Vad väger du på Mars eller månen?',stjarnbilder:'Rita stjärnbilder genom att trycka på stjärnor',stjarnkarta:'Lär dig läsa natthimlen',tidslinje:'Rymdresornas historia',ordlista:'Svåra ord förklarade enkelt',marken:'Dina belöningar',profil:'Namn, nivå, astronaut, byt profil och spara-kod',rapport:'Vad har lästs, quizresultat och vad behöver övas',rymd3d:'Flyg runt bland planeter, stjärnor och galaxen'};
 const vlabel=v=>VIEWS.find(x=>x[0]===v)[1];
 const icon=v=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[v]}</svg>`;
 const tile=(v,extra='')=>`<button class="tile" data-nav="${v}"><span class="ticon">${icon(v)}</span><span class="ttext"><b>${vlabel(v)}</b><small>${extra||DESC[v]}</small></span><span class="tarrow" aria-hidden="true">›</span></button>`;
@@ -1598,7 +1766,7 @@ function show(v){if(!VIEWS.some(x=>x[0]===v))v='hem';const prev=cur;cur=v;
   VIEWS.forEach(([n])=>$('v-'+n).classList.toggle('on',n===v));
   const top=PARENT[v]||v;NAV.forEach(([n])=>$('n-'+n).setAttribute('aria-current',n===top?'page':'false'));
   const cr=$('crumb');if(PARENT[v]){cr.hidden=false;cr.innerHTML=`<button data-nav="${PARENT[v]}">‹ ${vlabel(PARENT[v])}</button><span>${vlabel(v)}</span>`;}else cr.hidden=true;
-  if(v==='hem')renderHome();if(v==='profil')renderProfile();if(v==='rymd3d')start3D();if(v==='ova')renderOva();if(v==='mer')renderMer();
+  if(v==='hem')renderHome();if(v==='profil'){renderProfile();renderProfiles();}if(v==='rapport')renderReport();if(v==='rymd3d')start3D();if(v==='ova')renderOva();if(v==='mer')renderMer();
   if(v==='karta')startMap();if(v==='marken')renderBadges();if(v==='skala')renderScale();if(v==='stjarnkarta')requestAnimationFrame(drawSky);if(v==='larvag'){checkPathKarta();renderPath();}if(v==='forklaringar')startExplain();
   if(v==='tidslinje'&&!S.timeline){S.timeline=true;save();checkBadges();}
   if(prev&&prev!==v)window.scrollTo({top:0});}
@@ -1617,7 +1785,7 @@ function renderOva(){const due=ITEMS.filter(it=>(S.box[it.id]||{due:0}).due<=Dat
     +(S.missed.length?`<button class="tile miss" data-nav="quiz" data-qtopic="missar"><span class="ticon">${icon('ova')}</span><span class="ttext"><b>Öva på dina missar</b><small>${S.missed.length} frågor du har svarat fel på</small></span><span class="tarrow">›</span></button>`:'')
     +`<button class="tile" data-nav="quiz" data-qplayers="2"><span class="ticon">${icon('quiz')}</span><span class="ttext"><b>Tävla mot en kompis</b><small>Turas om på samma telefon</small></span><span class="tarrow">›</span></button>`;}
 function renderMer(){const g=(h,vs)=>`<h3 class="ghead">${h}</h3><div class="tiles">${vs.map(v=>tile(v)).join('')}</div>`;
-  $('mer-tiles').innerHTML=g('Lär dig mer',['forklaringar','stjarnkarta','stjarnbilder','tidslinje','ordlista'])+g('Upptäck',['rymd3d','karta','skala','vag'])+g('Du och dina framsteg',['profil','marken']);}
+  $('mer-tiles').innerHTML=g('Lär dig mer',['forklaringar','stjarnkarta','stjarnbilder','tidslinje','ordlista'])+g('Upptäck',['rymd3d','karta','skala','vag'])+g('Du och dina framsteg',['profil','marken','rapport']);}
 /* Inställningar */
 function closeSettings(){$('settings').hidden=true;$('gear').setAttribute('aria-expanded','false');}
 $('gear').addEventListener('click',e=>{e.stopPropagation();const p=$('settings'),o=p.hidden;p.hidden=!o;$('gear').setAttribute('aria-expanded',o);SFX.click();});
@@ -1635,12 +1803,12 @@ function renderStrip(){const q=($('bsearch').value||'').trim().toLowerCase();con
   $('strip').innerHTML=(list.length?'':'<p class="lead" style="padding:8px">Inget matchar. Prova ett annat ord.</p>')+list.map(k=>`<button class="body-btn" data-k="${k}" aria-current="${k===sel}">${art(k)}<span>${B[k].short||B[k].name}</span>${S.learned.includes(k)?'<b class="done" aria-label="utforskad">★</b>':''}</button>`).join('');
   $('learned-count').textContent=S.learned.length+' av '+ORDER.length+' utforskade';}
 function renderDetail(){const p=B[sel],i=ORDER.indexOf(sel),done=S.learned.includes(sel),prev=ORDER[(i-1+ORDER.length)%ORDER.length],next=ORDER[(i+1)%ORDER.length];
-  $('detail').innerHTML=`<article class="detail pop"><div><div class="hero"><div class="float" style="width:100%;display:grid;place-items:center">${art(sel,'big')}</div></div>
+  $('detail').innerHTML=`<article class="detail pop"><div><div class="hero"><div class="float" style="width:100%;display:grid;place-items:center">${art(sel,'big')}</div>${PHOTO[sel]?`<figure class="photo" id="photo" hidden><img alt="Foto av ${p.name}" loading="lazy" src="img/${sel}.jpg"><figcaption>Bild: ${PHOTO[sel][1]}</figcaption></figure><button class="photo-btn" id="photo-btn" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>Riktigt foto</span></button>`:''}</div>
     <div class="nav-arrows"><button data-go="${prev}" aria-label="Föregående: ${B[prev].name}">‹ ${B[prev].short||B[prev].name}</button><button data-go="${next}" aria-label="Nästa: ${B[next].name}">${B[next].short||B[next].name} ›</button></div></div>
-    <div class="info"><div class="title-row"><div><p class="kicker">${p.type}</p><h2>${p.name}</h2></div>${sayBtn(`${p.name}. ${p.tag} ${p.stats.slice(0,LVc().stats).map(([l,v])=>l+': '+v+'.').join(' ')} ${p.facts.concat(MORE[sel]||[]).slice(0,LVc().facts).join(' ')} Visste du? ${p.did} ${SEE[sel]?'Så ser du den: '+SEE[sel]:''}`)}</div><p class="tag">${p.tag}</p>
+    <div class="info"><div class="title-row"><div><p class="kicker">${p.type}</p><h2>${p.name}</h2></div>${sayBtn(`${p.name}. ${bodyTag(sel)} ${p.stats.slice(0,LVc().stats).map(([l,v])=>l+': '+v+'.').join(' ')} ${bodyFacts(sel).join(' ')} Visste du? ${p.did} ${SEE[sel]?'Så ser du den: '+SEE[sel]:''}`)}</div><p class="tag">${bodyTag(sel)}</p>
       <p class="gl-hint"><span class="term-demo">Prickiga ord</span> går att trycka på. Då ser du vad de betyder.</p>
       <div class="stats">${p.stats.slice(0,LVc().stats).map(([l,v])=>`<div class="stat"><small>${l}</small><b>${v}</b></div>`).join('')}</div>
-      <ul class="facts">${p.facts.concat(MORE[sel]||[]).slice(0,LVc().facts).map(f=>`<li><span>${f}</span></li>`).join('')}</ul>
+      <ul class="facts">${bodyFacts(sel).map(f=>`<li><span>${f}</span></li>`).join('')}</ul>
       ${SEE[sel]?`<div class="see"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 14 12-7 2 4-12 7z"/><path d="m15 7 2-1 2 4-2 1M9 17l-2 4M11 16l2 5"/></svg><div><b>Så ser du den</b><p>${SEE[sel]}</p></div></div>`:''}
       <div class="did">${nova()}<div><b>Visste du?</b><p>${p.did}</p></div></div>
       ${DEEP[sel]?`<button class="deep-btn" id="deep-btn" aria-expanded="${LVc().deepAuto?'true':'false'}" aria-controls="deep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M11 8v6M8 11h6"/></svg><span>Fördjupad fakta${S.deep.includes(sel)?'':' · +5 XP'}</span></button>
@@ -1651,6 +1819,7 @@ function select(k){sel=k;if(filter!=='alla'&&catOf(k)!==filter){filter='alla';re
 $('bsearch').addEventListener('input',()=>{renderStrip();const f=document.querySelector('.body-btn');if(f&&$('bsearch').value.trim())select(f.dataset.k);});
 $('strip').addEventListener('click',e=>{const b=e.target.closest('.body-btn');if(b){SFX.click();select(b.dataset.k);}});
 $('detail').addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){SFX.click();select(g.dataset.go);return;}
+  const pb=e.target.closest('#photo-btn');if(pb){const f=$('photo'),on=f.hidden;f.hidden=!on;pb.setAttribute('aria-pressed',on);pb.querySelector('span').textContent=on?'Visa teckning':'Riktigt foto';SFX.click();return;}
   const db=e.target.closest('#deep-btn');if(db){const d=$('deep'),open=d.hidden;d.hidden=!open;db.setAttribute('aria-expanded',open);SFX.flip();
     if(open){d.classList.add('pop');if(!S.deep.includes(sel)){S.deep.push(sel);db.querySelector('span').textContent='Fördjupad fakta';addXP(5,db);bump('deep');}}return;}
   if(e.target.closest('#learn')&&!S.learned.includes(sel)){S.learned.push(sel);SFX.right();addXP(10,$('learn'));bump('learned');renderStrip();renderDetail();}});
@@ -1680,14 +1849,21 @@ function drawMap(){const cv=$('map'),W=Math.round(cv.clientWidth*DPR);if(!W)retu
   c.setLineDash([]);
   for(const a of MAP.belt){const ang=a.ph+TAU*days/(365.25*Math.pow(a.a,1.5)),r=mr(a.a);c.fillStyle=`rgba(200,190,180,${a.o})`;c.fillRect(cx+r*Math.cos(ang),cx-r*Math.sin(ang),1.2*DPR,1.2*DPR);}
   const sg=c.createRadialGradient(cx,cx,0,cx,cx,R0*1.6);sg.addColorStop(0,'#fff6c8');sg.addColorStop(.35,'#ffc94a');sg.addColorStop(.6,'rgba(255,150,40,.5)');sg.addColorStop(1,'rgba(255,150,40,0)');c.fillStyle=sg;c.beginPath();c.arc(cx,cx,R0*1.6,0,TAU);c.fill();
-  MAP.hits=[];c.font=`800 ${11*DPR}px Nunito,sans-serif`;c.textAlign='center';
+  MAP.hits=[];const labs=[];c.font=`800 ${11*DPR}px Nunito,sans-serif`;c.textAlign='center';
   for(const k of MAPB){const {r,ang}=bodyPos(k,days),d=mr(r);if(d>W*.75)continue;const x=cx+d*Math.cos(ang),y=cx-d*Math.sin(ang),s=MSZ[k]*DPR;
     if(k==='halley'&&r<8){const L=Math.min(70,45/r)*DPR,ux=Math.cos(ang),uy=-Math.sin(ang);const g=c.createLinearGradient(x,y,x+ux*L,y+uy*L);g.addColorStop(0,'rgba(200,230,255,.9)');g.addColorStop(1,'rgba(200,230,255,0)');c.strokeStyle=g;c.lineWidth=2.4*DPR;c.beginPath();c.moveTo(x,y);c.lineTo(x+ux*L,y+uy*L);c.stroke();c.lineWidth=DPR;}
     if(k==='saturn'){c.strokeStyle='rgba(232,210,154,.85)';c.lineWidth=1.6*DPR;c.beginPath();c.ellipse(x,y,s*2,s*.7,-.35,0,TAU);c.stroke();c.lineWidth=DPR;}
     const g=c.createRadialGradient(x-s*.35,y-s*.35,s*.1,x,y,s);g.addColorStop(0,'#fff');g.addColorStop(.25,MCOL[k]);g.addColorStop(1,'rgba(0,0,0,.6)');c.fillStyle=g;c.beginPath();c.arc(x,y,s,0,TAU);c.fill();
     if(k==='earth'){const ma=TAU*days/27.32,mx=x+9*DPR*Math.cos(ma),my=y-9*DPR*Math.sin(ma);c.fillStyle='#d8d8e0';c.beginPath();c.arc(mx,my,1.3*DPR,0,TAU);c.fill();}
-    if(MAP.names&&k!=='ceres'){c.fillStyle='rgba(238,240,255,.85)';c.fillText(B[k].short||B[k].name,x,y-s-5*DPR);}
+    if(MAP.names&&k!=='ceres')labs.push([B[k].short||B[k].name,x,y,s]);
     MAP.hits.push([k,x,y]);}
+  const placed=[],hh=12*DPR;c.textBaseline='middle';
+  for(const [t,x,y,s] of labs){const w=c.measureText(t).width+4*DPR,g=5*DPR;
+    const cand=[[x,y-s-g-hh/2],[x,y+s+g+hh/2],[x+s+g+w/2,y],[x-s-g-w/2,y],[x,y-s-g-hh*1.6],[x,y+s+g+hh*1.6]];
+    let best=cand[0];for(const p of cand){const bx=[p[0]-w/2,p[1]-hh/2,p[0]+w/2,p[1]+hh/2];if(!placed.some(q=>bx[0]<q[2]&&bx[2]>q[0]&&bx[1]<q[3]&&bx[3]>q[1])){best=p;break;}}
+    placed.push([best[0]-w/2,best[1]-hh/2,best[0]+w/2,best[1]+hh/2]);
+    c.fillStyle='rgba(10,13,43,.55)';c.fillRect(best[0]-w/2,best[1]-hh/2,w,hh);c.fillStyle='rgba(238,240,255,.92)';c.fillText(t,best[0],best[1]);}
+  c.textBaseline='alphabetic';
   const date=new Date(Date.now()+MAP.t*864e5);
   $('map-read').innerHTML=`<span>Datum: <b>${date.toLocaleDateString('sv-SE',{year:'numeric',month:'long',day:'numeric'})}</b></span><span>Jordår som gått: <b>${nf(MAP.t/365.25,1)}</b></span>`;
   if(Math.abs(MAP.t)>=365.25&&!S.mapYear){S.mapYear=true;save();checkBadges();}}
@@ -1812,14 +1988,14 @@ function renderSetup(){if(!QS.level)QS.level=LVc().qlevel;if(QS.topic==='missar'
 function freshFirst(pool,n){const seen=new Set(S.qSeen);let fresh=pool.filter(it=>!seen.has(it.id));
   if(fresh.length<n){const ids=new Set(pool.map(i=>i.id));S.qSeen=S.qSeen.filter(id=>!ids.has(id));const rest=pool.filter(it=>!fresh.includes(it));fresh=fresh.concat(rest);}
   const pick=fresh.slice(0,n);S.qSeen.push(...pick.map(i=>i.id));if(S.qSeen.length>2000)S.qSeen=S.qSeen.slice(-2000);save();return pick;}
-function startQuiz(){const pool=quizPool(QS.topic,QS.level);let n=Math.min(RN(),pool.length);if(QS.players===2&&n%2)n--;Q.scores=[0,0];Q.list=shuffle(freshFirst(pool,n)).map(it=>({...it,opts:shuffle([it.a,...shuffle(it.w).slice(0,LVc().opts-1)])}));Q.i=0;Q.score=0;Q.stage='play';renderQuiz();}
+function startQuiz(){const pool=quizPool(QS.topic,QS.level);let n=Math.min(RN(),pool.length);if(QS.players===2&&n%2)n--;Q.scores=[0,0];Q.list=shuffle(freshFirst(pool,n)).map(it=>({...it,opts:shuffle([it.a,...shuffle(it.w).slice(0,LVc().opts-1)])}));Q.i=0;Q.score=0;Q.logged=0;Q.stage='play';renderQuiz();}
 function track(pos){return `<div class="track"><span class="path"></span>${art('earth')}<div style="position:absolute;left:52px;right:52px;top:0;bottom:0">${ROCKET.replace('class="rocket"',`class="rocket" style="left:${pos*100}%"`)}</div>${art('moon')}</div>`;}
 function renderQuiz(fb){const box=$('quiz'),N=Q.list.length;
   if(Q.stage==='setup')return renderSetup();
   if(Q.i>=N&&QS.players===2){const [a1,a2]=Q.scores,w=a1===a2?'Oavgjort!':`Spelare ${a1>a2?1:2} vinner!`;SFX.badge();
     box.innerHTML=`${track(1)}<div class="result pop" style="margin-top:16px">${nova('happy')}<h2>${w}</h2><div class="duel"><div class="p1"><small>Spelare 1</small><b>${a1}</b></div><div class="p2"><small>Spelare 2</small><b>${a2}</b></div></div><p>Varje spelare fick ${N/2} frågor.</p><div class="row"><button class="ghost" id="q-setup">Byt inställningar</button><button class="primary" id="q-again">Spela igen</button></div></div>`;return;}
   if(Q.i>=N){const r=Q.score/N,st=r>=.9?3:r>=.6?2:r>=.3?1:0,msg=['Bra försök! Utforska lite mer och testa igen.','Bra start! Du är på väg mot stjärnorna.','Grymt! Du kan mycket om rymden.','Perfekt landning! Du är en riktig rymdexpert.'][st];
-    if(Q.score===N&&N>=5&&!S.perfect){S.perfect=true;save();}if(QS.level==='svar'&&Q.score>=8&&!S.hardGood){S.hardGood=true;save();}checkBadges();
+    if(!Q.logged){Q.logged=1;S.rounds.push({t:Date.now(),s:Q.score,n:N,topic:QS.topic,lv:QS.level});if(S.rounds.length>30)S.rounds.splice(0,S.rounds.length-30);save();}if(Q.score===N&&N>=5&&!S.perfect){S.perfect=true;save();}if(QS.level==='svar'&&Q.score>=8&&!S.hardGood){S.hardGood=true;save();}checkBadges();
     box.innerHTML=`${track(1)}<div class="result pop" style="margin-top:16px">${nova(st?'happy':'sad')}<div class="stars" aria-label="${st} av 3 stjärnor">${[0,1,2].map(i=>`<span class="${i<st?'':'off'}">★</span>`).join('')}</div><h2>${Q.score} av ${N} rätt</h2><p>${msg}</p>
       <div class="row"><button class="ghost" id="q-setup">Byt ämne eller nivå</button><button class="primary" id="q-again">Ny rymdresa</button></div></div>`;
     if(st===3)SFX.badge();return;}
@@ -2039,6 +2215,7 @@ const PATH=[
  ['gas','Gasjättarna',['jupiter','saturn']],['is','Isjättarna',['uranus','neptune']],['manar','Spännande månar',['io','europa','ganymede','titan']],
  ['sma','Dvärgplaneter och asteroider',['ceres','vesta','bennu','pluto']],['kometer','Kometer',['halley','halebopp','c67p','sl9']],
  ['stjarnor','Stjärnor',['sirius','polaris','betelgeuse']],['djup','Galaxer och djuprymden',['milkyway','andromeda','orion','crab','blackhole']],
+ ['rymdfart','Rymdfart och exoplaneter',['rocket','iss','astronaut','exoplanet']],
  ['karta','Läs stjärnkartan',[]]];
 const PT={id:null,list:[],i:0,score:0,ans:null};
 const stepDone=id=>!!S.path[id];
@@ -2065,15 +2242,16 @@ function renderPathTest(){if(PT.i>=PT.list.length){const need=Math.ceil(PT.list.
 $('path').addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g&&!g.disabled){SFX.click();select(g.dataset.go);return;}
   const v=e.target.closest('[data-goview]');if(v){try{location.hash=v.dataset.goview;}catch(_){}show(v.dataset.goview);return;}
   const t=e.target.closest('[data-ptest]');if(t&&!t.disabled){SFX.click();startPathTest(t.dataset.ptest);return;}
-  const a=e.target.closest('[data-pans]');if(a&&!a.disabled){const p=decodeURIComponent(a.dataset.pans),c=PT.list[PT.i];PT.ans=p;if(p===c.a){PT.score++;SFX.right();}else{SFX.wrong();noteMiss(c.id);}renderPath();return;}
+  const a=e.target.closest('[data-pans]');if(a&&!a.disabled){const p=decodeURIComponent(a.dataset.pans),c=PT.list[PT.i];PT.ans=p;if(p===c.a){PT.score++;SFX.right();noteHit(c.id);}else{SFX.wrong();noteMiss(c.id);}renderPath();return;}
   if(e.target.closest('[data-pnext]')){PT.i++;PT.ans=null;renderPath();return;}
   const f=e.target.closest('[data-pfinish]');if(f){const ok=f.dataset.pfinish==='1',id=PT.id;PT.id=null;
     if(ok&&!S.path[id]){S.path[id]=true;save();SFX.badge();addXP(20,f);toast('Steget är klart!');buddySay(`Snyggt, ${pname()}! Nästa steg är upplåst.`,'wow');}else if(!ok)buddySay(`Det gör inget, ${pname()}. Läs igen och försök en gång till, du får nya frågor.`,'happy',5000);renderPath();}});
 function checkPathKarta(){if(S.skyQuiz&&stepOpen(PATH.length-1)&&!S.path.karta){S.path.karta=true;save();checkBadges();}}
 
 /* ===================== Missade frågor ===================== */
-function noteMiss(id){if(!S.missed.includes(id)){S.missed.push(id);save();}}
-function noteHit(id){const i=S.missed.indexOf(id);if(i>=0){S.missed.splice(i,1);save();}}
+function statNote(id,ok){const it=ITEMS.find(x=>x.id===id);if(!it)return;const c=catOf(it.k),s=S.stats[c]=S.stats[c]||{a:0,c:0};s.a++;if(ok)s.c++;}
+function noteMiss(id){statNote(id,false);if(!S.missed.includes(id))S.missed.push(id);save();}
+function noteHit(id){statNote(id,true);const i=S.missed.indexOf(id);if(i>=0)S.missed.splice(i,1);save();}
 
 /* ===================== Dagens uppdrag ===================== */
 const DAILY=[['learned',2,'Utforska 2 nya himlakroppar'],['quiz',5,'Svara rätt på 5 quizfrågor'],['cards',5,'Klara 5 minneskort'],['terms',3,'Slå upp 3 svåra ord'],['deep',2,'Läs 2 fördjupningar']];
@@ -2276,6 +2454,112 @@ function buddyOnAnswer(ok,c){if(ok){qStreak++;if(qStreak%3===0)buddySay(`${qStre
 function buddyGreet(){const k=dayKey(new Date());if(S.greeted===k||!S.profile)return;S.greeted=k;save();
   setTimeout(()=>buddySay(`Hej ${pname()}! ${S.daily&&!S.daily.done?'Dagens uppdrag väntar på dig.':'Kul att se dig igen!'}`,'wave',5000),1200);}
 
+/* ===================== Profiler, spara-kod, rapport för vuxna, inställningar ===================== */
+const APPVER='2026.11.07';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function wIdx(){try{localStorage.setItem(PKEY,JSON.stringify(PIDX));}catch(e){}}
+function readProfile(id){if(id===PIDX.cur)return S;try{return JSON.parse(localStorage.getItem('rymdakademin-p-'+id)||'{}');}catch(e){return {};}}
+function switchProfile(id){save();PIDX.cur=id;wIdx();location.hash='hem';location.reload();}
+function copyText(t,okMsg){const done=()=>toast(okMsg||'Kopierat!');
+  const fb=()=>{const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}ta.remove();ok?done():showText('Kopiera texten',t);};
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(done,fb);else fb();}
+function showText(title,t){let m=$('textpop');if(!m){m=document.createElement('div');m.id='textpop';m.className='textpop';document.body.appendChild(m);
+    m.addEventListener('click',e=>{if(e.target===m||e.target.closest('[data-close]'))m.hidden=true;});}
+  m.innerHTML=`<div class="tp-box" role="dialog" aria-modal="true" aria-label="${esc(title)}"><h3>${esc(title)}</h3><p class="lead">Markera allt och kopiera.</p><textarea readonly>${esc(t)}</textarea><button class="primary" data-close>Stäng</button></div>`;m.hidden=false;
+  const ta=m.querySelector('textarea');ta.focus();ta.select();}
+
+/* ---------- Flera profiler ---------- */
+let delArm=null;
+function renderProfiles(){const box=$('profiles-box');if(!box)return;
+  box.innerHTML=`<h3 style="margin-top:0">Profiler på den här enheten</h3><p class="lead">Syskon eller klasskompisar kan ha var sin profil med egna framsteg.</p><div class="plist">${PIDX.list.map(p=>{const d=readProfile(p.id),pr=d.profile||{},me=p.id===PIDX.cur;
+    return `<div class="prow">${astro('happy','',Object.assign({},AVDEF,pr.av||{}))}<b>${esc(pr.name||p.name||'Ny profil')}<br><small class="lead">${pr.level?LV[pr.level].name:'Ingen nivå än'} · ${d.xp||0} XP</small></b>${me?'<span class="cur">Aktiv</span>':`<button class="ghost" data-pswitch="${p.id}">Byt hit</button><button class="ghost" data-pdel="${p.id}" aria-label="Ta bort profil">${delArm===p.id?'Säker?':'Ta bort'}</button>`}</div>`;}).join('')}</div>
+   <button class="primary" id="p-new">+ Ny profil</button>`;renderTransfer();}
+document.addEventListener('click',e=>{
+  const sw=e.target.closest('[data-pswitch]');if(sw){switchProfile(sw.dataset.pswitch);return;}
+  const dl=e.target.closest('[data-pdel]');if(dl){const id=dl.dataset.pdel;if(delArm!==id){delArm=id;renderProfiles();return;}
+    PIDX.list=PIDX.list.filter(p=>p.id!==id);try{localStorage.removeItem('rymdakademin-p-'+id);}catch(_){}wIdx();delArm=null;renderProfiles();toast('Profilen är borttagen.');return;}
+  if(e.target.closest('#p-new')){save();const id='p'+Date.now().toString(36);PIDX.list.push({id,name:''});PIDX.cur=id;wIdx();location.hash='hem';location.reload();}});
+
+/* ---------- Spara och flytta framsteg med en kod ---------- */
+function exportCode(){const d=Object.assign({},S);delete d.qSeen;delete d.greeted;return 'RYMD1.'+btoa(unescape(encodeURIComponent(JSON.stringify(d))));}
+function importCode(c){c=(c||'').replace(/\s+/g,'');if(!c.startsWith('RYMD1.'))throw new Error('Koden ska börja med RYMD1.');
+  const d=JSON.parse(decodeURIComponent(escape(atob(c.slice(6)))));if(typeof d!=='object'||typeof d.xp!=='number')throw new Error('Koden ser inte ut att vara från Rymdakademin.');return d;}
+let impArm=false;
+function renderTransfer(){const box=$('transfer-box');if(!box)return;
+  box.innerHTML=`<h3 style="margin-top:0">Spara eller flytta dina framsteg</h3><p class="lead">Skapa en kod och spara den, till exempel i ett mejl till dig själv. Klistra in koden på en annan telefon eller dator för att fortsätta där.</p>
+   <div class="xfer"><div class="row" style="justify-content:flex-start;margin:8px 0"><button class="primary" id="x-make">Skapa kod</button><button class="ghost" id="x-copy" hidden>Kopiera koden</button></div><textarea id="x-out" readonly hidden aria-label="Din kod"></textarea>
+   <label for="x-in" style="display:block;margin-top:14px"><b>Har du en kod?</b> Klistra in den här:</label><textarea id="x-in" placeholder="RYMD1...."></textarea>
+   <div class="row" style="justify-content:flex-start;margin-top:8px"><button class="ghost" id="x-load">${impArm?'Ja, ersätt framstegen i den här profilen':'Läs in koden'}</button><span class="lead" id="x-msg"></span></div></div>`;}
+document.addEventListener('click',e=>{
+  if(e.target.closest('#x-make')){const o=$('x-out');o.value=exportCode();o.hidden=false;$('x-copy').hidden=false;o.select();return;}
+  if(e.target.closest('#x-copy')){copyText($('x-out').value,'Koden är kopierad. Spara den på ett säkert ställe.');return;}
+  if(e.target.closest('#x-load')){const v=$('x-in').value;let d;try{d=importCode(v);}catch(err){$('x-msg').textContent='Det gick inte: '+err.message;impArm=false;return;}
+    if(!impArm){impArm=true;const keep=v;renderTransfer();$('x-in').value=keep;$('x-msg').textContent=`Koden gäller ${d.profile&&d.profile.name?d.profile.name:'en profil'} med ${d.xp} XP. Tryck igen för att läsa in.`;return;}
+    impArm=false;S=Object.assign(JSON.parse(SDEF),d);save();toast('Framstegen är inlästa!');setTimeout(()=>{location.hash='hem';location.reload();},700);}});
+
+/* ---------- Rapport för förälder eller lärare ---------- */
+const CATNAME=c=>(CATS.find(x=>x[0]===c)||[0,c==='missar'?'Dina missar':c])[1];
+function pct(s){return s&&s.a?Math.round(100*s.c/s.a):null;}
+function reportData(){const pr=S.profile||{},cats=CATS.filter(c=>c[0]!=='alla').map(c=>c[0]);
+  const read=cats.map(c=>{const ks=ORDER.filter(k=>catOf(k)===c);return {c,ks,n:ks.filter(k=>S.learned.includes(k)).length};});
+  const quiz=cats.map(c=>({c,s:S.stats[c]})).filter(x=>x.s&&x.s.a);
+  const weak=quiz.filter(x=>x.s.a>=4&&pct(x.s)<70).sort((a,b)=>pct(a.s)-pct(b.s));
+  const missed=S.missed.map(id=>ITEMS.find(i=>i.id===id)).filter(Boolean);
+  const unread=read.filter(r=>r.n<r.ks.length&&r.n===0).map(r=>r.c);
+  return {pr,read,quiz,weak,missed,unread,steps:PATH.filter(p=>S.path[p[0]]).length};}
+function renderReport(){const d=reportData(),box=$('report'),pr=d.pr;
+  const bar=(label,v,max,txt)=>{const p=max?Math.round(100*v/max):0;return `<div class="rep-bar"><span>${label}</span><span class="bar"><i class="${p<50?'low':p<75?'mid':''}" style="width:${p}%"></i></span><b>${txt}</b></div>`;};
+  const totA=Object.values(S.stats).reduce((a,s)=>a+s.a,0),totC=Object.values(S.stats).reduce((a,s)=>a+s.c,0);
+  const tips=[];if(d.weak.length)tips.push(`Öva mer på ${d.weak.slice(0,2).map(w=>CATNAME(w.c).toLowerCase()).join(' och ')}. Läs faktan igen och gör sedan ett quiz med bara det ämnet.`);
+  if(d.missed.length)tips.push(`Det finns ${d.missed.length} frågor som blivit fel. Knappen "Öva på dina missar" under Öva tar fram just dem.`);
+  if(d.unread.length)tips.push(`Inte påbörjat än: ${d.unread.map(c=>CATNAME(c).toLowerCase()).join(', ')}.`);
+  if(!totA)tips.push('Inga quizsvar är sparade än. Statistiken börjar räknas när man svarar på quiz eller lärvägstest.');
+  if(!tips.length)tips.push('Det går riktigt bra! Prova en svårare nivå i quizet eller fördjupningarna.');
+  box.innerHTML=`<div class="rep-grid">
+   <div class="rep-card"><h3>${esc(pr.name||'Profil utan namn')}${pr.age?', '+esc(pr.age)+' år':''}</h3><div class="rep-kpis">
+    <div><small>Nivå</small><b>${LVc().name}</b></div><div><small>Rang</small><b>${LEVELS[lvl()]}</b></div><div><small>XP</small><b>${S.xp}</b></div>
+    <div><small>Utforskat</small><b>${S.learned.length}/${ORDER.length}</b></div><div><small>Lärvägen</small><b>${d.steps}/${PATH.length} steg</b></div><div><small>Märken</small><b>${S.badges.length}/${BADGES.length}</b></div>
+    <div><small>Quizsvar rätt</small><b>${totA?Math.round(100*totC/totA)+' %':'–'}</b></div><div><small>Dagar i rad</small><b>${S.streak||0} (bäst ${S.bestStreak||0})</b></div><div><small>Fördjupningar lästa</small><b>${S.deep.length}</b></div></div></div>
+   <div class="rep-card"><h3>Vad behöver övas?</h3><ul class="rep-list">${tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+    ${d.missed.length?`<h3 style="margin-top:14px;font-size:1rem">Frågor som blivit fel</h3><ul class="rep-list">${d.missed.slice(0,10).map(i=>`<li>${esc(i.q)}<br><small>Rätt svar: ${esc(i.a)}</small></li>`).join('')}</ul>`:''}</div>
+   <div class="rep-card"><h3>Quizresultat per ämne</h3>${d.quiz.length?d.quiz.map(x=>bar(CATNAME(x.c),x.s.c,x.s.a,`${pct(x.s)} % av ${x.s.a}`)).join(''):'<p class="lead">Inga svar sparade än.</p>'}</div>
+   <div class="rep-card"><h3>Senaste quizomgångar</h3>${S.rounds.length?`<ul class="rep-list">${S.rounds.slice(-8).reverse().map(r=>`<li>${new Date(r.t).toLocaleDateString('sv-SE',{day:'numeric',month:'short'})}: <b>${r.s} av ${r.n}</b> rätt <small>(${CATNAME(r.topic)}, ${{latt:'lätt',mix:'blandat',svar:'svår'}[r.lv]||'blandat'})</small></li>`).join('')}</ul>`:'<p class="lead">Inga omgångar än.</p>'}</div>
+   <div class="rep-card"><h3>Vad har lästs?</h3>${d.read.map(r=>bar(CATNAME(r.c),r.n,r.ks.length,`${r.n}/${r.ks.length}`)+`<div class="rep-tags">${r.ks.map(k=>`<span class="${S.learned.includes(k)?'':'no'}">${S.learned.includes(k)?'✓ ':''}${B[k].short||B[k].name}</span>`).join('')}</div>`).join('')}</div>
+   <div class="row" style="justify-content:flex-start"><button class="primary" id="rep-copy">Kopiera som text</button><button class="ghost" id="rep-print">Skriv ut</button></div></div>`;}
+function reportText(){const d=reportData(),pr=d.pr,L=[];
+  L.push(`Rymdakademin – framsteg för ${pr.name||'profil utan namn'}${pr.age?' ('+pr.age+' år)':''}`,`Datum: ${new Date().toLocaleDateString('sv-SE')}`,`Nivå: ${LVc().name} · ${S.xp} XP · ${LEVELS[lvl()]}`,
+   `Utforskat: ${S.learned.length}/${ORDER.length} · Lärvägen: ${d.steps}/${PATH.length} steg · Märken: ${S.badges.length}/${BADGES.length}`,'','Läst per område:');
+  d.read.forEach(r=>L.push(`- ${CATNAME(r.c)}: ${r.n}/${r.ks.length}`));L.push('','Quiz per ämne:');
+  if(d.quiz.length)d.quiz.forEach(x=>L.push(`- ${CATNAME(x.c)}: ${pct(x.s)} % rätt av ${x.s.a} svar`));else L.push('- Inga svar sparade än');
+  if(d.missed.length){L.push('','Frågor som blivit fel:');d.missed.slice(0,10).forEach(i=>L.push(`- ${i.q} (rätt: ${i.a})`));}
+  return L.join('\n');}
+document.addEventListener('click',e=>{if(e.target.closest('#rep-copy'))copyText(reportText(),'Rapporten är kopierad.');if(e.target.closest('#rep-print'))window.print();});
+
+/* ---------- Textstorlek och lättläst typsnitt ---------- */
+function applyLook(){document.documentElement.style.fontSize=(100*(S.fsize||1))+'%';document.documentElement.classList.toggle('readable',!!S.readable);
+  document.querySelectorAll('[data-fs]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.fs===(S.fsize||1)));$('readable').setAttribute('aria-pressed',!!S.readable);}
+document.addEventListener('click',e=>{const f=e.target.closest('[data-fs]');if(f){S.fsize=+f.dataset.fs;save();applyLook();SFX.click();skySize&&skySize();return;}
+  if(e.target.closest('#readable')){S.readable=!S.readable;save();applyLook();SFX.click();toast(S.readable?'Lättläst typsnitt är på.':'Vanligt typsnitt igen.');}});
+
+/* ---------- Rapportera problem ---------- */
+function diagText(){const n=navigator,gl=(()=>{try{const c=document.createElement('canvas');return c.getContext('webgl2')?'WebGL2':c.getContext('webgl')?'WebGL1':'saknas';}catch(e){return 'fel';}})();
+  let ls='?';try{let t=0;for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);t+=(localStorage.getItem(k)||'').length;}ls=Math.round(t/1024)+' kB';}catch(e){ls='blockerat';}
+  const vs=window.speechSynthesis?speechSynthesis.getVoices():[];
+  return ['Rymdakademin felrapport','Version: '+APPVER+(window.AndroidApp?' (Android-app)':matchMedia('(display-mode: standalone)').matches?' (hemskärm)':' (webbläsare)'),'Datum: '+new Date().toISOString(),
+   'Enhet: '+n.userAgent,'Skärm: '+screen.width+'x'+screen.height+' @'+(window.devicePixelRatio||1)+'x, fönster '+innerWidth+'x'+innerHeight,'Språk: '+n.language,
+   '3D: '+gl+(typeof S3!=='undefined'?(S3.ready?', igång':', ej startad'):''),'Uppläsning: '+(window.speechSynthesis?vs.length+' röster, svensk: '+(vs.some(v=>/^sv/i.test(v.lang))?'ja':'nej'):'ingen inbyggd (eSpeak används)'),
+   'Lagring: '+ls+', '+PIDX.list.length+' profil(er)','Vy: '+cur+' · nivå '+LVc().name+' · spara batteri '+(S.lite?'på':'av'),
+   'Senaste fel:',...(window.__errs&&__errs.length?__errs.slice(-6):['inga']),'','Beskriv problemet här:'].join('\n');}
+$('report-bug').addEventListener('click',()=>{closeSettings();const t=diagText();copyText(t,'Felrapporten är kopierad. Klistra in den i ett mejl eller meddelande.');});
+
+/* ---------- Påminnelse i Android-appen ---------- */
+function renderRemind(){const b=$('remind-btn');if(!window.AndroidApp||!AndroidApp.setReminder){b.hidden=true;return;}b.hidden=false;b.setAttribute('aria-pressed',!!S.remind);
+  b.querySelector('span').textContent=S.remind?'Påminnelse '+S.remind:'Påminnelse';}
+$('remind-btn').addEventListener('click',()=>{const opts=[null,'16:00','17:00','18:00','19:00'],i=(opts.indexOf(S.remind)+1)%opts.length;S.remind=opts[i];save();
+  try{if(S.remind){const [h,m]=S.remind.split(':').map(Number);AndroidApp.setReminder(h,m);toast('Påminnelse varje dag kl '+S.remind+'. Tryck igen för att byta tid.');}else{AndroidApp.cancelReminder();toast('Påminnelsen är avstängd.');}}catch(e){toast('Det gick inte att ställa in påminnelsen.');}
+  renderRemind();});
+
+const LOW3D=(navigator.hardwareConcurrency||4)<=4||(navigator.deviceMemory||4)<=3;
 /* ===================== 3D-rymdresa ===================== */
 const S3={ready:false,loading:null,mode:'sol',days:0,speed:1,focus:null,fly:null,tour:null,running:false,objs:{},groups:{},labels:[]};
 const S3URL=['lib/three.min.js','lib/OrbitControls.js'];
@@ -2306,12 +2590,32 @@ function ringTex(){const cv=document.createElement('canvas');cv.width=256;cv.hei
 function ringMesh(R,tilt){const g=new THREE.RingGeometry(R*1.22,R*2.31,128,1),pos=g.attributes.position,uv=g.attributes.uv,v=new THREE.Vector3();
   for(let i=0;i<pos.count;i++){v.fromBufferAttribute(pos,i);uv.setXY(i,(v.length()-R*1.22)/(R*1.09),.5);}
   const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:ringTex(),color:0xd8d2c4,side:THREE.DoubleSide,transparent:true,depthWrite:false}));m.rotation.x=-PI/2;return m;}
-async function build3D(){const box=$('s3-wrap'),cv=$('s3');S3.renderer=new THREE.WebGLRenderer({canvas:cv,antialias:!S.lite,logarithmicDepthBuffer:true});
+async function buildBodies(real){const G=S3.groups[real?'real':'sol'];if(S3.built[real?'real':'sol'])return;S3.built[real?'real':'sol']=true;
+    let bi=0;for(const k of S3B){bi++;$('s3-msg').textContent=`Bygger ${B[k].name}… ${Math.round(100*bi/S3B.length)} %`;await new Promise(r=>requestAnimationFrame(r));
+      const R=real?KMR[k]/1000:vR(k),key=(real?'r:':'v:')+k;let mesh;
+      if(k==='halley'){mesh=new THREE.Mesh(new THREE.SphereGeometry(R,12,8),new THREE.MeshBasicMaterial({color:0x9aa0b0}));
+        const tail=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex('rgb(170,210,255)'),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));tail.scale.set(R*30,R*30,1);mesh.add(tail);mesh.userData.tail=tail;}
+      else{const tex=S3.tex&&S3.tex[k]||(S3.tex=S3.tex||{},S3.tex[k]=texFor(k,LOW3D?256:512));let mat;
+        if(k==='sun'){tex.wrapT=THREE.RepeatWrapping;mat=sunMat(tex);}
+        else if(k==='earth')mat=earthMat(tex,S3.night||(S3.night=nightTex(LOW3D?256:512)),S3.cloud||(S3.cloud=cloudTex(LOW3D?256:512)));
+        else mat=new THREE.MeshPhongMaterial(ROCKY.includes(k)?{map:tex,bumpMap:tex,bumpScale:R*.02,shininess:1,specular:0x000000}:{map:tex,shininess:2,specular:0x000000});
+        mesh=new THREE.Mesh(new THREE.SphereGeometry(R,LOW3D?40:64,LOW3D?24:40),mat);
+        if(k==='sun'){[[5,'rgb(255,200,90)'],[14,'rgb(255,150,60)']].forEach(([f,c],i)=>{const gl=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex(c),transparent:true,opacity:i?.25:.6,depthWrite:false,blending:THREE.AdditiveBlending}));gl.scale.set(R*f,R*f,1);mesh.add(gl);});}
+        const at=R3[k]&&R3[k].atm;if(at&&!S.lite)mesh.add(atmoShell(R,at.split(',').map(Number),k==='earth'?1.3:k==='jupiter'?.35:.8));}
+      const pivot=new THREE.Group();pivot.add(mesh);pivot.rotation.z=(R3[k]&&R3[k].tilt)||0;if(k==='saturn')pivot.add(ringMesh(R));if(k==='uranus'){const rg=new THREE.Mesh(new THREE.RingGeometry(R*1.6,R*1.66,96),new THREE.MeshBasicMaterial({color:0xcfe8ea,side:THREE.DoubleSide,transparent:true,opacity:.5}));rg.rotation.x=-PI/2;pivot.add(rg);}
+      G.add(pivot);S3.objs[key]={k,mesh,pivot,R,real};
+      if(k!=='sun'){const per=k==='halley'?27510:(ORB[k]?ORB[k][1]:365),pts=[];for(let i=0;i<=240;i++)pts.push(toV(helioAU(k,per*i/240),real));
+        const ln=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:k==='halley'?0x6f9bd6:0x5a64b8,transparent:true,opacity:.5}));G.add(ln);}}
+    for(const [k,p,per,km,f] of S3M){const R=real?KMR[k]/1000:Math.max(.22,vR(k)*.55),tex=S3.tex[k]||(S3.tex[k]=texFor(k,LOW3D?256:512));
+      const mesh=new THREE.Mesh(new THREE.SphereGeometry(R,LOW3D?28:48,LOW3D?18:32),new THREE.MeshPhongMaterial({map:tex,bumpMap:tex,bumpScale:R*.02,shininess:1,specular:0x000000}));if(k==='titan'&&!S.lite)mesh.add(atmoShell(R,[255,180,90],.9));const pivot=new THREE.Group();pivot.add(mesh);G.add(pivot);
+      S3.objs[(real?'r:':'v:')+k]={k,mesh,pivot,R,real,parent:p,per,dist:real?km/1000:vR(p)*f};}
+  $('s3-msg').textContent='';}
+async function build3D(){S3.built={};const box=$('s3-wrap'),cv=$('s3');S3.renderer=new THREE.WebGLRenderer({canvas:cv,antialias:!S.lite,logarithmicDepthBuffer:true});
   S3.renderer.setPixelRatio(S.lite?1:Math.min(2,devicePixelRatio));S3.scene=new THREE.Scene();S3.camera=new THREE.PerspectiveCamera(55,1,.01,5e7);
   S3.controls=new THREE.OrbitControls(S3.camera,cv);S3.controls.enableDamping=true;S3.controls.dampingFactor=.08;S3.controls.rotateSpeed=.6;
   S3.scene.add(new THREE.AmbientLight(0x1a1d33,.35));S3.light=new THREE.PointLight(0xfff4e6,1.25,0,0);S3.scene.add(S3.light);
   /* himmel: stjärnor på en stor sfär som följer kameran */
-  const n=S.lite?1200:3500,sp=new Float32Array(n*3),sc=new Float32Array(n*3),r=seeded(42);
+  const n=S.lite||LOW3D?1200:3500,sp=new Float32Array(n*3),sc=new Float32Array(n*3),r=seeded(42);
   for(let i=0;i<n;i++){const u=r()*2-1,t=r()*TAU,s=Math.sqrt(1-u*u);sp.set([s*Math.cos(t),u,s*Math.sin(t)],i*3);const w=.55+r()*.45;sc.set([w,w,w*(r()<.2?.8:1)],i*3);}
   const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.BufferAttribute(sp,3));sg.setAttribute('color',new THREE.BufferAttribute(sc,3));
   S3.sky=new THREE.Points(sg,new THREE.PointsMaterial({size:1.3,transparent:true,opacity:.75,sizeAttenuation:false,vertexColors:true,depthWrite:false}));S3.sky.renderOrder=-1;S3.scene.add(S3.sky);
@@ -2319,25 +2623,7 @@ async function build3D(){const box=$('s3-wrap'),cv=$('s3');S3.renderer=new THREE
   S3.mw=new THREE.Group();S3.mw.add(catalogStars());S3.mw.renderOrder=-2;S3.scene.add(S3.mw);
   /* grupper för varje läge */
   for(const m of ['sol','real','stars','galax']){S3.groups[m]=new THREE.Group();S3.scene.add(S3.groups[m]);}
-  for(const real of [false,true]){const G=S3.groups[real?'real':'sol'];
-    for(const k of S3B){$('s3-msg').textContent='Bygger '+B[k].name+'…';await new Promise(r=>requestAnimationFrame(r));
-      const R=real?KMR[k]/1000:vR(k),key=(real?'r:':'v:')+k;let mesh;
-      if(k==='halley'){mesh=new THREE.Mesh(new THREE.SphereGeometry(R,12,8),new THREE.MeshBasicMaterial({color:0x9aa0b0}));
-        const tail=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex('rgb(170,210,255)'),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));tail.scale.set(R*30,R*30,1);mesh.add(tail);mesh.userData.tail=tail;}
-      else{const tex=S3.tex&&S3.tex[k]||(S3.tex=S3.tex||{},S3.tex[k]=texFor(k));let mat;
-        if(k==='sun'){tex.wrapT=THREE.RepeatWrapping;mat=sunMat(tex);}
-        else if(k==='earth')mat=earthMat(tex,S3.night||(S3.night=nightTex(512)),S3.cloud||(S3.cloud=cloudTex(512)));
-        else mat=new THREE.MeshPhongMaterial(ROCKY.includes(k)?{map:tex,bumpMap:tex,bumpScale:R*.02,shininess:1,specular:0x000000}:{map:tex,shininess:2,specular:0x000000});
-        mesh=new THREE.Mesh(new THREE.SphereGeometry(R,64,40),mat);
-        if(k==='sun'){[[5,'rgb(255,200,90)'],[14,'rgb(255,150,60)']].forEach(([f,c],i)=>{const gl=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex(c),transparent:true,opacity:i?.25:.6,depthWrite:false,blending:THREE.AdditiveBlending}));gl.scale.set(R*f,R*f,1);mesh.add(gl);});}
-        const at=R3[k]&&R3[k].atm;if(at&&!S.lite)mesh.add(atmoShell(R,at.split(',').map(Number),k==='earth'?1.3:k==='jupiter'?.35:.8));}
-      const pivot=new THREE.Group();pivot.add(mesh);pivot.rotation.z=(R3[k]&&R3[k].tilt)||0;if(k==='saturn')pivot.add(ringMesh(R));if(k==='uranus'){const rg=new THREE.Mesh(new THREE.RingGeometry(R*1.6,R*1.66,96),new THREE.MeshBasicMaterial({color:0xcfe8ea,side:THREE.DoubleSide,transparent:true,opacity:.5}));rg.rotation.x=-PI/2;pivot.add(rg);}
-      G.add(pivot);S3.objs[key]={k,mesh,pivot,R,real};
-      if(k!=='sun'){const per=k==='halley'?27510:(ORB[k]?ORB[k][1]:365),pts=[];for(let i=0;i<=240;i++)pts.push(toV(helioAU(k,per*i/240),real));
-        const ln=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:k==='halley'?0x6f9bd6:0x5a64b8,transparent:true,opacity:.5}));G.add(ln);}}
-    for(const [k,p,per,km,f] of S3M){const R=real?KMR[k]/1000:Math.max(.22,vR(k)*.55),tex=S3.tex[k]||(S3.tex[k]=texFor(k));
-      const mesh=new THREE.Mesh(new THREE.SphereGeometry(R,48,32),new THREE.MeshPhongMaterial({map:tex,bumpMap:tex,bumpScale:R*.02,shininess:1,specular:0x000000}));if(k==='titan'&&!S.lite)mesh.add(atmoShell(R,[255,180,90],.9));const pivot=new THREE.Group();pivot.add(mesh);G.add(pivot);
-      S3.objs[(real?'r:':'v:')+k]={k,mesh,pivot,R,real,parent:p,per,dist:real?km/1000:vR(p)*f};}}
+  await buildBodies(S3.mode==='real');
   /* närmaste stjärnorna: 1 enhet = 1 ljusår */
   const SG=S3.groups.stars;NEAR.forEach(([id,name,ra,de,ly],i)=>{const a=ra*15*D2R,d=de*D2R,p=new THREE.Vector3(Math.cos(d)*Math.cos(a)*ly,Math.sin(d)*ly,Math.cos(d)*Math.sin(a)*ly);
     const col=id==='sun'?'rgb(255,210,120)':['sirius','vega','altair','procyon','fomalhaut'].includes(id)?'rgb(200,220,255)':['arcturus','pollux','capella'].includes(id)?'rgb(255,200,140)':'rgb(255,150,110)';
@@ -2345,7 +2631,7 @@ async function build3D(){const box=$('s3-wrap'),cv=$('s3');S3.renderer=new THREE
     S3.objs['s:'+id]={k:id,name,ly,mesh:sp,pivot:sp,R:.6,star:true};});
   [5,10,20,40].forEach(rr=>{const pts=[];for(let i=0;i<=96;i++)pts.push(new THREE.Vector3(Math.cos(i/96*TAU)*rr,0,Math.sin(i/96*TAU)*rr));SG.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0x3a4290,transparent:true,opacity:.6})));});
   /* Vintergatan: 1 enhet = 1000 ljusår */
-  const GG=S3.groups.galax,N=S.lite?9000:22000,gp=new Float32Array(N*3),gc=new Float32Array(N*3);
+  const GG=S3.groups.galax,N=S.lite||LOW3D?9000:22000,gp=new Float32Array(N*3),gc=new Float32Array(N*3);
   for(let i=0;i<N;i++){let x,y,z,c;if(i<N*.18){const rr=Math.abs((r()+r()+r()-1.5))*6,t=r()*TAU;x=Math.cos(t)*rr*1.6;z=Math.sin(t)*rr*.7;y=(r()-.5)*2.4;c=[1,.86,.6];}
     else{const arm=i%4,t=r(),ang=arm*PI/2+t*4.4+(r()-.5)*.5,rr=4+t*46+(r()-.5)*4;x=Math.cos(ang)*rr;z=Math.sin(ang)*rr;y=(r()-.5)*1.2;c=t<.35?[1,.9,.75]:[.7,.8,1];}
     gp.set([x,y,z],i*3);const w=.5+r()*.5;gc.set(c.map(v=>v*w),i*3);}
@@ -2361,7 +2647,7 @@ function onResize3D(){if(!S3.ready)return;const w=$('s3-wrap').clientWidth,h=$('
 addEventListener('resize',()=>{if(cur==='rymd3d')onResize3D();});
 const MODES3={sol:['Solsystemet','Planeterna är förstorade och avstånden ihoptryckta, så att allt syns.'],real:['Verklig skala','Allt i rätt storlek och avstånd. Planeterna blir pyttesmå, för rymden är nästan helt tom! Tryck på ett namn för att flyga dit.'],
   stars:['Närmaste stjärnorna','1 ruta på ringarna är 1 ljusår. Ringarna visar 5, 10, 20 och 40 ljusår från solen.'],galax:['Vintergatan','Hela vår galax sedd utifrån. Den rosa pricken är ungefär där solen finns.']};
-function setMode3D(m,first){S3.mode=m;S3.tour=null;for(const g in S3.groups)S3.groups[g].visible=g===m;S3.sky.visible=S3.mw.visible=m!=='galax';
+function setMode3D(m,first){if((m==='real'||m==='sol')&&!S3.built[m]){if(S3.lazy)return;S3.lazy=buildBodies(m==='real').then(()=>{S3.lazy=null;setMode3D(m,first);});return;}S3.mode=m;S3.tour=null;for(const g in S3.groups)S3.groups[g].visible=g===m;S3.sky.visible=S3.mw.visible=m!=='galax';
   [...$('s3-modes').children].forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m));$('s3-modeinfo').textContent=MODES3[m][1];
   S3.controls.minDistance=.05;S3.focus=null;$('s3-info').hidden=true;
   const home={sol:[0,130,230],real:[0,2.5e6,4.5e6],stars:[0,45,70],galax:[0,55,75]}[m];S3.camera.position.set(...home);S3.controls.target.set(0,0,0);
@@ -2539,7 +2825,7 @@ addEventListener('hashchange',closeTerm);
 
 /* ---------- Start ---------- */
 $('logo').innerHTML=art('saturn');
-renderHUD();renderSound();$('lite').setAttribute('aria-pressed',!!S.lite);renderMission();renderDaily();renderFilters();renderStrip();renderDetail();
+applyLook();renderRemind();renderHUD();renderSound();$('lite').setAttribute('aria-pressed',!!S.lite);renderMission();renderDaily();renderFilters();renderStrip();renderDetail();
 renderFcTopic();buildQueue();renderSetup();renderWeight();renderConstPick();renderConst();renderGloss();updSpeedLbl();buildSkyView();
 if(!MAP.play)$('map-play').textContent='Spela';
 show(location.hash.slice(1));applyProfile();if(!S.profile)openOnboarding();else buddyGreet();
