@@ -30,9 +30,7 @@ jobs:
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-34" "build-tools;34.0.0" > /dev/null
 
       - name: Bygg webbappen
-        env:
-          RYMD_VERSION: ${{ github.run_number }}
-        run: python3 rymdakademin-src/build.py
+        run: RYMD_VERSION="$(date +%Y.%m.%d)-${{ github.run_number }}" python3 rymdakademin-src/build.py
 
       - name: Bygg Android-appen
         env:
