@@ -2455,7 +2455,7 @@ function buddyGreet(){const k=dayKey(new Date());if(S.greeted===k||!S.profile)re
   setTimeout(()=>buddySay(`Hej ${pname()}! ${S.daily&&!S.daily.done?'Dagens uppdrag väntar på dig.':'Kul att se dig igen!'}`,'wave',5000),1200);}
 
 /* ===================== Profiler, spara-kod, rapport för vuxna, inställningar ===================== */
-const APPVER='2026.11.07';
+const APPVER='2026.11.07-2';
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function wIdx(){try{localStorage.setItem(PKEY,JSON.stringify(PIDX));}catch(e){}}
 function readProfile(id){if(id===PIDX.cur)return S;try{return JSON.parse(localStorage.getItem('rymdakademin-p-'+id)||'{}');}catch(e){return {};}}
