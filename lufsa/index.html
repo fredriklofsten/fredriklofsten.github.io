@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f5c45">
+<title>Lufsa – backpackerappen</title>
+<meta name="description" content="Lufsa: budget, rutt, karta offline, resesällskap, tips och trygghet för backpackers.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<header>
+  <div class="logo">Lufs<span>a</span></div>
+  <div class="row" style="flex:0;gap:8px"><div class="pill" id="syncPill">Lokalt läge</div><div class="av" id="meBtn" title="Min profil">👤</div></div>
+</header>
+
+<!-- HEM -->
+<section class="view" id="v-hem">
+  <div class="card hero" id="heroCard">
+    <svg width="160" height="120" viewBox="0 0 160 120"><path d="M0 120 L50 40 L80 80 L110 20 L160 120Z" fill="#fff"/></svg>
+    <div class="lbl">Frihetsmätaren – så länge räcker pengarna</div>
+    <div class="big" id="runway">–</div>
+    <div class="sub" id="runwaySub">Ställ in din resa nedan för att komma igång.</div>
+  </div>
+  <div class="grid2" style="margin-bottom:12px">
+    <div class="stat"><small>Kvar av budget</small><b id="stLeft">–</b></div>
+    <div class="stat"><small>Idag / dagsmål</small><b id="stToday">–</b></div>
+    <div class="stat"><small>Snitt per dag</small><b id="stAvg">–</b></div>
+    <div class="stat"><small>Dag på resan</small><b id="stDay">–</b></div>
+  </div>
+  <div id="homeAlerts"></div>
+  <div class="card">
+    <h2>Dagens rad</h2>
+    <p class="muted">En mening om dagen blir en dagbok du faktiskt skriver.</p>
+    <div class="row" style="margin:8px 0" id="moods"></div>
+    <textarea id="jText" placeholder="Vad hände idag?"></textarea>
+    <div class="row" style="margin-top:8px"><button id="jSave">Spara dagen</button></div>
+    <ul class="list" id="jList" style="margin-top:6px"></ul>
+  </div>
+  <div class="card">
+    <h2>Min resa</h2>
+    <div class="grid2">
+      <div><label>Total budget (SEK)</label><input id="tBudget" type="number" inputmode="numeric" placeholder="t.ex. 60000"></div>
+      <div><label>Hemvaluta</label><input value="SEK" disabled></div>
+      <div><label>Startdatum</label><input id="tStart" type="date"></div>
+      <div><label>Planerat slut</label><input id="tEnd" type="date"></div>
+    </div>
+    <div class="row" style="margin-top:10px"><button id="tSave">Spara resan</button></div>
+  </div>
+</section>
+
+<!-- SOCIALT -->
+<section class="view" id="v-socialt">
+  <div class="banner" id="localBanner">🧪 <b>Testläge:</b> det du delar sparas bara på den här enheten tills appen kopplas till en gemensam databas.</div>
+  <div class="seg" id="seg">
+    <button data-sg="flode" class="on">📸 Flöde</button>
+    <button data-sg="tips">💡 Tips</button>
+    <button data-sg="sallskap">🤝 Sällskap</button>
+    <button data-sg="hang">🍻 Häng</button>
+    <button data-sg="hostels">🛏️ Hostels</button>
+    <button data-sg="jobb">🧰 Jobb</button>
+  </div>
+  <div class="card" id="profileNudge" style="display:none">
+    <h2>Skapa din resenärsprofil</h2>
+    <p class="muted">Med en profil kan du dela bilder och tips, hitta resesällskap och hänga med på träffar.</p>
+    <div class="row" style="margin-top:10px"><button id="nudgeBtn">Skapa profil</button></div>
+  </div>
+
+  <div class="sg" id="sg-flode">
+    <div class="card" id="postBox">
+      <div class="row"><div class="av" id="postAv"></div><textarea id="postText" placeholder="Dela ett ögonblick från resan…" style="min-height:48px"></textarea></div>
+      <div id="postPrev"></div>
+      <div class="row" style="margin-top:8px">
+        <label class="btnlike" style="flex:0">📷 Bild<input type="file" accept="image/*" id="postImg" hidden></label>
+        <span class="muted" id="postCity" style="flex:1"></span>
+        <button id="postSend" style="flex:0">Dela</button>
+      </div>
+    </div>
+    <div id="feed"></div>
+  </div>
+
+  <div class="sg" id="sg-tips" style="display:none">
+    <div class="card">
+      <h2>Tips från resenärer</h2>
+      <label>Stad</label><div class="chips" id="tipCities"></div>
+      <div class="chips" id="tipCatsF"></div>
+    </div>
+    <div id="tipList"></div>
+    <div class="card">
+      <h2>Dela ett tips</h2>
+      <div class="grid2">
+        <div><label>Stad</label><input id="tipCity"></div>
+        <div><label>Ungefärligt pris (valfritt)</label><input id="tipPrice" placeholder="t.ex. 80 THB"></div>
+      </div>
+      <label>Typ</label><div class="chips" id="tipCats"></div>
+      <label>Tipset</label><textarea id="tipText" placeholder="t.ex. Nattmarknaden bakom stationen – bästa pad thai, 60 baht"></textarea>
+      <div class="row" style="margin-top:8px"><button id="tipAdd">Dela tips</button></div>
+    </div>
+  </div>
+
+  <div class="sg" id="sg-sallskap" style="display:none">
+    <div class="card">
+      <h2>Hitta resesällskap</h2>
+      <p class="muted">Matchar dig med resenärer vars rutt korsar din – samma stad, samma dagar – och som gillar samma saker.</p>
+      <div class="row" style="margin-top:10px;justify-content:space-between"><span style="flex:1">Jag söker sällskap</span><label class="sw"><input type="checkbox" id="lfc"><i></i></label></div>
+    </div>
+    <div id="matches"></div>
+    <div class="card"><h3>🛡️ Träffa säkert</h3><p class="muted">Träffas första gången på en offentlig plats, berätta för någon var du är (Trygghetstimern under Mer) och dela aldrig mer än du vill.</p></div>
+  </div>
+
+  <div class="sg" id="sg-hang" style="display:none">
+    <div class="card">
+      <h2>Häng</h2>
+      <p class="muted">Bjud in till middag, vandring eller delad taxi – andra i samma stad kan haka på.</p>
+      <div class="grid2">
+        <div><label>Stad</label><input id="hCity"></div>
+        <div><label>När</label><input id="hWhen" type="datetime-local"></div>
+      </div>
+      <label>Vad händer?</label><input id="hWhat" placeholder="t.ex. Streetfood-runda, möts vid fontänen">
+      <div class="row" style="margin-top:8px"><button id="hAdd">Bjud in</button></div>
+    </div>
+    <div id="hangList"></div>
+  </div>
+
+  <div class="sg" id="sg-hostels" style="display:none">
+    <div class="card">
+      <h2>Hostelbetyg som spelar roll</h2>
+      <p class="muted">Inte bara "bra läge" – här betygsätter resenärer trygghet, låsbara skåp, ljudnivå och hur det är att bo där som ensamresande kvinna.</p>
+      <label>Stad</label><div class="chips" id="hosCities"></div>
+    </div>
+    <div id="hosList"></div>
+    <div class="card">
+      <h2>Betygsätt ett hostel</h2>
+      <div class="grid2">
+        <div><label>Hostel</label><input id="hosName"></div>
+        <div><label>Stad</label><input id="hosCity"></div>
+      </div>
+      <div id="hosRates"></div>
+      <div class="row" style="margin-top:6px;justify-content:space-between"><span style="flex:1">Låsbara skåp finns</span><label class="sw"><input type="checkbox" id="hosLock"><i></i></label></div>
+      <label>Kommentar</label><textarea id="hosText" placeholder="Vad bör nästa resenär veta?"></textarea>
+      <div class="row" style="margin-top:8px"><button id="hosAdd">Spara betyg</button></div>
+    </div>
+  </div>
+
+  <div class="sg" id="sg-jobb" style="display:none">
+    <div class="card">
+      <h2>Jobb & volontär på vägen</h2>
+      <p class="muted">Jobba mot mat och säng, hitta säsongsjobb eller volontärprojekt – tipsat av andra resenärer.</p>
+      <div class="chips" id="jobKindsF"></div>
+    </div>
+    <div id="jobList"></div>
+    <div class="card">
+      <h2>Tipsa om ett jobb</h2>
+      <div class="grid2">
+        <div><label>Vad</label><input id="jobTitle" placeholder="t.ex. Receptionist på hostel"></div>
+        <div><label>Var (stad, land)</label><input id="jobPlace"></div>
+      </div>
+      <label>Typ</label><div class="chips" id="jobKinds"></div>
+      <label>Vad får man?</label><input id="jobOffer" placeholder="t.ex. säng + frukost mot 4 h/dag">
+      <label>Hur söker man?</label><input id="jobHow" placeholder="t.ex. fråga i receptionen, sida på nätet">
+      <div class="row" style="margin-top:8px"><button id="jobAdd">Dela jobbet</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- KARTA -->
+<section class="view" id="v-karta">
+  <div id="map"></div>
+  <div class="mapbar">
+    <button class="ghost sm" id="mLocate">📍 Var är jag?</button>
+    <button class="ghost sm" id="mAddPlace">⭐ Spara plats här</button>
+    <button class="ghost sm" id="mOffline">⬇️ Spara kartan offline</button>
+  </div>
+  <div class="note" id="offlineInfo" style="margin:-6px 0 12px"></div>
+  <div class="card">
+    <h2>Rutten</h2>
+    <p class="muted">Utgifter kopplas automatiskt till stoppet du är på – då ser du vad varje plats faktiskt kostade per natt.</p>
+    <div class="timeline" id="stops" style="margin-top:12px"></div>
+  </div>
+  <div class="card">
+    <h2>Nytt stopp</h2>
+    <div class="grid2">
+      <div><label>Plats</label><input id="sCity" placeholder="Stad"></div>
+      <div><label>Land</label><input id="sCountry" placeholder="Land"></div>
+      <div><label>Ankomst</label><input id="sDate" type="date"></div>
+      <div><label>Nätter</label><input id="sNights" type="number" inputmode="numeric" value="3"></div>
+    </div>
+    <div class="note" id="geoNote"></div>
+    <div class="row" style="margin-top:10px"><button id="sAdd">Lägg till stopp</button></div>
+  </div>
+  <div class="card">
+    <h2>Sparade platser</h2>
+    <p class="muted">Finns kvar i telefonen även utan internet.</p>
+    <ul class="list" id="placeList"></ul>
+  </div>
+</section>
+
+<!-- PENGAR -->
+<section class="view" id="v-pengar">
+  <div class="card">
+    <h2>Ny utgift</h2>
+    <div class="row">
+      <div><label>Belopp</label><input id="eAmt" type="number" inputmode="decimal" placeholder="0"></div>
+      <div style="flex:.7"><label>Valuta</label><select id="eCur"></select></div>
+    </div>
+    <div class="muted" id="eConv" style="margin-top:6px"></div>
+    <label>Kategori</label><div class="chips" id="eCats"></div>
+    <label>Notering (valfritt)</label><input id="eNote" placeholder="t.ex. nattbuss till Hanoi">
+    <div id="splitBox"></div>
+    <div class="row" style="margin-top:10px"><button id="eAdd">Lägg till</button></div>
+  </div>
+  <div class="card"><h2>Vart pengarna går</h2><div id="catBars"></div></div>
+  <div class="card">
+    <h2>Resekompisar & delning</h2>
+    <p class="muted">Lägg till kompisar så kan du dela utgifter. Appen räknar ut vem som är skyldig vem.</p>
+    <div class="row" style="margin-top:8px"><input id="bName" placeholder="Namn"><button class="sm" id="bAdd" style="flex:0">Lägg till</button></div>
+    <div class="chips" id="bList"></div>
+    <div id="settle"></div>
+  </div>
+  <div class="card"><h2>Senaste utgifter</h2><ul class="list" id="eList"></ul></div>
+  <details class="card">
+    <summary style="font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer">Växelkurser</summary>
+    <p class="muted">1 enhet = X SEK. Ungefärliga startvärden – uppdatera när du växlar så stämmer allt.</p>
+    <ul class="list" id="rList"></ul>
+    <div class="row" style="margin-top:8px"><input id="rCode" placeholder="Kod, t.ex. LAK" maxlength="4"><input id="rVal" type="number" inputmode="decimal" placeholder="SEK"><button class="sm" id="rAdd" style="flex:0">+</button></div>
+  </details>
+</section>
+
+<!-- MER -->
+<section class="view" id="v-mer">
+  <div class="seg" id="merSeg">
+    <button data-ms="verktyg" class="on">🧰 Verktyg</button>
+    <button data-ms="trygg">🛟 Trygg</button>
+    <button data-ms="packa">🎒 Packa</button>
+    <button data-ms="inst">⚙️ Inställningar</button>
+  </div>
+
+  <div class="ms" id="ms-verktyg">
+    <div class="card tool" data-open="tool-ocr"><div class="ic">📷</div><div class="grow"><b>Kameraöversättning</b><div class="muted">Fota en meny eller skylt – läs av texten och översätt.</div></div><span>›</span></div>
+    <div class="card tool" data-open="tool-entry"><div class="ic">🛂</div><div class="grow"><b>Inreseregler</b><div class="muted">Checklista för visum, pass och vaccin för varje land på din rutt.</div></div><span>›</span></div>
+    <div class="card tool" data-open="tool-film"><div class="ic">🎬</div><div class="grow"><b>Resefilm</b><div class="muted">Gör en film av dina bilder och din rutt.</div></div><span>›</span></div>
+    <div class="card tool" data-open="tool-phr"><div class="ic">🗣️</div><div class="grow"><b>Visa för lokalbor</b><div class="muted">Fraser i stort format på 6 språk.</div></div><span>›</span></div>
+
+    <div class="sub" id="tool-ocr" style="display:none">
+      <button class="back" data-back>‹ Verktyg</button>
+      <div class="card">
+        <h2>Kameraöversättning</h2>
+        <p class="muted">Ta en bild på en meny, skylt eller lapp. Texten läses av direkt i telefonen och du kan öppna översättningen med ett tryck.</p>
+        <label>Språk på texten</label>
+        <select id="ocrLang">
+          <option value="eng">Engelska / latinska bokstäver</option><option value="spa">Spanska</option><option value="por">Portugisiska</option><option value="fra">Franska</option>
+          <option value="tha">Thai</option><option value="vie">Vietnamesiska</option><option value="ind">Indonesiska</option><option value="jpn">Japanska</option><option value="chi_sim">Kinesiska</option><option value="kor">Koreanska</option>
+        </select>
+        <div class="row" style="margin-top:10px"><label class="btnlike" style="text-align:center">📷 Ta eller välj bild<input type="file" accept="image/*" capture="environment" id="ocrImg" hidden></label></div>
+        <img id="ocrPrev" style="width:100%;border-radius:14px;margin-top:10px;display:none">
+        <div class="muted" id="ocrStatus" style="margin-top:8px"></div>
+        <textarea id="ocrText" style="margin-top:8px;display:none;min-height:120px"></textarea>
+        <div class="row" style="margin-top:8px;display:none" id="ocrActs"><a id="ocrGo" target="_blank" rel="noopener"><button style="width:100%">Översätt till svenska ↗</button></a><button class="ghost" id="ocrCopy">Kopiera</button></div>
+        <p class="note">Första gången laddas läsverktyget ner (några MB) – sedan går det snabbare.</p>
+      </div>
+    </div>
+
+    <div class="sub" id="tool-entry" style="display:none">
+      <button class="back" data-back>‹ Verktyg</button>
+      <div class="card">
+        <h2>Inreseregler</h2>
+        <p class="muted">En checklista per land på din rutt. Regler ändras ofta – kolla alltid de officiella källorna innan du åker.</p>
+        <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px">
+          <a href="https://www.regeringen.se/uds-reseinformation/" target="_blank" rel="noopener" class="btnlike" style="flex:0">UD:s reseinformation ↗</a>
+          <a href="https://www.swedenabroad.se/" target="_blank" rel="noopener" class="btnlike" style="flex:0">Ambassader ↗</a>
+          <a href="https://www.1177.se/" target="_blank" rel="noopener" class="btnlike" style="flex:0">1177 vaccin ↗</a>
+        </div>
+      </div>
+      <div id="entryList"></div>
+    </div>
+
+    <div class="sub" id="tool-film" style="display:none">
+      <button class="back" data-back>‹ Verktyg</button>
+      <div class="card">
+        <h2>Resefilm</h2>
+        <p class="muted">Välj bilder från resan. Appen gör en film med din rutt, dina bilder och dina dagboksrader. Allt sker i telefonen.</p>
+        <label>Titel</label><input id="filmTitle" placeholder="t.ex. Sydostasien 2026">
+        <div class="row" style="margin-top:10px"><label class="btnlike" style="text-align:center">🖼️ Välj bilder<input type="file" accept="image/*" multiple id="filmImgs" hidden></label></div>
+        <div class="muted" id="filmCount" style="margin-top:6px"></div>
+        <div class="row" style="margin-top:10px"><button id="filmMake">🎬 Skapa film</button></div>
+        <canvas class="film" id="filmCanvas" width="720" height="1280" style="display:none;margin-top:10px"></canvas>
+        <div id="filmOut" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div class="sub" id="tool-phr" style="display:none">
+      <button class="back" data-back>‹ Verktyg</button>
+      <div class="card">
+        <h2>Visa för lokalbor</h2>
+        <p class="muted">Tryck på en fras så visas den i stort format – vänd skärmen mot personen.</p>
+        <div class="chips" id="lang"></div>
+        <ul class="list" id="phrases"></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="ms" id="ms-trygg" style="display:none">
+    <div class="card" id="ciCard">
+      <h2>Trygghetstimer</h2>
+      <p class="muted">Ska du på vandring, nattbuss eller dejt? Säg när du är tillbaka. Missar du tiden får du en notis och ett färdigt SMS med din position till din kontakt.</p>
+      <div id="ciActive"></div>
+      <div id="ciForm">
+        <div class="grid2">
+          <div><label>Tillbaka senast</label><input id="ciTime" type="time"></div>
+          <div><label>Kontaktens nummer</label><input id="ciPhone" type="tel" placeholder="+46…"></div>
+        </div>
+        <label>Vart ska du?</label><input id="ciWhere" placeholder="t.ex. vandring till vattenfallet">
+        <div class="row" style="margin-top:10px"><button id="ciStart">Starta timer</button></div>
+      </div>
+      <p class="note">Notisen fungerar när appen är öppen eller ligger i bakgrunden. Den ersätter inte att berätta för någon var du är.</p>
+    </div>
+    <div class="card">
+      <h2>Dela min position</h2>
+      <p class="muted">Skicka var du är just nu till familj eller resesällskap – som en kartlänk i SMS, WhatsApp eller mejl.</p>
+      <div class="row" style="margin-top:10px"><button id="locShare">📍 Dela min position nu</button></div>
+      <div id="locOut" class="muted" style="margin-top:8px"></div>
+      <p class="note">Löpande livespårning kommer när appen kopplas till databasen.</p>
+    </div>
+    <div class="card">
+      <h2>Nödkort</h2>
+      <div class="grid2">
+        <div><label>Namn</label><input id="nName"></div>
+        <div><label>Blodgrupp</label><input id="nBlood"></div>
+        <div><label>Allergier / medicin</label><input id="nAll"></div>
+        <div><label>Nödkontakt</label><input id="nIce"></div>
+        <div><label>Försäkringsbolag</label><input id="nIns"></div>
+        <div><label>Skadeärende-tel</label><input id="nInsTel"></div>
+      </div>
+      <div class="row" style="margin-top:10px"><button class="ghost" id="nSave">Spara</button><button class="red" id="nShow">Visa nödkort</button></div>
+    </div>
+  </div>
+
+  <div class="ms" id="ms-packa" style="display:none">
+    <div class="card">
+      <h2>Ryggsäcksvikten</h2>
+      <div class="row" style="justify-content:space-between"><b class="big" style="font-size:28px" id="pWeight">0 kg</b><span class="muted" id="pGoal"></span></div>
+      <div class="bar" style="margin:8px 0"><i id="pBar"></i></div>
+      <div class="muted" id="pPacked"></div>
+      <label>Viktmål</label><div class="chips" id="pGoals"></div>
+    </div>
+    <div class="card"><h2>Fyll på från mall</h2><div class="chips" id="pTemplates"></div></div>
+    <div class="card">
+      <h2>Packlistan</h2>
+      <ul class="list" id="pList"></ul>
+      <div class="row" style="margin-top:8px"><input id="pName" placeholder="Sak"><input id="pGram" type="number" inputmode="numeric" placeholder="gram" style="flex:.5"><button class="sm" id="pAdd" style="flex:0">+</button></div>
+    </div>
+  </div>
+
+  <div class="ms" id="ms-inst" style="display:none">
+    <div class="card" id="installCard">
+      <h2>Installera appen</h2>
+      <p class="muted" id="installText">Lägg Lufsa på hemskärmen så fungerar den som en vanlig app – även utan internet.</p>
+      <div class="row" style="margin-top:10px"><button id="installBtn">📲 Installera</button></div>
+    </div>
+    <div class="card">
+      <h2>Notiser</h2>
+      <p class="muted">Få notis när trygghetstimern går ut och påminnelse innan ett häng du ska på.</p>
+      <div class="row" style="margin-top:10px"><button id="notifBtn">🔔 Slå på notiser</button></div>
+      <div class="muted" id="notifState" style="margin-top:6px"></div>
+    </div>
+    <div id="hiddenBox"></div>
+    <div class="card">
+      <h2>Säkerhetskopia</h2>
+      <p class="muted">Allt sparas i telefonen. Kopiera en säkerhetskopia om du byter telefon.</p>
+      <div class="row" style="margin-top:10px"><button class="ghost" id="expBtn">Kopiera säkerhetskopia</button><button class="ghost" id="impBtn">Återställ</button></div>
+      <textarea id="impText" placeholder="Klistra in säkerhetskopian här" style="display:none;margin-top:8px"></textarea>
+    </div>
+  </div>
+</section>
+</main>
+
+<button class="fab" id="fab">✦ Fråga guiden</button>
+
+<nav><div class="in">
+  <a href="#hem" data-v="hem"><span class="ic">🧭</span>Hem</a>
+  <a href="#socialt" data-v="socialt"><span class="ic">👋</span>Socialt</a>
+  <a href="#karta" data-v="karta"><span class="ic">🗺️</span>Karta</a>
+  <a href="#pengar" data-v="pengar"><span class="ic">💸</span>Pengar</a>
+  <a href="#mer" data-v="mer"><span class="ic">🎒</span>Mer</a>
+</div></nav>
+
+<div class="modal" id="profModal"><div class="sheet">
+  <div class="row" style="justify-content:space-between"><h2 style="flex:1">Min profil</h2><button class="x" data-close="profModal" style="flex:0">✕</button></div>
+  <div class="row" style="margin:8px 0;align-items:center">
+    <div class="av big" id="profAv"></div>
+    <div style="flex:1"><label class="btnlike">Byt bild<input type="file" accept="image/*" id="profImg" hidden></label>
+    <div class="chips" id="emojiPick" style="margin-top:6px"></div></div>
+  </div>
+  <div class="grid2">
+    <div><label>Smeknamn</label><input id="prNick" maxlength="30"></div>
+    <div><label>Kommer från</label><input id="prFrom" maxlength="40" placeholder="t.ex. Göteborg"></div>
+  </div>
+  <label>Om mig</label><textarea id="prBio" maxlength="240" placeholder="Vad gör du på resan? Vad letar du efter?"></textarea>
+  <label>Resestil</label><div class="chips" id="prStyle"></div>
+  <div class="grid2">
+    <div><label>Språk</label><input id="prLangs" placeholder="svenska, engelska"></div>
+    <div><label>Kontakt (valfritt, syns för alla)</label><input id="prContact" placeholder="t.ex. Instagram @namn"></div>
+  </div>
+  <div class="row" style="margin-top:10px;justify-content:space-between"><span style="flex:1">Visa min rutt för andra</span><label class="sw"><input type="checkbox" id="prShare"><i></i></label></div>
+  <div class="row" style="margin-top:6px;justify-content:space-between"><span style="flex:1">Jag söker sällskap</span><label class="sw"><input type="checkbox" id="prLfc"><i></i></label></div>
+  <h3 style="margin-top:14px">Pass-stämplar</h3>
+  <div class="stamps" id="myStamps"></div>
+  <div class="row" style="margin-top:12px"><button id="prSave">Spara profil</button></div>
+</div></div>
+
+<div class="modal" id="personModal"><div class="sheet" id="personBody"></div></div>
+<div class="modal" id="cmtModal"><div class="sheet">
+  <div class="row" style="justify-content:space-between"><h2 style="flex:1">Kommentarer</h2><button class="x" data-close="cmtModal" style="flex:0">✕</button></div>
+  <div id="cmtList" style="margin:8px 0"></div>
+  <div class="row"><input id="cmtIn" placeholder="Skriv en kommentar…" maxlength="300"><button id="cmtSend" style="flex:0">Skicka</button></div>
+</div></div>
+<div class="modal" id="placeModal"><div class="sheet">
+  <div class="row" style="justify-content:space-between"><h2 style="flex:1">Spara plats</h2><button class="x" data-close="placeModal" style="flex:0">✕</button></div>
+  <label>Namn</label><input id="plName" placeholder="t.ex. Mitt hostel">
+  <label>Typ</label><div class="chips" id="plKinds"></div>
+  <label>Anteckning</label><input id="plNote" placeholder="valfritt">
+  <div class="row" style="margin-top:10px"><button id="plSave">Spara</button></div>
+</div></div>
+<div class="modal" id="aiModal"><div class="sheet">
+  <div class="row" style="justify-content:space-between"><h2 style="flex:1">Reseguiden</h2><button class="x" data-close="aiModal" style="flex:0">✕</button></div>
+  <p class="muted">Guiden vet din budget, din rutt och var du är just nu.</p>
+  <div class="chips" id="aiQuick"></div>
+  <div class="chat" id="aiChat"></div>
+  <div class="row"><input id="aiIn" placeholder="Fråga vad som helst om resan…"><button id="aiSend" style="flex:0">Skicka</button></div>
+</div></div>
+
+<div class="full" id="full"><div class="phr" id="fullPhr"></div><div class="sv" id="fullSv"></div><button class="ghost" style="margin-top:30px" id="fullClose">Stäng</button></div>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/core.js"></script>
+<script src="js/data.js"></script>
+<script src="js/social.js"></script>
+<script src="js/map.js"></script>
+<script src="js/tools.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
