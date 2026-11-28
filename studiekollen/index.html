@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studiekollen</title>
+<meta name="theme-color" content="#111111">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Studiekollen">
+<meta name="robots" content="noindex">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: lugn, tydlig, uppmuntrande – en sak i taget, aldrig stressande.
+   IDEA: en tågtidtabell för skolan – varje uppgift är en avgång med stora siffror för slutdatum.
+   PICTURE: "Nästa steg"-tavlan överst: ett enda steg i stor stil + fokus-timer.
+   COLOUR and TYPE: vitt, svart, signalrött för det som brådskar, en färgprick per kurs; Archivo bred för siffror, Atkinson Hyperlegible för läsbarhet.
+   LAYOUT: tavlan överst, kursfilter, sedan avgångar grupperade efter när de går. */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#0e0e0e);--ink:light-dark(#111,#f2f2f2);--mut:light-dark(#62625f,#a5a5a0);--line:light-dark(#dcdcd8,#2c2c2a);--soft:light-dark(#f3f3f1,#181817);--red:light-dark(#e4002b,#ff4a5f);--ok:light-dark(#0a7a3d,#4fd08a)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Atkinson Hyperlegible",system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(20px,3.5vw,48px) max(5vw,16px);max-width:1240px;margin:0 auto}
+h1,h2,.num{font-family:Archivo,system-ui,sans-serif;font-stretch:112%;font-weight:800;letter-spacing:-.01em}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;border-top:6px solid var(--ink);padding-top:14px}
+h1{font-size:clamp(28px,4vw,40px);line-height:1.05;margin:0}
+.sub{color:var(--mut);margin:4px 0 0;font-size:15px}
+button,input,textarea,select{font:inherit;font-size:16px;color:inherit}
+.btn{min-height:44px;padding:8px 16px;border-radius:10px;border:2px solid var(--ink);background:var(--bg);cursor:pointer;font-weight:700}
+.btn.pri{background:var(--ink);color:var(--bg)}
+.btn.red{background:var(--red);border-color:var(--red);color:#fff}
+.btn.ghost{border-color:var(--line)}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,.chip:focus-visible,summary:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.btn:disabled{opacity:.5;cursor:wait}
+/* Nästa steg */
+.now{margin-top:22px;background:var(--ink);color:var(--bg);border-radius:18px;padding:clamp(20px,3vw,36px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px 32px;align-items:center}
+.now .lbl{font-size:15px;opacity:.75;margin:0}
+.now .step{font-family:Archivo,sans-serif;font-stretch:112%;font-weight:800;font-size:clamp(26px,3.6vw,44px);line-height:1.08;margin:6px 0 10px;text-wrap:balance}
+.now .meta{font-size:15px;opacity:.85}
+.now .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.now .btn{border-color:var(--bg);background:var(--ink);color:var(--bg)}
+.now .btn.pri{background:var(--bg);color:var(--ink)}
+.clock{text-align:center}
+.clock .num{font-size:clamp(48px,8vw,96px);line-height:1}
+.clock small{display:block;opacity:.75;font-size:14px}
+.now.empty{background:var(--soft);color:var(--ink)}
+/* Kurser */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 6px}
+.chip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:6px 14px;border-radius:999px;border:2px solid var(--line);background:var(--bg);cursor:pointer;font-weight:700;font-size:15px}
+.chip[aria-pressed=true]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+.dot{width:12px;height:12px;border-radius:50%;flex:none;background:var(--c,#888)}
+.chip .n{font-weight:400;opacity:.7}
+/* Lista */
+h2{font-size:22px;margin:30px 0 8px;display:flex;gap:10px;align-items:baseline}
+h2 .cnt{font-family:"Atkinson Hyperlegible";font-weight:400;font-size:15px;color:var(--mut)}
+h2.late{color:var(--red)}
+.task{display:grid;grid-template-columns:86px minmax(0,1fr);gap:0 18px;border-top:2px solid var(--line);padding:14px 0}
+.date{text-align:left}
+.date .num{font-size:40px;line-height:1}
+.date small{display:block;font-size:14px;color:var(--mut)}
+.task.late .date .num,.task.late .left{color:var(--red)}
+.tt{font-weight:700;font-size:19px;line-height:1.3;margin:0;background:none;border:0;padding:0;text-align:left;cursor:pointer}
+.row{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:15px;color:var(--mut);margin-top:4px}
+.row .k{display:inline-flex;gap:6px;align-items:center;color:var(--ink)}
+.left{font-weight:700;color:var(--ink)}
+.bar{height:8px;border-radius:4px;background:var(--soft);overflow:hidden;width:120px}
+.bar i{display:block;height:100%;background:var(--ok)}
+.task.done .tt{text-decoration:line-through;color:var(--mut)}
+.open{grid-column:2;margin-top:12px}
+.what{background:var(--soft);border-radius:12px;padding:14px 16px;margin:0 0 12px}
+.what b{display:block;font-size:14px;color:var(--mut);margin-bottom:2px}
+.steps{list-style:none;margin:0 0 12px;padding:0}
+.steps li{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line)}
+.steps input{width:24px;height:24px;margin-top:2px;flex:none;accent-color:var(--ok)}
+.steps label{flex:1;cursor:pointer}
+.steps .m{color:var(--mut);font-size:14px;white-space:nowrap}
+.steps li.ok label{text-decoration:line-through;color:var(--mut)}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+details.orig{margin:0 0 12px;font-size:15px}
+details.orig summary{cursor:pointer;color:var(--mut);min-height:32px}
+details.orig pre{white-space:pre-wrap;font:inherit;background:var(--soft);padding:12px;border-radius:10px;max-height:260px;overflow:auto}
+.emptylist{color:var(--mut);padding:24px 0}
+/* Panel */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-start;justify-content:center;padding:4vh 12px;overflow:auto;z-index:5}
+.ov.on{display:flex}
+.panel{background:var(--bg);color:var(--ink);border-radius:18px;padding:22px;width:min(640px,100%)}
+.panel h3{font-family:Archivo,sans-serif;font-stretch:112%;font-size:24px;margin:0 0 6px}
+.tabs{display:flex;gap:8px;margin:12px 0}
+textarea,input[type=text],input[type=date]{width:100%;min-height:44px;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:var(--bg)}
+textarea{min-height:180px;resize:vertical}
+label.f{display:block;font-weight:700;font-size:15px;margin:12px 0 4px}
+.hint{font-size:14px;color:var(--mut);margin:6px 0}
+.msg{font-size:15px;margin:10px 0 0;min-height:1.4em}
+.msg.err{color:var(--red)}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ok);color:#fff;font-weight:700;padding:12px 20px;border-radius:999px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+.note{font-size:13px;color:var(--mut);margin-top:30px}
+/* Idag */
+.dchip{display:inline-block;font-size:13px;font-weight:700;padding:1px 7px;border-radius:6px;background:var(--soft);color:var(--mut);margin-right:6px;white-space:nowrap;vertical-align:1px}
+.dchip.td{background:var(--red);color:#fff}
+.dchip.late{background:transparent;color:var(--red);border:2px solid var(--red)}
+.hd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;margin:28px 0 6px}
+.hd h2{margin:0}
+.prog{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px}
+.prog .bar{width:140px;height:12px;border-radius:6px}
+.srow{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:2px solid var(--line)}
+.srow input{width:30px;height:30px;flex:none;accent-color:var(--ok);margin:0}
+.srow label{flex:1;cursor:pointer;font-size:19px;font-weight:700;line-height:1.3}
+.srow label small{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;font-size:14px;font-weight:400;color:var(--mut);margin-top:4px}
+.srow.ok label{text-decoration:line-through;color:var(--mut)}
+.soon .ev{border-top:1px solid var(--line);padding:8px 0}
+.vidbox{margin-top:26px;border:2px solid var(--line);border-radius:16px;padding:16px;background:var(--soft)}
+.vidbox h2{margin:0 0 4px;font-size:21px}
+.vidbox p{margin:0 0 12px;color:var(--mut);font-size:15px}
+.vidbox video{width:100%;max-width:960px;display:block;border-radius:10px;background:#000;aspect-ratio:16/9}
+.kap{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.mv{min-height:40px;padding:4px 12px;border-radius:8px;border:2px solid var(--line);background:var(--bg);font-weight:700;font-size:14px;cursor:pointer;color:var(--mut);white-space:nowrap;align-self:center}
+.mv:hover{border-color:var(--ink);color:var(--ink)}
+.topacts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.iconbtn{min-height:44px;padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--bg);font-weight:700;cursor:pointer}
+.qz .opt{display:block;width:100%;text-align:left;min-height:52px;margin:8px 0;padding:10px 16px;border-radius:12px;border:2px solid var(--line);background:var(--bg);font-weight:700;font-size:17px;cursor:pointer}
+.qz .opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--bg))}
+.qz .opt.wrong{border-color:var(--red);background:color-mix(in srgb,var(--red) 12%,var(--bg))}
+.qz .fb{background:var(--soft);border-radius:12px;padding:12px 14px;margin:10px 0}
+.qz .qn{color:var(--mut);font-size:15px;margin:0 0 4px}
+.qz .qq{font-family:Archivo,sans-serif;font-stretch:112%;font-weight:800;font-size:24px;line-height:1.2;margin:0 0 8px}
+.qzbar{height:8px;border-radius:4px;background:var(--soft);overflow:hidden;margin-bottom:14px}.qzbar i{display:block;height:100%;background:var(--ok)}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:16px 0 6px}
+.wd{display:flex;flex-direction:column;align-items:center;gap:3px;border:2px solid var(--line);border-radius:12px;background:var(--bg);padding:6px 2px 8px;cursor:pointer;min-height:96px;font-weight:700}
+.wd small{font-size:13px;color:var(--mut);font-weight:700}
+.wd .wn{font-family:Archivo,sans-serif;font-stretch:112%;font-size:20px}
+.wd .wb{width:14px;height:34px;border-radius:7px;background:var(--soft);display:flex;align-items:flex-end;overflow:hidden}
+.wd .wb i{display:block;width:100%;background:var(--ok)}
+.wd .wb i.hv{background:#d98a00}.wd .wb i.xh{background:var(--red)}
+.wd .wm{font-size:13px;color:var(--mut);font-weight:400}
+.wd.sel{border-color:var(--ink);background:var(--soft)}
+.wd.td small{color:var(--red)}
+.wd .pv{width:8px;height:8px;border-radius:50%;background:var(--red)}
+.mood{display:flex;gap:10px;justify-content:center;margin:14px 0}
+.mood button{flex:1;min-height:88px;border:2px solid var(--line);border-radius:16px;background:var(--bg);font-size:36px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.mood button span{font-size:15px;font-weight:700}
+.tmb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}
+.tmb button{min-height:70px;border:2px solid var(--line);border-radius:14px;background:var(--bg);font-family:Archivo,sans-serif;font-stretch:112%;font-weight:800;font-size:24px;cursor:pointer}
+.tmb button small{display:block;font-family:"Atkinson Hyperlegible";font-weight:400;font-size:13px;color:var(--mut)}
+.fc{perspective:1000px;margin:14px 0}
+.fcard{min-height:230px;border:2px solid var(--ink);border-radius:18px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:Archivo,sans-serif;font-stretch:112%;font-weight:800;font-size:clamp(22px,4vw,30px);line-height:1.2;cursor:pointer;background:var(--bg);touch-action:pan-y;user-select:none}
+.fcard.back{font-family:"Atkinson Hyperlegible";font-weight:700;font-size:19px;line-height:1.45;background:var(--soft)}
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px;margin-top:16px;scroll-snap-type:x mandatory}
+.bcol{background:var(--soft);border-radius:14px;padding:10px;scroll-snap-align:start;min-height:160px}
+.bcol h3{font-size:17px;margin:2px 4px 10px;display:flex;justify-content:space-between}
+.lcard{background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px}
+.lcard b{display:block;font-size:17px}
+.lcard p{margin:2px 0;font-size:14px;color:var(--mut)}
+.lcard .la{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.lform{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:14px;align-items:end}
+.lform label{font-size:14px;font-weight:700}
+.calm{background:var(--soft);border-radius:14px;padding:18px 20px;font-size:17px}
+.filt{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px}
+.filt .chip[aria-expanded]{border-color:var(--line)}
+.steps label .dchip{font-weight:700}
+.steps li.today{background:color-mix(in srgb,var(--red) 7%,transparent);border-radius:8px;padding-inline:6px}
+/* Vyer */
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:4;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));background:var(--bg);border-top:2px solid var(--line);padding:4px max(env(safe-area-inset-left),4px) max(env(safe-area-inset-bottom),4px)}
+.bnav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:58px;border:0;background:none;cursor:pointer;color:var(--mut);font-weight:700;font-size:13px;border-radius:12px;padding:4px 2px}
+.bnav button .ic{font-size:22px;line-height:1}
+.bnav button[aria-current=page]{color:var(--ink);background:var(--soft)}
+.bnav button[aria-current=page] .lb{text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:3px;text-underline-offset:4px}
+.bnav button:focus-visible{outline:3px solid var(--red)}
+body{padding-bottom:90px}
+.vhead{margin:26px 0 0}
+.vhead h2{font-size:clamp(26px,3.4vw,34px);margin:0}
+.vtip{display:flex;gap:10px;align-items:flex-start;background:var(--soft);border-radius:12px;padding:10px 14px;margin:10px 0 0;font-size:15px;color:var(--ink)}
+.vtip b{white-space:nowrap}
+.sheet{align-items:flex-start}
+.sheet .panel{width:min(820px,100%);padding:18px 20px 26px}
+.back{min-height:44px;padding:6px 14px 6px 8px;border:0;background:none;font-weight:700;font-size:17px;cursor:pointer;margin:-6px 0 6px -6px}
+.sheet .task{border-top:0;padding-top:0}
+.sheet .open{grid-column:1/-1}
+.hub{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:14px;margin-top:18px}
+.hubc{border:2px solid var(--line);border-radius:16px;padding:16px 18px;background:var(--bg)}
+.hubc h3{margin:0 0 4px;font-size:19px}
+.hubc p{margin:0 0 12px;color:var(--mut);font-size:15px}
+.mer{display:grid;gap:12px;margin-top:18px;max-width:760px}
+.mer .row2{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;border:2px solid var(--line);border-radius:14px;padding:14px 16px}
+.mer .row2 span{flex:1 1 220px}
+.mer ol,.mer ul{margin:6px 0 0;padding-left:22px}.mer li{margin:6px 0}
+.bigbtn{display:flex;gap:12px;align-items:center;width:100%;text-align:left;min-height:64px;border:2px solid var(--line);border-radius:14px;background:var(--bg);padding:12px 16px;font-weight:700;font-size:17px;cursor:pointer;margin-top:14px}
+.bigbtn small{display:block;font-weight:400;color:var(--mut);font-size:14px}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:2px 8px;border-radius:6px;border:2px solid currentColor;white-space:nowrap}
+.tag.prov{background:var(--red);border-color:var(--red);color:#fff}
+.tag.inl{color:var(--ink)}
+.tag.red{color:#b0610a}
+.tag.lek{color:var(--mut);border-color:var(--line)}
+/* Kalender */
+.wk{margin-top:28px}
+.wk h2{margin:0 0 6px}
+.wk h2 .now2{font-family:"Atkinson Hyperlegible";font-size:14px;color:#fff;background:var(--red);padding:2px 8px;border-radius:6px}
+.day{display:grid;grid-template-columns:86px minmax(0,1fr);gap:0 18px;border-top:2px solid var(--line);padding:10px 0}
+.day.today{border-top-color:var(--red)}
+.day .num{font-size:30px;line-height:1}
+.ev{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:4px 0}
+.ev .tm{font-variant-numeric:tabular-nums;color:var(--mut);font-size:15px;white-space:nowrap;min-width:3.2em}
+.ev .ttl{font-weight:700}
+.ev.lek .ttl{font-weight:400}
+.ev .crs{display:inline-flex;gap:6px;align-items:center;font-size:14px;color:var(--mut)}
+/* Kurser */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px;margin-top:20px}
+.course{border:2px solid var(--line);border-radius:14px;padding:16px 18px}
+.course h3{font-family:Archivo,sans-serif;font-stretch:112%;font-size:20px;margin:0 0 4px;display:flex;gap:8px;align-items:center}
+.course .meta{font-size:15px;color:var(--mut);margin:0 0 10px}
+.course ul{list-style:none;margin:0;padding:0}
+.course li{display:flex;gap:10px;justify-content:space-between;padding:6px 0;border-top:1px solid var(--line);font-size:15px}
+.course li .d{white-space:nowrap;color:var(--mut)}
+.course li.ok{color:var(--mut)}
+.course .nt{font-size:14px;color:var(--mut);margin:10px 0 0}
+.st{font-size:13px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--soft);margin-left:auto;font-family:"Atkinson Hyperlegible"}
+.st.on{background:var(--ok);color:#fff}
+@media(max-width:600px){.now{grid-template-columns:1fr}.clock{text-align:left}.task{grid-template-columns:64px minmax(0,1fr);gap:0 12px}.date .num{font-size:30px}.open{grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="band">
+  <header>
+    <div><h1>Studiekollen</h1><p class="sub" id="sum">Laddar dina uppgifter …</p></div>
+    <div class="topacts"><button class="btn pri" id="addBtn">+ Lägg till</button></div>
+  </header>
+  <div class="vhead" id="vhead"></div>
+  <section class="now empty" id="now" aria-live="polite"></section>
+  <div class="filt" id="filt"><button class="chip" id="filtBtn" aria-expanded="false" aria-controls="chips"></button></div>
+  <nav class="chips" id="chips" aria-label="Kurser" hidden></nav>
+  <section id="vid" hidden></section>
+  <main id="list"></main>
+</div>
+<nav class="bnav views" aria-label="Huvudmeny">
+  <button data-v="idag"><span class="ic" aria-hidden="true">☀️</span><span class="lb">Idag</span></button>
+  <button data-v="todo"><span class="ic" aria-hidden="true">✅</span><span class="lb">Uppgifter</span></button>
+  <button data-v="cal"><span class="ic" aria-hidden="true">📅</span><span class="lb">Kalender</span></button>
+  <button data-v="plugg"><span class="ic" aria-hidden="true">🎓</span><span class="lb">Plugga</span></button>
+  <button data-v="kurs"><span class="ic" aria-hidden="true">📚</span><span class="lb">Kurser</span></button>
+  <button data-v="mer"><span class="ic" aria-hidden="true">☰</span><span class="lb">Mer</span></button>
+</nav>
+<div class="ov sheet" id="dov" role="dialog" aria-modal="true" aria-label="Uppgift"><div class="panel" id="dpanel"></div></div>
+
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-labelledby="pt">
+  <div class="panel">
+    <h3 id="pt">Lägg till uppgifter</h3>
+    <div class="tabs">
+      <button class="chip" id="tabPaste" aria-pressed="true">Klistra in från Classroom</button>
+      <button class="chip" id="tabHand" aria-pressed="false">Skriv själv</button>
+    </div>
+    <div id="pPaste">
+      <textarea id="paste" placeholder="Klistra in text från Google Classroom här: uppgiftens namn, kurs, förfallodatum och instruktioner."></textarea>
+      <p class="hint">Claude hittar kurs och slutdatum, förklarar uppgiften med enkla ord och delar upp den i små steg.</p>
+    </div>
+    <div id="pHand" hidden>
+      <label class="f" for="hT">Uppgiftens namn</label><input type="text" id="hT">
+      <label class="f" for="hK">Kurs</label><input type="text" id="hK" list="kurslist"><datalist id="kurslist"></datalist>
+      <label class="f" for="hD">Slutdatum</label><input type="date" id="hD">
+      <label class="f" for="hO">Instruktioner (klistra in från läraren)</label><textarea id="hO" style="min-height:120px"></textarea>
+    </div>
+    <p class="msg" id="pmsg"></p>
+    <div class="acts" style="margin-top:12px">
+      <button class="btn pri" id="go">Sortera och gör en plan</button>
+      <button class="btn ghost" id="close">Avbryt</button>
+    </div>
+  </div>
+</div>
+<div class="ov" id="qov" role="dialog" aria-modal="true" aria-labelledby="qt"><div class="panel qz" id="qpanel"></div></div>
+<div class="ov" id="iov" role="dialog" aria-modal="true" aria-labelledby="it"><div class="panel">
+  <h3 id="it">Installera Studiekollen</h3>
+  <p class="hint" style="font-size:16px"><b>På datorn:</b> öppna appen i Claude-appen på datorn och tryck på knappen nedan. Då får Studiekollen ett eget fönster och en egen ikon.</p>
+  <button class="btn pri" id="instDo" hidden>Installera som datorapp</button>
+  <p class="msg" id="imsg"></p>
+  <p class="hint" style="font-size:16px"><b>På mobilen (iPhone):</b> öppna appens länk i Safari → tryck på Dela-knappen (rutan med pil) → <b>Lägg till på hemskärmen</b>.</p>
+  <p class="hint" style="font-size:16px"><b>På mobilen (Android):</b> öppna länken i Chrome → menyn ⋮ → <b>Lägg till på startskärmen</b>.</p>
+  <div class="acts" style="margin-top:12px"><button class="btn ghost" id="iclose">Stäng</button></div>
+</div></div>
+<div class="ov" id="gov" role="dialog" aria-modal="true" aria-label="Fönster"><div class="panel" id="gpanel"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="shim.js"></script>
+<script>
+{
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const PAL=['#e4002b','#0062d1','#0a8a4a','#c7781a','#7a3fc4','#00909e','#c2338f','#5a6b00'];
+const hue=k=>{let h=0;for(const c of String(k))h=(h*31+c.charCodeAt(0))>>>0;return PAL[h%PAL.length]};
+const MON=['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+const DAY=['sön','mån','tis','ons','tor','fre','lör'];
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const pd=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s||'');return m?new Date(+m[1],m[2]-1,+m[3]):null};
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const diff=t=>{const d=pd(t.slut);return d?Math.round((d-today())/864e5):null};
+const leftTxt=n=>n==null?'Inget slutdatum':n<0?(n==-1?'Försenad 1 dag':`Försenad ${-n} dagar`):n==0?'Idag!':n==1?'Imorgon':`Om ${n} dagar`;
+const uid=()=>'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+let tasks=[],filt='Alla',openId=null,col=null,sample=null,timer=null,tEnd=0,delAsk=null;
+const setTheme=t=>{if(t)document.documentElement.dataset.theme=t;else delete document.documentElement.dataset.theme;const dark=t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;};
+let theme=null;try{theme=localStorage.getItem('sk-theme')}catch(e){}
+setTheme(theme);
+let view='idag',events=[],courses=[],skip=new Set(),filtOpen=false;
+try{const v=localStorage.getItem('sk-view');if(['idag','todo','cal','kurs','plugg','mer','lia'].includes(v))view=v}catch(e){}
+const VT={idag:['Idag','Gör det svarta kortet först. Allt annat kan vänta.'],todo:['Alla uppgifter','Tryck på en uppgift för att se förklaring och steg.'],cal:['Kalender','Lektioner, prov och inlämningar – vecka för vecka.'],plugg:['Plugga','Titta på videon, gör sedan quizet. Att testa sig själv är bästa sättet att minnas.'],kurs:['Kurser','Lärare, period och vilka prov varje kurs har.'],mer:['Mer','Inställningar, hjälp och tips.'],lia:['LIA-tavlan','Skriv in varje företag samma dag du kontaktar det. Flytta kortet när något händer.']};
+const TIPS=['Börja med bara 5 minuter. Starten är det svåraste – sen rullar det ofta på.','Ett steg i taget. Du behöver inte tänka på resten just nu.','Lägg telefonen i ett annat rum medan du pluggar.','Plugga i korta pass: 15–25 minuter, sedan 5 minuters paus.','Säg högt vad du ska göra innan du börjar. Det hjälper hjärnan att komma igång.','Gör det svåraste när du har mest energi – för många är det på förmiddagen.','Bestäm en liten belöning innan du börjar, och ta den när passet är klart.','Rör på dig i pausen. En kort promenad hjälper fokus.','Förklara det du läst med egna ord, högt eller för någon annan. Då minns du det bättre.','Testa dig själv med quizet i stället för att bara läsa om. Det fastnar bättre.','Sov ordentligt före ett prov. Hjärnan sparar det du pluggat medan du sover.','Hann du inte? Flytta steget till imorgon. Det är helt okej – planen är till för dig.'];
+const tipToday=()=>TIPS[Math.floor(+today()/864e5)%TIPS.length];
+const WD=['söndag','måndag','tisdag','onsdag','torsdag','fredag','lördag'],MONL=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
+const sday=txt=>{const m=/^(mån|tis|ons|tor|fre|lör|sön)\s+(\d{1,2})\/(\d{1,2})((?:\s+[a-zåäö]+)?(?:\s*\([^)]*\))?)\s*:\s*/i.exec(txt||'');if(!m)return null;const t0=today();let y=t0.getFullYear();const mo=+m[3]-1;if(mo<t0.getMonth()-6)y++;return{d:new Date(y,mo,+m[2]),rest:txt.slice(m[0].length),extra:m[4].trim()}};
+const dchip=sd=>{if(!sd)return'';const n=Math.round((sd.d-today())/864e5);const lbl=n===0?'Idag':n===1?'Imorgon':DAY[sd.d.getDay()]+' '+sd.d.getDate()+'/'+(sd.d.getMonth()+1);return `<span class="dchip${n===0?' td':n<0?' late':''}">${esc(lbl)}${sd.extra?' '+esc(sd.extra):''}</span>`};
+const dueTxt=t=>{const d=diff(t);if(d==null)return'Inget slutdatum';if(d<0)return leftTxt(d);return(t.typ==='prov'?'Prov ':'Lämnas in ')+(d==0?'idag':d==1?'imorgon':'om '+d+' dagar')};
+const DCAP=['Sön','Mån','Tis','Ons','Tor','Fre','Lör'];
+function moveStep(t,i){const s=t.steg[i],sd=sday(s.t),base=today();let d=new Date(Math.max(+base,sd?+sd.d:0));d.setDate(d.getDate()+1);
+  const lbl=DCAP[d.getDay()]+' '+d.getDate()+'/'+(d.getMonth()+1)+(sd&&sd.extra?' '+sd.extra:'');
+  s.t=lbl+': '+stext(s);skip.delete(t.id+':'+i);return d}
+const stext=s=>{const sd=sday(s.t);return sd?sd.rest:s.t};
+const isoWeek=d=>{const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const n=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-n);const y=new Date(Date.UTC(t.getUTCFullYear(),0,1));return Math.ceil(((t-y)/864e5+1)/7)};
+const monday=d=>{const m=new Date(d);m.setDate(m.getDate()-((m.getDay()+6)%7));m.setHours(0,0,0,0);return m};
+const TAG={prov:['prov','Prov'],inlamning:['inl','Inlämning'],redovisning:['red','Redovisning'],lektion:['lek','Lektion']};
+
+/* ---- lagring: db om möjligt, annars webbläsaren ---- */
+const LS='studiekollen-v1';
+const lsLoad=()=>{try{return JSON.parse(localStorage.getItem(LS)||'[]')}catch(e){return[]}};
+const lsSave=()=>{try{localStorage.setItem(LS,JSON.stringify(tasks))}catch(e){}};
+const okU=u=>typeof u==='string'&&(u.startsWith('/_blob/')||u.startsWith('video/'));
+const cleanVid=v=>v&&okU(v.url)?{url:v.url,poster:okU(v.poster)?v.poster:'',titel:String(v.titel||'Pluggvideo'),kap:(v.kap||[]).map(k=>({t:String(k.t||''),sek:+k.sek||0}))}:null;
+const clean=t=>({video:cleanVid(t.video),typ:t.typ==='prov'?'prov':'uppgift',titel:t.titel||'Uppgift',kurs:t.kurs||'Övrigt',slut:t.slut||'',tid:t.tid||'',original:t.original||'',forklaring:t.forklaring||'',steg:(t.steg||[]).map(s=>({t:String(s.t||s),min:+s.min||0,klar:!!s.klar})),klar:!!t.klar,skapad:t.skapad||Date.now()});
+async function save(t){
+  const i=tasks.findIndex(x=>x.id===t.id);if(i<0)tasks.push(t);else tasks[i]=t;render();
+  if(col){try{await col.doc(t.id).set(clean(t))}catch(e){toast('Kunde inte spara, försök igen')}}else lsSave();
+}
+async function remove(id){
+  tasks=tasks.filter(t=>t.id!==id);render();
+  if(col){try{await col.doc(id).delete()}catch(e){}}else lsSave();
+}
+
+/* ---- rendering ---- */
+function sorted(){return tasks.slice().sort((a,b)=>(a.slut||'9999')<(b.slut||'9999')?-1:(a.slut||'9999')>(b.slut||'9999')?1:a.skapad-b.skapad)}
+const rankT=t=>{const d=diff(t);return d==null?3:(d>=0&&d<=3)?0:d<0?1:2};
+function openTasks(){return sorted().sort((a,b)=>rankT(a)-rankT(b)).filter(t=>!t.klar&&(filt==='Alla'||t.kurs===filt))}
+/* stegen som hör till idag (och de som släpar efter) */
+function dayItems(dd){const t0=+(dd||today()),now=+today(),td=[],late=[];
+  for(const t of openTasks())t.steg.forEach((s,i)=>{const sd=sday(s.t);if(!sd)return;const k=+sd.d;if(k===t0)td.push({t,i,s,sd});else if(t0===now&&k<t0&&!s.klar)late.push({t,i,s,sd})});
+  return{td,late}}
+function nextStep(){
+  const {td,late}=dayItems(),ok=x=>!x.s.klar&&!skip.has(x.t.id+':'+x.i);
+  const a=td.find(ok)||late.find(ok);if(a)return{t:a.t,i:a.i};
+  const t0=today();let ahead=null;
+  for(const t of openTasks()){const i=t.steg.findIndex(s=>!s.klar);
+    if(!t.steg.length)return{t,i:-1};if(i<0||skip.has(t.id+':'+i))continue;
+    const sd=sday(t.steg[i].t);if(sd&&sd.d>t0){if(!ahead)ahead={t,i,ahead:true};continue}
+    return{t,i}}
+  if(!ahead&&skip.size){skip.clear();return nextStep()}
+  return ahead;
+}
+function renderNow(){
+  const el=$('#now'),n=nextStep();
+  if(!n){el.className='now empty';el.innerHTML=tasks.length?'<div><p class="lbl">Allt är klart</p><p class="step">Snyggt jobbat! Inga steg kvar just nu.</p></div>':'<div><p class="lbl">Kom igång</p><p class="step">Klistra in din första uppgift från Classroom.</p><div class="btns"><button class="btn pri" data-a="add">+ Lägg till uppgift</button></div></div>';return}
+  const {t,i}=n,s=t.steg[i],d=diff(t),sd=i>=0?sday(s.t):null;
+  el.className='now'+(n.ahead?' empty':'');
+  el.innerHTML=`<div><p class="lbl">${n.ahead?'Klart för idag! Vill du ligga före?':'Gör detta nu'} · ${esc(t.titel)}</p>
+  <p class="step">${i>=0?esc(stext(s)):'Gör en steg-för-steg-plan för den här uppgiften'}</p>
+  <p class="meta">${i>=0?`Steg ${i+1} av ${t.steg.length}${s.min?' · ca '+s.min+' min':''} · `:''}${n.ahead&&sd?'Planerat '+esc(DAY[sd.d.getDay()]+' '+sd.d.getDate()+'/'+(sd.d.getMonth()+1))+' · ':''}${esc(dueTxt(t))}</p>
+  <div class="btns">${i>=0?`<button class="btn pri" data-a="stepdone" data-id="${esc(t.id)}" data-i="${i}">Klart ✓</button>`:`<button class="btn pri" data-a="clarify" data-id="${esc(t.id)}">Gör en plan</button>`}
+  <button class="btn" data-a="focus">${timer?'Stoppa timern':'Fokus '+focusMin+' min'}</button>${tts&&i>=0?`<button class="btn" data-a="say" data-id="${esc(t.id)}" data-i="${i}" aria-label="Läs upp steget">🔊</button>`:''}
+  ${i>=0?`<button class="btn" data-a="skip" data-id="${esc(t.id)}" data-i="${i}">Inte nu</button><button class="btn" data-a="move" data-id="${esc(t.id)}" data-i="${i}">Flytta till imorgon</button>`:''}
+  ${sample&&i>=0?`<button class="btn" data-a="split" data-id="${esc(t.id)}" data-i="${i}">✂️ Dela upp</button>`:''}<button class="btn" data-a="openit" data-id="${esc(t.id)}">Visa uppgiften</button></div></div>
+  <div class="clock" ${timer?'':'hidden'}><div class="num" id="clk">${String(focusMin).padStart(2,"0")}:00</div><small>Bara det här steget. Paus sedan.</small></div>`;
+  tick();
+}
+function renderChips(){
+  const k={};tasks.filter(t=>!t.klar).forEach(t=>k[t.kurs]=(k[t.kurs]||0)+1);
+  tasks.forEach(t=>{if(!(t.kurs in k))k[t.kurs]=0});
+  if(view!=='todo')courses.forEach(c=>{if(c.namn&&!(c.namn in k))k[c.namn]=0});
+  const names=Object.keys(k).sort((a,b)=>a.localeCompare(b,'sv'));
+  if(filt!=='Alla'&&!names.includes(filt))filt='Alla';
+  const open=tasks.filter(t=>!t.klar).length;
+  const fb=$('#filtBtn');fb.innerHTML=filt==='Alla'?'Visa bara en kurs ▾':`<span class="dot" style="--c:${hue(filt)}"></span>${esc(filt)} ✕`;fb.setAttribute('aria-expanded',filtOpen);
+  $('#chips').hidden=!filtOpen;
+  $('#chips').innerHTML=`<button class="chip" data-k="Alla" aria-pressed="${filt==='Alla'}">Alla kurser <span class="n">${open}</span></button>`+
+   names.map(n=>`<button class="chip" data-k="${esc(n)}" aria-pressed="${filt===n}"><span class="dot" style="--c:${hue(n)}"></span>${esc(n)} <span class="n">${k[n]}</span></button>`).join('');
+  $('#kurslist').innerHTML=names.map(n=>`<option value="${esc(n)}">`).join('');
+}
+function card(t,full){
+  const d=diff(t),dt=pd(t.slut),done=t.steg.filter(s=>s.klar).length,pct=t.steg.length?Math.round(done/t.steg.length*100):0;
+  const late=!t.klar&&d!=null&&d<0,isOpen=!!full;
+  return `<article class="task${late?' late':''}${t.klar?' done':''}">
+  <div class="date">${dt?`<div class="num">${dt.getDate()}</div><small>${MON[dt.getMonth()]} · ${DAY[dt.getDay()]}${t.tid?' '+esc(t.tid):''}</small>`:'<div class="num">–</div><small>inget datum</small>'}</div>
+  <div><button class="tt" data-a="toggle" data-id="${esc(t.id)}" aria-expanded="${isOpen}">${esc(t.titel)}</button>
+   <div class="row">${t.typ==='prov'?'<span class="tag prov">Prov</span>':''}<span class="k"><span class="dot" style="--c:${hue(t.kurs)}"></span>${esc(t.kurs)}</span>
+   ${t.klar?'<span class="left" style="color:var(--ok)">Inlämnad ✓</span>':`<span class="left">${esc(leftTxt(d))}</span>`}
+   ${t.steg.length?`<span class="bar" aria-hidden="true"><i style="width:${pct}%"></i></span><span>${done} av ${t.steg.length} steg</span>`:'<span>Ingen plan än</span>'}</div></div>
+  ${isOpen?`<div class="open">
+   ${t.forklaring?`<div class="what"><b>Vad ska jag göra?</b>${esc(t.forklaring)}</div>`:''}
+   ${t.steg.length?`<ol class="steps">${t.steg.map((s,i)=>{const sd=sday(s.t),td=sd&&+sd.d===+today();return `<li class="${s.klar?'ok':''}${td&&!s.klar?' today':''}"><input type="checkbox" id="s-${esc(t.id)}-${i}" data-a="check" data-id="${esc(t.id)}" data-i="${i}" ${s.klar?'checked':''}><label for="s-${esc(t.id)}-${i}">${s.klar?'':dchip(sd)}${esc(stext(s))}</label>${s.min?`<span class="m">${s.min} min</span>`:''}${sd&&!s.klar?`<button class="mv" data-a="move" data-id="${esc(t.id)}" data-i="${i}">→ Imorgon</button>`:''}</li>`}).join('')}</ol>`:''}
+   <div class="acts" style="margin-bottom:12px">${tts?`<button class="btn" data-a="sayall" data-id="${esc(t.id)}">🔊 Läs upp</button>`:''}<button class="btn" data-a="mail" data-id="${esc(t.id)}">✉️ Mejla läraren</button>${/LIA/.test(t.kurs)?`<button class="btn" data-a="golia">📋 LIA-tavlan</button>`:''}</div>
+   ${t.original?`<details class="orig"><summary>Lärarens originaltext</summary><pre>${esc(t.original)}</pre></details>`:''}
+   <div class="acts">
+    ${t.video?`<button class="btn pri" data-a="watch" data-id="${esc(t.id)}">🎬 Se pluggvideon</button>`:''}
+    ${quizFor(t.id).length?`<button class="btn" data-a="quiz" data-id="${esc(t.id)}">📝 Snabbquiz</button>`:''}
+    <button class="btn ${t.klar?'ghost':'pri'}" data-a="done" data-id="${esc(t.id)}">${t.klar?'Ångra inlämnad':'Markera inlämnad'}</button>
+    ${sample?`<button class="btn" data-a="clarify" data-id="${esc(t.id)}">${t.steg.length?'Gör en ny plan':'Förtydliga och gör plan'}</button>`:''}
+    <button class="btn ghost" data-a="date" data-id="${esc(t.id)}">Ändra datum</button>
+    <button class="btn ${delAsk===t.id?'red':'ghost'}" data-a="del" data-id="${esc(t.id)}">${delAsk===t.id?'Säker? Ta bort':'Ta bort'}</button>
+   </div>
+   <div class="datebox" id="db-${esc(t.id)}" hidden style="margin-top:10px;display:none;gap:8px;flex-wrap:wrap"><input type="date" value="${esc(t.slut)}" style="width:auto"><button class="btn" data-a="savedate" data-id="${esc(t.id)}">Spara datum</button></div>
+  </div>`:''}
+ </article>`;
+}
+function renderList(){
+  const L=sorted().filter(t=>filt==='Alla'||t.kurs===filt),g={late:[],today:[],tom:[],week:[],later:[],none:[],done:[]};
+  for(const t of L){const d=diff(t);if(t.klar)g.done.push(t);else if(d==null)g.none.push(t);else if(d<0)g.late.push(t);else if(d==0)g.today.push(t);else if(d==1)g.tom.push(t);else if(d<=7)g.week.push(t);else g.later.push(t)}
+  const H=[['late','Försenat'],['today','Idag'],['tom','Imorgon'],['week','Den här veckan'],['later','Senare'],['none','Inget slutdatum']];
+  const fold={later:1,none:1};
+  let h=H.filter(([k])=>g[k].length).map(([k,n])=>{const head=`<h2 class="${k==='late'?'late':''}" style="${fold[k]?'display:inline-flex':''}">${n} <span class="cnt">${g[k].length} st</span></h2>`;
+    return fold[k]?`<details${g[k].some(t=>t.id===openId)?' open':''}><summary>${head}</summary>${g[k].map(card).join('')}</details>`:head+g[k].map(card).join('')}).join('');
+  if(g.done.length)h+=`<details${L.every(t=>t.klar)?' open':''}><summary><h2 style="display:inline-flex">Inlämnat <span class="cnt">${g.done.length} st</span></h2></summary>${g.done.map(card).join('')}</details>`;
+  $('#list').innerHTML=h||'<p class="emptylist">Här hamnar dina uppgifter, sorterade efter slutdatum.</p>';
+  const open=tasks.filter(t=>!t.klar),late=open.filter(t=>diff(t)<0).length,wk=open.filter(t=>{const d=diff(t);return d!=null&&d>=0&&d<=7}).length;
+  $('#sum').textContent=tasks.length?`${open.length} uppgifter kvar · ${wk} denna vecka${late?` · ${late} försenade`:''}`:'Dina Classroom-uppgifter, sorterade och uppdelade i små steg.';
+}
+function renderCal(){
+  const t0=today(),all=[];
+  for(const e of events){const d=pd(e.datum);if(d&&d>=t0)all.push({d,tid:e.tid||'',kurs:e.kurs||'',titel:e.titel||'',typ:e.typ||'lektion',not:e.not||''})}
+  for(const t of tasks){const d=pd(t.slut);if(!t.klar&&d&&d>=t0)all.push({d,tid:t.tid,kurs:t.kurs,titel:t.titel,typ:t.typ==='prov'?'prov':'inlamning',id:t.id})}
+  const L=all.filter(e=>filt==='Alla'||e.kurs===filt).sort((a,b)=>a.d-b.d||(a.tid||'99').localeCompare(b.tid||'99'));
+  if(!L.length){$('#list').innerHTML='<p class="emptylist">Inget inplanerat framåt.</p>';return}
+  const wks=new Map();
+  for(const e of L){const k=+monday(e.d);if(!wks.has(k))wks.set(k,new Map());const days=wks.get(k),dk=+e.d;if(!days.has(dk))days.set(dk,[]);days.get(dk).push(e)}
+  const thisMon=+monday(t0);let h='';
+  for(const [k,days] of wks){const m=new Date(k),s=new Date(k);s.setDate(s.getDate()+6);
+    h+=`<section class="wk"><h2>Vecka ${isoWeek(m)} <span class="cnt">${m.getDate()} ${MON[m.getMonth()]} – ${s.getDate()} ${MON[s.getMonth()]}${m.getFullYear()!==t0.getFullYear()?' '+m.getFullYear():''}</span>${k===thisMon?' <span class="now2">Den här veckan</span>':''}</h2>`;
+    for(const [dk,evs] of days){const d=new Date(dk);
+      h+=`<div class="day${dk===+t0?' today':''}"><div class="date"><div class="num">${d.getDate()}</div><small>${dk===+t0?'idag':DAY[d.getDay()]} · ${MON[d.getMonth()]}</small></div><div>`+
+      evs.map(e=>{const [c,l]=TAG[e.typ]||TAG.lektion;return `<div class="ev ${c}"><span class="tm">${esc(e.tid)}</span>${e.typ!=='lektion'?`<span class="tag ${c}">${l}</span>`:''}${e.id?`<button class="tt ttl" data-a="openit" data-id="${esc(e.id)}" style="font-size:17px">${esc(e.titel)}</button>`:`<span class="ttl">${esc(e.titel)}</span>`}<span class="crs"><span class="dot" style="--c:${hue(e.kurs)}"></span>${esc(e.kurs)}</span>${e.not?`<span class="crs">${esc(e.not)}</span>`:''}</div>`}).join('')+`</div></div>`}
+    h+='</section>'}
+  $('#list').innerHTML=h+'<p class="note">Från studieplanerna och examinationsschemat i Classroom. Lärarna kan ändra datum – kolla Classroom om något verkar fel.</p>';
+}
+function renderCourses(){
+  const t0=today(),order={on:0,next:1,done:2};
+  const st=c=>{const a=pd(c.start),b=pd(c.slut);return a&&a>t0?'next':b&&b<t0?'done':'on'};
+  const L=courses.filter(c=>filt==='Alla'||c.namn===filt).sort((a,b)=>order[st(a)]-order[st(b)]||(a.start||'').localeCompare(b.start||''));
+  if(!L.length){$('#list').innerHTML='<p class="emptylist">Inga kurser inlagda än.</p>';return}
+  $('#list').innerHTML='<div class="cgrid">'+L.map(c=>{const s=st(c),open=tasks.filter(t=>t.kurs===c.namn&&!t.klar).length;
+    return `<article class="course"><h3><span class="dot" style="--c:${hue(c.namn)}"></span>${esc(c.namn)}<span class="st${s==='on'?' on':''}">${s==='on'?'Pågår':s==='next'?'Kommer':'Avslutad'}</span></h3>
+    <p class="meta">${[c.larare,c.poang?c.poang+' yh-poäng':'',c.period].filter(Boolean).map(esc).join(' · ')}${open?` · <b style="color:var(--ink)">${open} att göra</b>`:''}</p>
+    ${(c.exam||[]).length?`<ul>${c.exam.map(x=>`<li class="${x.klar?'ok':''}"><span>${x.typ==='prov'?'<span class="tag prov">Prov</span> ':''}${esc(x.t)}${x.klar?' ✓':''}</span><span class="d">${esc(x.datum||'')}</span></li>`).join('')}</ul>`:''}
+    ${c.not?`<p class="nt">${esc(c.not)}</p>`:''}</article>`}).join('')+'</div>';
+}
+function srow(x,pf){const {t,i,s,sd}=x,id=`${pf||'d'}-${t.id}-${i}`;
+  return `<div class="srow${s.klar?' ok':''}"><input type="checkbox" id="${esc(id)}" data-a="check" data-id="${esc(t.id)}" data-i="${i}" ${s.klar?'checked':''}><label for="${esc(id)}">${sd&&+sd.d<+today()?dchip(sd):''}${esc(stext(s))}<small>${t.typ==='prov'?'<span class="tag prov">Prov</span>':''}<span class="crs"><span class="dot" style="--c:${hue(t.kurs)}"></span>${esc(t.titel.includes(t.kurs)?t.titel:t.titel+' · '+t.kurs)}</span>${s.min?`<span>ca ${s.min} min</span>`:''}</small></label>${s.klar?'':`<button class="mv" data-a="move" data-id="${esc(t.id)}" data-i="${i}" title="Flytta till imorgon">→ Imorgon</button>`}</div>`}
+function renderToday(){
+  const t0=selDay||today(),isT=+t0===+today(),{td,late}=dayItems(t0),done=td.filter(x=>x.s.klar).length,tot=td.length,min=td.filter(x=>!x.s.klar).reduce((a,x)=>a+(x.s.min||0),0);
+  let h=weekStrip()+`<div class="hd"><h2>${isT?'':'📅 '}${WD[t0.getDay()][0].toUpperCase()+WD[t0.getDay()].slice(1)} ${t0.getDate()} ${MONL[t0.getMonth()]}</h2>${tot?`<span class="prog"><span class="bar"><i style="width:${Math.round(done/tot*100)}%"></i></span>${done} av ${tot} klara${min?` · ca ${min} min kvar`:''}</span>`:''}</div>`;
+  if(!isT)h+=`<button class="mv" data-a="seltoday" style="margin:4px 0 10px">← Tillbaka till idag</button>`;
+  const mood=moodNote();if(mood&&isT)h+=`<p class="calm" style="margin:10px 0">${mood}</p>`;
+  if(isT)h+=`<button class="bigbtn" data-a="havetime">⏱️<span>Jag har en stund – välj åt mig<small>Säg hur lång tid du har, så väljer appen vad du ska göra</small></span></button>`;
+  if(tot){h+=td.map(srow).join('');if(done===tot&&isT)h+=`<p class="calm" style="margin-top:14px"><b>Allt för idag är klart! 🎉</b> Ta ledigt resten av dagen – det har du förtjänat.</p>`}
+  else if(!isT)h+=`<p class="calm">Inget planerat den här dagen.</p>`;
+  else h+=`<p class="calm">Inget särskilt planerat idag. Steget högst upp är det viktigaste just nu – gör det om du orkar.</p>`;
+  const qt=openTasks().find(x=>quizFor(x.id).length&&diff(x)!=null&&diff(x)>=0&&diff(x)<=7);
+  if(qt)h+=`<div class="calm" style="margin-top:20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between"><span><b>📝 Snabbquiz inför ${esc(qt.titel)}</b><br><span style="color:var(--mut);font-size:15px">5 frågor · ca 3 min · ${esc(dueTxt(qt))}</span></span><button class="btn pri" data-a="quiz" data-id="${esc(qt.id)}">Starta quiz</button></div>`;
+  const vt=openTasks().find(x=>x.video&&diff(x)!=null&&diff(x)>=0&&diff(x)<=7);
+  if(vt)h+=`<button class="bigbtn" data-a="watch" data-id="${esc(vt.id)}">🎬<span>Pluggvideo: ${esc(vt.titel)}<small>${esc(dueTxt(vt))} · finns under Plugga</small></span></button>`;
+  if(late.length)h+=`<details style="margin-top:20px"><summary><h2 class="late" style="display:inline-flex;font-size:19px">Hann inte förra dagarna <span class="cnt">${late.length} steg</span></h2></summary>${late.map(srow).join('')}<p class="note" style="margin-top:8px">Ingen fara. Gör dem när det finns tid, eller flytta dem i planen.</p></details>`;
+  if(!isT){$('#list').innerHTML=h;return}
+  const soon=[],end=new Date(t0);end.setDate(end.getDate()+3);
+  for(const e of events){const d=pd(e.datum);if(d&&d>t0&&d<=end)soon.push({d,tid:e.tid||'',kurs:e.kurs,titel:e.titel,typ:e.typ||'lektion'})}
+  for(const t of tasks){const d=pd(t.slut);if(!t.klar&&d&&d>=t0&&d<=end)soon.push({d,tid:t.tid,kurs:t.kurs,titel:t.titel,typ:t.typ==='prov'?'prov':'inlamning'})}
+  soon.sort((a,b)=>a.d-b.d||(a.tid||'99').localeCompare(b.tid||'99'));
+  const f=soon.filter(e=>filt==='Alla'||e.kurs===filt);
+  if(f.length)h+=`<h2 style="margin-top:30px;font-size:19px">Närmaste dagarna</h2><div class="soon">${f.map(e=>{const [c,l]=TAG[e.typ]||TAG.lektion,n=Math.round((e.d-t0)/864e5);return `<div class="ev ${c}"><span class="dchip${n===0?' td':''}">${n===0?'Idag':n===1?'Imorgon':DAY[e.d.getDay()]+' '+e.d.getDate()+'/'+(e.d.getMonth()+1)}</span>${e.tid?`<span class="tm">${esc(e.tid)}</span>`:''}${e.typ!=='lektion'?`<span class="tag ${c}">${l}</span>`:''}<span class="ttl">${esc(e.titel)}</span><span class="crs"><span class="dot" style="--c:${hue(e.kurs)}"></span>${esc(e.kurs)}</span></div>`}).join('')}</div>`;
+  $('#list').innerHTML=h;
+}
+let vidKey='';
+function renderVid(){const box=$('#vid');const L=openTasks().filter(x=>x.video);const show=view==='plugg'&&L.length;box.hidden=!show;if(!show)return;const key=L.map(t=>t.id+t.video.url).join('|');if(key===vidKey)return;vidKey=key;
+  box.innerHTML=L.map((t,n)=>{const v=t.video;return `<div class="vidbox"><h2>🎬 ${esc(v.titel)}</h2><p>${esc(t.titel)} · ${esc(dueTxt(t))}. Hoppa direkt till en del:</p><video id="vp${n}" controls preload="metadata" playsinline ${v.poster?`poster="${esc(v.poster)}"`:''} src="${esc(v.url)}"></video><div class="kap">${v.kap.map(k=>`<button class="chip" data-sek="${k.sek}" data-vp="vp${n}">${esc(k.t)} <span class="n">${Math.floor(k.sek/60)}:${String(Math.round(k.sek%60)).padStart(2,'0')}</span></button>`).join('')}</div></div>`}).join('')}
+function renderDetail(){const ov=$('#dov'),t=tasks.find(x=>x.id===openId);if(!t){ov.classList.remove('on');return}
+  ov.classList.add('on');$('#dpanel').innerHTML=`<button class="back" data-a="closedet">← Tillbaka</button>`+card(t,true)}
+function renderHead(){const [ti,tip]=VT[view]||VT.idag;$('#vhead').innerHTML=`<h2>${esc(ti)}</h2><p class="vtip"><b>Tips:</b><span>${esc(view==='idag'?tipToday():tip)}</span></p>`}
+function renderPlugg(){const L=openTasks().filter(t=>t.typ==='prov'||t.video||quizFor(t.id).length);
+  let h='';
+  const qz=L.filter(t=>quizFor(t.id).length);
+  if(qz.length)h+=`<h2 style="font-size:21px;margin-top:26px">📝 Quiz</h2><div class="hub">${qz.map(t=>{const du=quizFor(t.id).filter(q=>qDue(q)).length;return `<div class="hubc"><h3>${esc(t.titel)}</h3><p>${quizFor(t.id).length} frågor · ${du} att repetera idag · ${esc(dueTxt(t))}</p><button class="btn pri" data-a="quiz" data-id="${esc(t.id)}">Starta quiz</button></div>`}).join('')}</div>`;
+  const grp=[...new Set(cards.map(c=>c.grupp))];
+  if(grp.length)h+=`<h2 style="font-size:21px;margin-top:26px">🃏 Flashcards</h2><div class="hub">${grp.map(g=>`<div class="hubc"><h3>${esc(g)}</h3><p>${cards.filter(c=>c.grupp===g).length} kort · tryck för att vända, svep åt höger om du kunde</p><button class="btn pri" data-a="cards" data-g="${esc(g)}">Öva kort</button></div>`).join('')}</div>`;
+  const pr=L.filter(t=>t.typ==='prov');
+  if(pr.length)h+=`<h2 style="font-size:21px;margin-top:26px">📌 Prov och pluggplaner</h2><div class="hub">${pr.map(t=>{const left=t.steg.filter(s=>!s.klar).length;return `<div class="hubc"><h3>${esc(t.titel)}</h3><p>${esc(dueTxt(t))} · ${left} steg kvar i pluggplanen</p><button class="btn" data-a="openit" data-id="${esc(t.id)}">Visa pluggplan</button></div>`}).join('')}</div>`;
+  if(!h&&!L.some(t=>t.video))h='<p class="emptylist">Inga prov eller pluggvideor just nu.</p>';
+  $('#list').innerHTML=h}
+function renderMer(){const dark=document.documentElement.dataset.theme?document.documentElement.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  $('#list').innerHTML=`<div class="mer">
+  <button class="bigbtn" data-a="add">➕<span>Lägg till uppgift<small>Klistra in text från Classroom eller skriv själv</small></span></button>
+  <button class="bigbtn" data-a="theme">${dark?'☀️':'🌙'}<span>${dark?'Byt till ljust läge':'Byt till mörkt läge'}<small>Mörkt är skönare för ögonen på kvällen</small></span></button>
+  <button class="bigbtn" data-a="golia">📋<span>LIA-tavlan<small>Håll koll på företag du sökt till och kontaktat</small></span></button>
+  ${window.SK_STANDALONE?(window.SKDB.hasKey()?`<button class="bigbtn" data-a="pullnow">🔄<span>Uppdatera nu<small>Hämtar det senaste från kvällshämtningen</small></span></button>`:`<button class="bigbtn" data-a="imp">📥<span>Hämta data från Claude-appen<small>Uppdatera med nya uppgifter, schema, quiz och kort</small></span></button>`):`<button class="bigbtn" data-a="exp">📱<span>Flytta data till telefon-appen<small>Skicka allt till den fristående Studiekollen</small></span></button>`}
+  <button class="bigbtn" data-a="install">📲<span>Installera som app<small>På datorn eller på mobilens hemskärm</small></span></button>
+  <div class="row2"><span><b>🔄 Automatiskt från Classroom</b><br><span style="color:var(--mut);font-size:15px">${window.SK_STANDALONE?syncTxt():''}Varje kväll kl 18.32 hämtar Claude nya uppgifter, ändringar från lärarna och schemat från Skola24. Kl 06.35 kommer en morgonnotis till telefonen med dagens steg.</span></span></div>
+  <div class="row2"><span><b>❓ Så funkar appen</b><ol>
+    <li><b>Idag</b> visar bara dagens steg. Bocka av, eller tryck <i>→ Imorgon</i> om du inte hinner.</li>
+    <li>Det <b>svarta kortet</b> är alltid det viktigaste just nu. <i>Inte nu</i> visar ett annat steg.</li>
+    <li><b>Uppgifter</b>: tryck på en uppgift så öppnas den i ett eget fönster med förklaring och alla steg.</li>
+    <li><b>Plugga</b>: pluggvideor och quiz inför prov.</li>
+    <li><b>Kalender</b> och <b>Kurser</b>: schema, prov och vad varje kurs innehåller.</li></ol></span></div>
+  <div class="row2"><span><b>💡 Plugg-tips</b><ul>${TIPS.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></span></div></div>`}
+let quiz=[];const quizFor=id=>quiz.filter(q=>q.prov===id&&Array.isArray(q.alt)&&q.alt.length>1);
+let qs=null;
+function startQuiz(id){const all=quizFor(id).slice();for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]]}
+  const st=q=>qstat[q.id],due=all.filter(q=>st(q)&&qDue(q)).sort((a,b)=>(st(a).box||0)-(st(b).box||0)),neu=all.filter(q=>!st(q)),rest=all.filter(q=>st(q)&&!qDue(q));
+  qs={id,qs:[...due,...neu,...rest].slice(0,5),i:0,score:0,ans:null};$('#qov').classList.add('on');drawQuiz()}
+function drawQuiz(){const p=$('#qpanel');if(!qs)return;const n=qs.qs.length;
+  if(qs.i>=n){const r=qs.score;p.innerHTML=`<h3 id="qt">Klart! ${r} av ${n} rätt</h3><div class="qzbar"><i style="width:${r/n*100}%"></i></div><p class="fb">${r===n?'Perfekt! Du kan det här. 🎉':r>=n-1?'Riktigt bra jobbat!':r>=n/2?'Bra! Kör en omgång till så sitter det bättre.':'Ingen fara – kolla pluggvideon och försök igen. Varje gång lär du dig mer.'}</p><div class="acts"><button class="btn pri" data-q="again">Ny omgång</button><button class="btn ghost" data-q="close">Stäng</button></div>`;return}
+  const q=qs.qs[qs.i],a=qs.ans;
+  p.innerHTML=`<p class="qn" id="qt">Fråga ${qs.i+1} av ${n}</p><div class="qzbar"><i style="width:${qs.i/n*100}%"></i></div><p class="qq">${esc(q.q)}</p>`+
+   q.alt.map((o,k)=>`<button class="opt${a!=null?(k===q.ratt?' right':k===a?' wrong':''):''}" data-q="opt" data-k="${k}" ${a!=null?'disabled':''}>${esc(o)}</button>`).join('')+
+   (a!=null?`<div class="fb"><b>${a===q.ratt?'Rätt! ✓':'Inte riktigt.'}</b>${a!==q.ratt?' <i>(Den kommer tillbaka imorgon.)</i>':''} ${esc(q.forkl||'')}</div><div class="acts"><button class="btn pri" data-q="next">${qs.i+1<n?'Nästa fråga':'Se resultat'}</button></div>`:`<div class="acts" style="margin-top:8px"><button class="btn ghost" data-q="close">Avbryt</button></div>`)}
+$('#qov').addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(e.target.id==='qov'){qs=null;$('#qov').classList.remove('on');return}if(!b)return;const a=b.dataset.q;
+  if(a==='opt'&&qs.ans==null){qs.ans=+b.dataset.k;const q=qs.qs[qs.i],ok=qs.ans===q.ratt;if(ok)qs.score++;srUpdate(q,ok);drawQuiz()}
+  else if(a==='next'){qs.i++;qs.ans=null;drawQuiz()}
+  else if(a==='again')startQuiz(qs.id);
+  else if(a==='close'){qs=null;$('#qov').classList.remove('on')}});
+/* ======== nya funktioner ======== */
+let focusMin=15,selDay=null,tts=null,dbh=null,moods={},qstat={},cards=[],lia=[],lastMood=0;
+function startFocus(m){focusMin=m;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(e){}clearInterval(timer);tEnd=Date.now()+m*60e3;timer=setInterval(tick,1000);renderNow();window.scrollTo({top:0,behavior:'smooth'})}
+const openG=html=>{$('#gpanel').innerHTML=html;$('#gov').classList.add('on')};
+const closeG=()=>{$('#gov').classList.remove('on');fcS=null};
+$('#gov').addEventListener('click',e=>{if(e.target.id==='gov')closeG()});
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+/* 3. veckoremsa */
+function dayLoad(d){const k=+d;let m=0,prov=false,ev=0;for(const t of tasks){if(!t.klar&&t.slut&&+pd(t.slut)===k&&t.typ==='prov')prov=true;for(const s of t.steg){const sd=sday(s.t);if(sd&&+sd.d===k)m+=s.min||0}}for(const e of events){if(+pd(e.datum)===k)ev++}return{m,prov,ev}}
+function weekStrip(){const t0=today(),sel=+(selDay||t0);let h='<div class="week" role="group" aria-label="Kommande sju dagar">';
+  for(let n=0;n<7;n++){const d=addDays(t0,n),L=dayLoad(d),pct=Math.min(100,Math.round(L.m/120*100)),cls=L.m>120?'xh':L.m>75?'hv':'';
+    h+=`<button class="wd${+d===sel?' sel':''}${n===0?' td':''}" data-a="selday" data-d="${iso(d)}" aria-label="${WD[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}: ${L.m} minuter planerat"><small>${n===0?'idag':DAY[d.getDay()]}</small><span class="wn">${d.getDate()}</span><span class="wb"><i class="${cls}" style="height:${pct}%"></i></span><span class="wm">${L.m?Math.round(L.m/5)*5+'′':'–'}</span>${L.prov?'<span class="pv" title="Prov"></span>':''}</button>`}
+  return h+'</div>'}
+/* 1. jag har en stund */
+function pickForTime(min){const {td,late}=dayItems(),pool=[];const add=(t,i,s)=>{if(!s.klar&&!pool.some(p=>p.t.id===t.id&&p.i===i))pool.push({t,i,s,sd:sday(s.t)})};
+  td.forEach(x=>add(x.t,x.i,x.s));late.forEach(x=>add(x.t,x.i,x.s));const fut=[],t0=today();for(const t of openTasks()){const i=t.steg.findIndex(s=>!s.klar);if(i<0)continue;const sd=sday(t.steg[i].t);if(sd&&sd.d>t0)fut.push([t,i]);else add(t,i,t.steg[i])}fut.sort((a,b)=>sday(a[0].steg[a[1]].t).d-sday(b[0].steg[b[1]].t).d).forEach(([t,i])=>add(t,i,t.steg[i]))
+  const out=[];let sum=0;for(const p of pool){const m=p.s.min||15;if(sum+m<=min||(!out.length&&m<=min*1.6)){out.push(p);sum+=m}if(sum>=min*0.85)break}return{out,sum}}
+function showTimePick(){openG(`<h3>Hur mycket tid har du?</h3><p class="hint">Appen väljer de viktigaste stegen som får plats.</p><div class="tmb">${[10,20,30,60].map(m=>`<button data-a="tm" data-m="${m}">${m}<small>min</small></button>`).join('')}</div><div class="acts"><button class="btn ghost" data-a="gclose">Avbryt</button></div>`)}
+function showTimeResult(min){const {out,sum}=pickForTime(heavy()?Math.min(min,30):min);
+  if(!out.length){openG(`<h3>Inget att göra just nu 🎉</h3><p class="hint">Alla steg är klara. Njut av tiden!</p><div class="acts"><button class="btn pri" data-a="gclose">Stäng</button></div>`);return}
+  openG(`<h3>Gör detta – ca ${sum} min</h3><p class="hint">Ett steg i taget, uppifrån och ner.</p>${out.map(x=>srow(x,'g')).join('')}<div class="acts" style="margin-top:14px"><button class="btn pri" data-a="tmgo" data-m="${Math.max(5,Math.min(min,60))}">Starta fokus ${Math.max(5,Math.min(min,60))} min</button><button class="btn ghost" data-a="gclose">Stäng</button></div>`)}
+/* 2. hur gick det */
+function heavy(){const t0=today();let tung=0,bra=0;for(let n=0;n<3;n++){const r=moods[iso(addDays(t0,-n))];if(!r)continue;for(const x of r.svar||[]){if(x.t==='tungt')tung++;if(x.t==='bra')bra++}}return tung>=2&&tung>bra}
+function moodNote(){const t0=today();let bra=0,tung=0;for(let n=0;n<3;n++){const r=moods[iso(addDays(t0,-n))];for(const x of (r&&r.svar)||[]){if(x.t==='tungt')tung++;if(x.t==='bra')bra++}}
+  if(heavy())return '<b>De senaste dagarna har känts tunga.</b> Ta det lugnt idag: välj korta pass med "Jag har en stund", eller tryck ✂️ <b>Dela upp</b> på det svarta kortet så blir stegen mindre.';
+  if(bra>=3&&tung===0)return '<b>Du är i form! 💪</b> Om du orkar kan du ligga före – men vila är också okej.';return ''}
+function maybeMood(){if(Date.now()-lastMood<45*60e3)return;lastMood=Date.now();
+  openG(`<h3>Snyggt! Hur gick det?</h3><div class="mood"><button data-a="mood" data-v="bra">😀<span>Bra</span></button><button data-a="mood" data-v="ok">😐<span>Okej</span></button><button data-a="mood" data-v="tungt">😩<span>Tungt</span></button></div><div class="acts"><button class="btn ghost" data-a="gclose">Hoppa över</button></div>`)}
+async function saveMood(v){const k=iso(today()),r=moods[k]||{dag:k,svar:[]};r.svar=[...(r.svar||[]),{t:v,kl:new Date().toTimeString().slice(0,5)}];moods[k]=r;
+  closeG();toast(v==='tungt'?'Tack! Vi gör nästa steg mindre.':v==='bra'?'Grymt! 🎉':'Tack!');render();
+  if(dbh){try{await dbh.collection('kanslor').doc(k).set({dag:k,svar:r.svar})}catch(e){}}}
+async function splitStep(t,i,btn){if(!sample)return;const s=t.steg[i],sd=sday(s.t);if(btn){btn.disabled=true;btn.textContent='Delar upp …'}
+  try{const r=await sample.json(`Du hjälper en elev med ADHD. Dela upp detta steg i 2–3 mindre steg på svenska. Varje steg börjar med ett verb, max 10 ord, och tar 5–20 minuter.\nUppgift: ${t.titel}\nSteg: ${stext(s)} (ca ${s.min||20} min)\nSvara ENDAST med JSON: {"steg":[{"t":"...","min":10}]}`,{modelTier:'quick'});
+    if(r&&Array.isArray(r.steg)&&r.steg.length){const pre=sd?s.t.slice(0,s.t.length-stext(s).length):'';const nya=r.steg.slice(0,3).map(x=>({t:pre+String(x.t||''),min:+x.min||10,klar:false})).filter(x=>stext(x));t.steg.splice(i,1,...nya);await save(t);toast('Uppdelat i '+nya.length+' mindre steg')}}
+  catch(e){toast('Gick inte att dela upp just nu')}}
+/* 4. repetition med mellanrum */
+const IV=[1,3,7,14,30];
+const qDue=q=>{const s=qstat[q.id];return s&&s.next&&s.next<=iso(today())};
+async function srUpdate(q,ok){const s=qstat[q.id]||{box:0};const box=ok?Math.min((s.box||0)+1,IV.length-1):0;const next=iso(addDays(today(),ok?IV[box]:1));qstat[q.id]={box,next};
+  if(dbh&&q.id){try{await dbh.collection('quizstat').doc(q.id).set({box,next})}catch(e){}}}
+/* 5. uppläsning */
+async function say(lines){if(!tts)return;try{await tts.speak(lines.filter(Boolean).map(x=>({text:String(x).slice(0,1900),language:'sv'})))}catch(e){if(e&&e.code==='not_granted'){tts=null;render()}}}
+/* 6. flashcards */
+let fcS=null;
+function startCards(g){const L=cards.filter(c=>c.grupp===g).slice();for(let i=L.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[L[i],L[j]]=[L[j],L[i]]}fcS={g,q:L,n:L.length,ok:0,flip:false};drawCard()}
+function drawCard(){if(!fcS)return;if(!fcS.q.length){openG(`<h3>Klart! Du kunde alla ${fcS.n} kort 🎉</h3><p class="hint">Kör igen imorgon så sitter de ännu bättre.</p><div class="acts"><button class="btn pri" data-a="cards" data-g="${esc(fcS.g)}">Igen</button><button class="btn ghost" data-a="gclose">Stäng</button></div>`);return}
+  const c=fcS.q[0];openG(`<p class="qn">${esc(fcS.g)} · ${fcS.ok} av ${fcS.n} klara</p><div class="qzbar"><i style="width:${fcS.ok/fcS.n*100}%"></i></div><div class="fc"><div class="fcard${fcS.flip?' back':''}" id="fcard" data-a="flip" role="button" tabindex="0" aria-label="Vänd kortet">${esc(fcS.flip?c.bak:c.fram)}</div></div>
+  ${fcS.flip?`<div class="acts"><button class="btn red" data-a="fcno">↺ Igen</button><button class="btn pri" data-a="fcok">Kunde ✓</button>${tts?`<button class="btn" data-a="fcsay">🔊</button>`:''}</div>`:`<div class="acts"><button class="btn pri" data-a="flip">Vänd kortet</button>${tts?`<button class="btn" data-a="fcsay">🔊</button>`:''}<button class="btn ghost" data-a="gclose">Stäng</button></div>`}`);
+  const el=$('#fcard');let x0=null;el.addEventListener('pointerdown',e=>{x0=e.clientX});el.addEventListener('pointerup',e=>{if(x0==null)return;const dx=e.clientX-x0;x0=null;if(fcS&&fcS.flip&&Math.abs(dx)>60){fcAns(dx>0)}})}
+function fcAns(ok){const c=fcS.q.shift();if(ok)fcS.ok++;else fcS.q.push(c);fcS.flip=false;drawCard()}
+/* 7. LIA-tavlan */
+const LST=[['sokt','Sökt / kontaktat'],['svar','Fått svar'],['intervju','Intervju'],['klart','LIA-plats! 🎉']];
+function renderLia(){const by=k=>lia.filter(x=>x.status===k).sort((a,b)=>(b.datum||'').localeCompare(a.datum||''));const nej=lia.filter(x=>x.status==='nej');
+  let h=`<p class="vtip" style="background:transparent;padding:0"><b>${lia.length} företag</b><span>${by('intervju').length} intervju · ${by('klart').length} klart · ${nej.length} nej</span></p>
+  <form class="lform" id="liaf"><div><label for="lf1">Företag *</label><input type="text" id="lf1" required></div><div><label for="lf2">Kontaktperson</label><input type="text" id="lf2"></div><div><label for="lf3">Telefon eller e-post</label><input type="text" id="lf3"></div><div><label for="lf4">Anteckning</label><input type="text" id="lf4" placeholder="t.ex. ringde, skickade CV"></div><button class="btn pri" type="submit">+ Lägg till</button></form>
+  <div class="board">${LST.map(([k,n])=>`<section class="bcol"><h3>${n}<span class="cnt">${by(k).length}</span></h3>${by(k).map(liaCard).join('')||'<p class="hint">Inget här än.</p>'}</section>`).join('')}</div>
+  ${nej.length?`<details style="margin-top:14px"><summary><b>Sa nej (${nej.length})</b></summary>${nej.map(liaCard).join('')}</details>`:''}
+  <div class="acts" style="margin-top:16px"><button class="btn" data-a="liacopy">📋 Kopiera allt till kalkylarket</button></div>
+  <p class="note">Tips: klistra in i ditt kalkylark "Kontaktuppföljning LIA" i Classroom så är inlämningen uppdaterad.</p>`;
+  $('#list').innerHTML=h;
+  $('#liaf').addEventListener('submit',async e=>{e.preventDefault();const f=$('#lf1').value.trim();if(!f)return;const x={id:'l'+Date.now().toString(36),foretag:f,kontakt:$('#lf2').value.trim(),nr:$('#lf3').value.trim(),not:$('#lf4').value.trim(),status:'sokt',datum:iso(today())};lia.push(x);renderLia();toast('Tillagt – bra jobbat!');await liaSave(x)})}
+function liaCard(x){const i=LST.findIndex(s=>s[0]===x.status);return `<div class="lcard"><b>${esc(x.foretag)}</b>${x.kontakt?`<p>👤 ${esc(x.kontakt)}</p>`:''}${x.nr?`<p>📞 ${esc(x.nr)}</p>`:''}${x.not?`<p>${esc(x.not)}</p>`:''}<p>Senast: ${esc(x.datum||'')}</p>
+  <div class="la">${i>0?`<button class="mv" data-a="liamv" data-l="${esc(x.id)}" data-s="${LST[i-1][0]}">←</button>`:''}${i>=0&&i<LST.length-1?`<button class="mv" data-a="liamv" data-l="${esc(x.id)}" data-s="${LST[i+1][0]}">${esc(LST[i+1][1].replace(' 🎉',''))} →</button>`:''}${x.status!=='nej'?`<button class="mv" data-a="liamv" data-l="${esc(x.id)}" data-s="nej">Nej tack</button>`:`<button class="mv" data-a="liamv" data-l="${esc(x.id)}" data-s="sokt">Ångra</button>`}<button class="mv" data-a="liadel" data-l="${esc(x.id)}">${liaDel===x.id?'Säker?':'Ta bort'}</button></div></div>`}
+let liaDel=null;
+async function liaSave(x){if(!dbh)return;try{const {id,...d}=x;await dbh.collection('lia').doc(id).set(d)}catch(e){toast('Kunde inte spara')}}
+/* 9. flytta data mellan Claude-versionen och telefon-appen */
+function exportObj(){const strip=a=>a.map(x=>JSON.parse(JSON.stringify(x)));
+  return{app:'studiekollen',v:1,exporterad:new Date().toISOString(),namn:myName(),coll:{uppgifter:strip(tasks),kalender:strip(events),quiz:strip(quiz),quizstat:Object.entries(qstat).map(([id,r])=>Object.assign({},r,{id})),kanslor:Object.entries(moods).map(([id,r])=>Object.assign({},r,{id})),kort:strip(cards),lia:strip(lia),kurser:strip(courses)}}}
+const expName=()=>'studiekollen-data-'+iso(today())+'.json';
+function showExport(){const n=tasks.length;openG(`<h3>📱 Flytta data till telefon-appen</h3><p class="hint">${n} uppgifter, ${events.length} lektioner, ${quiz.length} quizfrågor och ${cards.length} kort följer med.</p>
+  <ol class="hint" style="padding-left:20px"><li>Tryck <b>Dela fil</b> (telefon) eller <b>Ladda ner fil</b> (dator).</li><li>Öppna Studiekollen-appen → Mer → <b>Hämta data</b> och välj filen.</li></ol>
+  <p class="hint">Går inte det? Tryck <b>Kopiera text</b> och klistra in texten i telefon-appen i stället.</p><p class="msg" id="xmsg"></p>
+  <div class="acts"><button class="btn pri" data-a="xshare">Dela fil</button><button class="btn" data-a="xdl">Ladda ner fil</button><button class="btn" data-a="xcopy">Kopiera text</button><button class="btn ghost" data-a="gclose">Stäng</button></div>`)}
+async function doExport(a){const txt=JSON.stringify(exportObj()),m=$('#xmsg');
+  try{if(a==='xcopy'){await navigator.clipboard.writeText(txt);m.className='msg';m.textContent='Kopierat! Öppna telefon-appen → Mer → Hämta data → klistra in.';return}
+    const f=new File([txt],expName(),{type:'application/json'});
+    if(a==='xshare'){if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Studiekollen-data'});m.className='msg';m.textContent='Klart! Öppna filen i Studiekollen-appen.';return}a='xdl'}
+    const u=URL.createObjectURL(f),l=document.createElement('a');l.href=u;l.download=expName();document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);m.className='msg';m.textContent='Filen laddas ner. Hittar du den inte? Tryck Kopiera text.'}
+  catch(e){if(e&&e.name==='AbortError')return;m.className='msg err';m.textContent='Det gick inte. Prova Kopiera text.'}}
+function showImport(){openG(`<h3>📥 Hämta data från Claude-appen</h3><ol class="hint" style="padding-left:20px"><li>Öppna Studiekollen i Claude-appen → Mer → <b>Flytta data till telefon-appen</b>.</li><li>Välj filen här, eller klistra in texten du kopierade.</li></ol>
+  <label class="f" for="ifile">Fil</label><input type="file" id="ifile" accept=".json,application/json,text/plain">
+  <label class="f" for="itxt">… eller klistra in texten</label><textarea id="itxt" style="min-height:110px" placeholder='{"app":"studiekollen", …}'></textarea>
+  <p class="hint">Det som redan finns här byts ut mot det nya. Dina bockar följer med från Claude-appen.</p><p class="msg" id="imsg2"></p>
+  <div class="acts"><button class="btn pri" data-a="idoit">Hämta data</button><button class="btn ghost" data-a="gclose">Avbryt</button></div>`)}
+async function doImport(){const m=$('#imsg2');let txt=$('#itxt').value.trim();const f=$('#ifile').files[0];
+  try{if(f)txt=await f.text();if(!txt)throw new Error('tom');const o=JSON.parse(txt);if(!o||o.app!=='studiekollen'||!o.coll)throw new Error('fel');
+    window.SKDB.importAll(o);closeG();toast('Klart! '+(o.coll.uppgifter||[]).length+' uppgifter hämtade.');goView('idag')}
+  catch(e){m.className='msg err';m.textContent=e.message==='tom'?'Välj en fil eller klistra in texten först.':'Det där ser inte ut som Studiekollen-data. Försök igen.'}}
+
+function syncTxt(){const i=window.SKDB.info();const at=i.at?new Date(i.at):null;
+  return window.SKDB.hasKey()?`Appen uppdateras automatiskt när du öppnar den.${at?` Senaste data: <b>${DAY[at.getDay()].toLowerCase()} ${at.getDate()}/${at.getMonth()+1} kl ${String(at.getHours()).padStart(2,'0')}.${String(at.getMinutes()).padStart(2,'0')}</b>.`:''} Det du bockar av här sparas i telefonen. `:'Öppna den personliga länken du fick av Claude en gång, så uppdateras appen automatiskt. '}
+async function doPull(loud){if(!window.SK_STANDALONE)return;const r=await window.SKDB.pull();
+  if(r.ok){if(r.n)toast('Nya uppdateringar från Classroom hämtade ✓');else if(loud)toast('Allt är redan uppdaterat ✓')}
+  else if(loud)toast(r.why==='badkey'?'Nyckeln stämmer inte. Öppna din personliga länk igen.':r.why==='nokey'?'Öppna din personliga länk först.':'Ingen uppkoppling just nu. Försök igen sen.');
+  if(view==='mer')renderMer()}
+
+/* 8. mejl till läraren */
+function myName(){let n='';try{n=localStorage.getItem('sk-namn')||''}catch(e){}return n||(window.SK_STANDALONE?'':'Fredrik Löfsten, Ba26')}
+function teacherOf(kurs){const c=courses.find(c=>c.namn===kurs)||{};return{namn:c.larare||'',epost:c.epost||''}}
+function mailDraft(t){const te=teacherOf(t.kurs),fn=(te.namn||'').split(' ')[0];const late=!t.klar&&diff(t)!=null&&diff(t)<0;
+  return{to:te.epost,subj:`Fråga om ${t.titel} (${t.kurs})`,body:`Hej${fn?' '+fn:''}!\n\nJag har en fråga om ${t.typ==='prov'?'provet':'uppgiften'} "${t.titel}" i ${t.kurs}.\n\n${late?'Den står som saknad hos mig. Går det fortfarande att lämna in den, och i så fall när?':'[Skriv din fråga här]'}\n\nTack på förhand!\n\nMed vänliga hälsningar\n${myName()}`}}
+function showMail(t){const m=mailDraft(t);openG(`<h3>✉️ Mejl till läraren</h3><label class="f" for="mto">Till</label><input type="text" id="mto" value="${esc(m.to)}" placeholder="lärarens e-post"><label class="f" for="msu">Ämne</label><input type="text" id="msu" value="${esc(m.subj)}"><label class="f" for="mbo">Text</label><textarea id="mbo" style="min-height:220px">${esc(m.body)}</textarea>
+  <p class="hint">Skriv din fråga där det står [Skriv din fråga här]. ${sample?'Eller låt Claude formulera mejlet åt dig.':''}</p><p class="msg" id="mmsg"></p>
+  <div class="acts">${sample?`<button class="btn" data-a="mailai" data-id="${esc(t.id)}">✨ Formulera åt mig</button>`:''}<button class="btn pri" data-a="mailcopy">Kopiera text</button><a class="btn" id="mopen" href="#" target="_blank" rel="noopener">Öppna i mejlprogram</a><button class="btn ghost" data-a="gclose">Stäng</button></div>`);
+  const upd=()=>{$('#mopen').href='mailto:'+encodeURIComponent($('#mto').value.trim())+'?subject='+encodeURIComponent($('#msu').value)+'&body='+encodeURIComponent($('#mbo').value)};upd();['#mto','#msu','#mbo'].forEach(s=>$(s).addEventListener('input',upd))}
+
+function render(){renderChips();renderVid();renderHead();
+  $('#now').hidden=view!=='idag';if(view==='idag')renderNow();
+  $('#filt').hidden=!(view==='todo'||view==='cal');if($('#filt').hidden)$('#chips').hidden=true;
+  document.querySelectorAll('.bnav button').forEach(b=>{if(b.dataset.v===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  if(view==='cal')renderCal();else if(view==='kurs')renderCourses();else if(view==='idag')renderToday();else if(view==='plugg')renderPlugg();else if(view==='mer')renderMer();else if(view==='lia')renderLia();else renderList();
+  if(view!=='todo')renderSum();renderDetail()}
+function renderSum(){const open=tasks.filter(t=>!t.klar),late=open.filter(t=>diff(t)<0).length,wk=open.filter(t=>{const d=diff(t);return d!=null&&d>=0&&d<=7}).length;
+  $('#sum').textContent=tasks.length?`${open.length} uppgifter kvar · ${wk} denna vecka${late?` · ${late} försenade`:''}`:'Dina Classroom-uppgifter, sorterade och uppdelade i små steg.'}
+const goView=v=>{view=v;openId=null;try{localStorage.setItem('sk-view',view)}catch(e){}render();window.scrollTo({top:0})};
+document.querySelector('.bnav').addEventListener('click',e=>{const b=e.target.closest('button[data-v]');if(b)goView(b.dataset.v)});
+const doTheme=()=>{const dark=document.documentElement.dataset.theme?document.documentElement.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;theme=dark?'light':'dark';try{localStorage.setItem('sk-theme',theme)}catch(e){}setTheme(theme);if(view==='mer')renderMer()};
+let desk=null;
+let bip=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();bip=e});
+const doInstall=async()=>{$('#iov').classList.add('on');$('#imsg').textContent='';const b=$('#instDo');b.hidden=true;
+  if(window.SK_STANDALONE){if(matchMedia('(display-mode: standalone)').matches)$('#imsg').textContent='Du kör redan Studiekollen som app. ✓';else if(bip){b.hidden=false;b.textContent='Installera på den här enheten'}else $('#imsg').textContent='Följ stegen nedan för din telefon.';return}
+  try{if(desk&&desk.install&&await desk.install.state()==='available'){b.hidden=false}else if(desk&&desk.fs){$('#imsg').textContent='Du kör redan Studiekollen som datorapp. ✓'}else{$('#imsg').textContent='Datorinstallationen fungerar när appen är öppen i Claude-appen på datorn.'}}catch(e){}};
+$('#instDo').addEventListener('click',async()=>{if(bip){bip.prompt();bip=null;$('#instDo').hidden=true;return}try{await desk.install.request();$('#imsg').textContent='Klart! Leta efter Studiekollen bland dina program.'}catch(e){$('#imsg').textContent='Det gick inte att installera just nu.'}});
+$('#dov').addEventListener('click',e=>{if(e.target.id==='dov'){openId=null;renderDetail()}});
+$('#iclose').onclick=()=>$('#iov').classList.remove('on');$('#iov').onclick=e=>{if(e.target.id==='iov')$('#iov').classList.remove('on')};
+$('#filtBtn').addEventListener('click',()=>{if(filt!=='Alla'){filt='Alla';filtOpen=false}else filtOpen=!filtOpen;render()});
+
+/* ---- timer ---- */
+function tick(){const c=$('#clk');if(!c||!timer)return;const s=Math.max(0,Math.round((tEnd-Date.now())/1000));c.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');if(s<=0){stopTimer();beep();toast(focusMin+' minuter klart! Ta en kort paus.')}}
+function stopTimer(){clearInterval(timer);timer=null;renderNow()}
+let actx=null;
+function beep(){try{if(!actx)return;const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=660;g.gain.value=.15;o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+.6)}catch(e){}}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2600)}
+
+/* ---- Claude ---- */
+const RULES=`Du hjälper en elev med ADHD att förstå och planera skoluppgifter. Skriv på enkel, vänlig svenska.
+- "forklaring": 2–3 korta meningar: vad uppgiften går ut på, vad som ska lämnas in och i vilken form. Inga svåra ord.
+- "steg": 3–8 små konkreta steg i rätt ordning. Varje steg börjar med ett verb, max 12 ord, går att göra på 10–30 minuter. Sista steget är att lämna in i Classroom.
+- "min": uppskattad tid i minuter per steg.`;
+async function clarify(t,btn){
+  if(!sample)return;if(btn){btn.disabled=true;btn.textContent='Claude tänker …'}
+  try{
+    const r=await sample.json(`${RULES}\n\nUppgift: ${t.titel}\nKurs: ${t.kurs}\nSlutdatum: ${t.slut||'okänt'}\nLärarens text:\n${t.original||'(ingen text)'}\n\nSvara ENDAST med JSON: {"forklaring":"...","steg":[{"t":"...","min":15}]}`,{modelTier:'default'});
+    if(r&&Array.isArray(r.steg)){t.forklaring=String(r.forklaring||'');t.steg=r.steg.map(s=>({t:String(s.t||''),min:+s.min||0,klar:false})).filter(s=>s.t);await save(t);toast('Plan klar!')}
+  }catch(e){toast(e&&e.code==='rate_limited'?'Vänta en stund och försök igen':'Kunde inte göra en plan just nu')}
+  if(btn&&btn.isConnected){btn.disabled=false}
+}
+async function parsePaste(text){
+  const r=await sample.json(`${RULES}\n\nIdag är ${iso(today())} (${DAY[today().getDay()]}). Nedan är text som eleven kopierat från Google Classroom. Den kan innehålla en eller flera uppgifter. Hitta varje uppgift som ska göras (hoppa över meny, knappar och kommentarer). Räkna ut slutdatum som YYYY-MM-DD (t.ex. "Förfaller i morgon", "Due Dec 3"). Kursnamnet står ofta högst upp eller bredvid uppgiften; använd ett kort tydligt namn. Kända kurser: ${[...new Set(tasks.map(t=>t.kurs))].join(', ')||'inga än'}.\n\nText:\n"""${text.slice(0,24000)}"""\n\nSvara ENDAST med JSON: {"uppgifter":[{"titel":"...","kurs":"...","slut":"YYYY-MM-DD eller tom","tid":"HH:MM eller tom","original":"uppgiftens instruktioner ordagrant","forklaring":"...","steg":[{"t":"...","min":15}]}]}`,{modelTier:'default'});
+  return (r&&Array.isArray(r.uppgifter))?r.uppgifter:[];
+}
+
+/* ---- panel ---- */
+let mode='paste';
+const setMode=m=>{mode=m;$('#tabPaste').setAttribute('aria-pressed',m==='paste');$('#tabHand').setAttribute('aria-pressed',m==='hand');$('#pPaste').hidden=m!=='paste';$('#pHand').hidden=m!=='hand'};
+function openPanel(){$('#ov').classList.add('on');$('#pmsg').textContent='';$('#pmsg').className='msg';setMode(sample?'paste':'hand');$('#tabPaste').hidden=!sample;setTimeout(()=>(sample?$('#paste'):$('#hT')).focus(),30)}
+function closePanel(){$('#ov').classList.remove('on');$('#addBtn').focus()}
+$('#tabPaste').onclick=()=>setMode('paste');$('#tabHand').onclick=()=>setMode('hand');
+$('#close').onclick=closePanel;$('#ov').onclick=e=>{if(e.target.id==='ov')closePanel()};
+document.addEventListener('keydown',e=>{if(fcS&&$('#gov').classList.contains('on')){if(e.key===' '||e.key==='Enter'){if(document.activeElement&&document.activeElement.id==='fcard'){e.preventDefault();fcS.flip=!fcS.flip;drawCard();return}}if(fcS.flip&&e.key==='ArrowRight'){fcAns(true);return}if(fcS.flip&&e.key==='ArrowLeft'){fcAns(false);return}}
+  if(e.key!=='Escape')return;closeG();if(openId){openId=null;renderDetail()}if($('#ov').classList.contains('on'))closePanel();$('#qov').classList.remove('on');qs=null;$('#iov').classList.remove('on')});
+$('#addBtn').onclick=openPanel;
+$('#go').onclick=async()=>{
+  const b=$('#go'),m=$('#pmsg');m.className='msg';
+  if(mode==='paste'){
+    const txt=$('#paste').value.trim();if(!txt){m.className='msg err';m.textContent='Klistra in text från Classroom först.';return}
+    b.disabled=true;m.textContent='Claude läser, sorterar och gör planer … det tar en liten stund.';
+    try{const list=await parsePaste(txt);
+      if(!list.length){m.className='msg err';m.textContent='Hittade ingen uppgift. Prova att kopiera hela uppgiftssidan.'}
+      else{for(const u of list)await save(Object.assign(clean(u),{id:uid()}));$('#paste').value='';closePanel();toast(list.length===1?'1 uppgift tillagd':list.length+' uppgifter tillagda')}
+    }catch(e){m.className='msg err';m.textContent=e&&e.code==='rate_limited'?'Claude är upptagen. Vänta en minut och försök igen.':'Det gick inte just nu. Försök igen, eller välj "Skriv själv".'}
+    b.disabled=false;
+  }else{
+    const t=clean({titel:$('#hT').value.trim(),kurs:$('#hK').value.trim(),slut:$('#hD').value,original:$('#hO').value.trim()});
+    if(!$('#hT').value.trim()){m.className='msg err';m.textContent='Skriv uppgiftens namn.';return}
+    t.id=uid();await save(t);['#hT','#hK','#hD','#hO'].forEach(s=>$(s).value='');closePanel();openId=t.id;render();
+    if(sample)clarify(t,null);
+  }
+};
+
+/* ---- klick ---- */
+document.addEventListener('click',async e=>{
+  const sk=e.target.closest('[data-sek]');if(sk){const v=document.getElementById(sk.dataset.vp||'vp0');if(v){v.currentTime=+sk.dataset.sek;try{v.play()}catch(er){}}return}
+  const ch=e.target.closest('.chip[data-k]');if(ch){filt=ch.dataset.k;filtOpen=false;render();return}
+  const b=e.target.closest('[data-a]');if(!b||b.tagName==='INPUT')return;
+  const a=b.dataset.a,t=tasks.find(x=>x.id===b.dataset.id);
+  if(a!=='del')delAsk=null;
+  if(a==='gclose'){closeG();return}
+  if(a==='exp'){showExport();return}
+  if(a==='imp'){showImport();return}
+  if(a==='pullnow'){b.disabled=true;await doPull(true);return}
+  if(a==='xshare'||a==='xdl'||a==='xcopy'){doExport(a);return}
+  if(a==='idoit'){doImport();return}
+  if(a==='havetime'){showTimePick();return}
+  if(a==='tm'){showTimeResult(+b.dataset.m);return}
+  if(a==='tmgo'){closeG();startFocus(+b.dataset.m);return}
+  if(a==='selday'){const d=pd(b.dataset.d);selDay=+d===+today()?null:d;renderToday();return}
+  if(a==='seltoday'){selDay=null;renderToday();return}
+  if(a==='mood'){saveMood(b.dataset.v);return}
+  if(a==='cards'){startCards(b.dataset.g);return}
+  if(a==='flip'){if(fcS){fcS.flip=!fcS.flip;drawCard()}return}
+  if(a==='fcok'||a==='fcno'){fcAns(a==='fcok');return}
+  if(a==='fcsay'){const c=fcS&&fcS.q[0];if(c)say([fcS.flip?c.bak:c.fram]);return}
+  if(a==='golia'){openId=null;goView('lia');return}
+  if(a==='liamv'){const x=lia.find(y=>y.id===b.dataset.l);if(x){x.status=b.dataset.s;x.datum=iso(today());renderLia();if(x.status==='klart')toast('GRATTIS till LIA-platsen! 🎉');await liaSave(x)}return}
+  if(a==='liadel'){const id=b.dataset.l;if(liaDel===id){liaDel=null;lia=lia.filter(y=>y.id!==id);renderLia();if(dbh){try{await dbh.collection('lia').doc(id).delete()}catch(e){}}}else{liaDel=id;renderLia()}return}
+  if(a==='liacopy'){const nm={sokt:'Sökt/kontaktat',svar:'Fått svar',intervju:'Intervju',klart:'LIA-plats',nej:'Nej'};const txt=['Företag\tKontaktperson\tTelefon/e-post\tStatus\tDatum\tAnteckning',...lia.map(x=>[x.foretag,x.kontakt,x.nr,nm[x.status]||x.status,x.datum,x.not].map(v=>String(v||'').replace(/\t|\n/g,' ')).join('\t'))].join('\n');try{await navigator.clipboard.writeText(txt);toast('Kopierat! Klistra in i kalkylarket.')}catch(e){toast('Kunde inte kopiera')}return}
+  if(a==='mailcopy'){try{await navigator.clipboard.writeText('Till: '+$('#mto').value+'\nÄmne: '+$('#msu').value+'\n\n'+$('#mbo').value);$('#mmsg').textContent='Kopierat! Klistra in i ditt skolmejl.'}catch(e){$('#mmsg').textContent='Markera texten och kopiera själv (Ctrl+C).'}return}
+  if(a==='add')openPanel();
+  else if(a==='toggle'){openId=t.id;renderDetail()}
+  else if(a==='closedet'){openId=null;renderDetail()}
+  else if(a==='theme')doTheme();
+  else if(a==='install')doInstall();
+  else if(a==='openit'){openId=t.id;renderDetail()}
+  else if(a==='watch'){goView('plugg')}
+  else if(a==='move'){const d=moveStep(t,+b.dataset.i);if(timer)stopTimer();toast('Flyttat till '+WD[d.getDay()]+'. Helt okej!');await save(t)}
+  else if(a==='quiz'){startQuiz(t.id)}
+  else if(a==='say'){const s=t.steg[+b.dataset.i];say(['Gör detta nu: '+stext(s)+'.',t.titel+'. '+dueTxt(t)+'.'])}
+  else if(a==='sayall'){say([t.titel+'.',t.forklaring,...t.steg.filter(s=>!s.klar).map((s,k)=>'Steg '+(k+1)+': '+stext(s)+'.')])}
+  else if(a==='split'){splitStep(t,+b.dataset.i,b)}
+  else if(a==='mail'){showMail(t)}
+  else if(a==='mailai'){const m=$('#mmsg');m.textContent='Claude skriver …';try{const r=await sample(`Skriv ett kort, artigt mejl på svenska från studenten Fredrik Löfsten (klass Ba26) till läraren ${teacherOf(t.kurs).namn||''} om uppgiften "${t.titel}" i kursen ${t.kurs}. ${!t.klar&&diff(t)<0?'Uppgiften står som saknad. Fråga om det går att lämna in den och när.':'Fråga vad som förväntas och be om ett förtydligande.'} Studentens egen anteckning: "${$('#mbo').value.replace(/[\n\r]+/g,' ').slice(0,600)}". Max 90 ord. Bara själva mejltexten, ingen ämnesrad.`,{modelTier:'quick'});if(r&&r.text){$('#mbo').value=r.text.trim();$('#mbo').dispatchEvent(new Event('input'));m.textContent='Klart – läs igenom och ändra om du vill.'}}catch(e){m.textContent='Det gick inte just nu.'}}
+  else if(a==='skip'){skip.add(t.id+':'+b.dataset.i);renderNow();toast('Okej, vi tar något annat.')}
+  else if(a==='stepdone'){t.steg[+b.dataset.i].klar=true;if(timer)stopTimer();const left=t.steg.filter(s=>!s.klar).length;toast(left?'Bra! Ett steg närmare.':'Alla steg klara! Glöm inte lämna in.');await save(t);maybeMood()}
+  else if(a==='focus'){if(timer)stopTimer();else{try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(e){}startFocus(focusMin)}}
+  else if(a==='done'){t.klar=!t.klar;if(t.klar){toast('Inlämnad! Snyggt jobbat.');openId=null}await save(t)}
+  else if(a==='clarify')clarify(t,b);
+  else if(a==='del'){if(delAsk===t.id){delAsk=null;remove(t.id)}else{delAsk=t.id;render()}}
+  else if(a==='date'){const box=$('#db-'+CSS.escape(t.id));box.hidden=!box.hidden;box.style.display=box.hidden?'none':'flex'}
+  else if(a==='savedate'){t.slut=b.previousElementSibling.value;await save(t)}
+});
+document.addEventListener('change',async e=>{
+  const c=e.target.closest('input[data-a=check]');if(!c)return;
+  const t=tasks.find(x=>x.id===c.dataset.id);t.steg[+c.dataset.i].klar=c.checked;if(c.checked)toast('Bra jobbat!');await save(t);if(c.checked&&!c.closest('#gpanel'))maybeMood();if(c.closest('#gpanel')&&$('#gov').classList.contains('on')){c.closest('.srow').classList.toggle('ok',c.checked)}
+});
+
+/* ---- start ---- */
+tasks=window.SK_STANDALONE?[]:lsLoad();render();
+if(window.SK_STANDALONE){setTimeout(async()=>{await doPull(false);if(!window.SKDB.info().tasks&&!window.SKDB.hasKey())showImport()},300);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')doPull(false)})}
+(async()=>{
+  if(!window.claude)return;const [db,smp,dk,tt]=await Promise.all([claude.use("db"),claude.use("sample"),claude.use("desktop"),claude.use("tts")]);desk=dk;tts=tt;dbh=db;
+  sample=smp;
+  if(db){
+    col=db.collection('uppgifter');
+    const to=setTimeout(()=>{$('#sum').textContent='Det tar tid att ladda. Kolla din uppkoppling.'},10000);
+    col.onSnapshot(snap=>{clearTimeout(to);
+      const docs=snap&&snap.docs?snap.docs:[];
+      tasks=docs.map(d=>Object.assign(clean(typeof d.data==='function'?d.data():(d.data||{})),{id:d.id}));render()},
+      ()=>{clearTimeout(to);$('#sum').textContent='Kunde inte ladda uppgifterna.'});
+    const rows=s=>(s&&s.docs?s.docs:[]).map(d=>Object.assign({},typeof d.data==='function'?d.data():(d.data||{}),{id:d.id}));
+    db.collection('kalender').onSnapshot(s=>{events=rows(s);if(view==='cal'||view==='idag')render()},()=>{});
+    db.collection('quiz').onSnapshot(s=>{quiz=rows(s);render()},()=>{});
+    db.collection('quizstat').onSnapshot(s=>{qstat={};for(const r of rows(s))qstat[r.id]=r;if(view==='plugg')render()},()=>{});
+    db.collection('kanslor').onSnapshot(s=>{moods={};for(const r of rows(s))moods[r.id]=r;if(view==='idag')render()},()=>{});
+    db.collection('kort').onSnapshot(s=>{cards=rows(s).filter(c=>c.fram&&c.bak);if(view==='plugg')render()},()=>{});
+    db.collection('lia').onSnapshot(s=>{lia=rows(s);if(view==='lia')renderLia()},()=>{});
+    db.collection('kurser').onSnapshot(s=>{courses=rows(s);if(view!=='todo')render()},()=>{});
+  }else render();
+})();
+}
+</script>
+</body>
+</html>
