@@ -497,7 +497,7 @@ function renderMer(){const dark=document.documentElement.dataset.theme?document.
   <button class="bigbtn" data-a="add">➕<span>Lägg till uppgift<small>Klistra in text från Classroom eller skriv själv</small></span></button>
   <button class="bigbtn" data-a="theme">${dark?'☀️':'🌙'}<span>${dark?'Byt till ljust läge':'Byt till mörkt läge'}<small>Mörkt är skönare för ögonen på kvällen</small></span></button>
   <button class="bigbtn" data-a="golia">📋<span>LIA-tavlan<small>Håll koll på företag du sökt till och kontaktat</small></span></button>
-  ${window.SK_STANDALONE?(window.SKDB.hasKey()?`<button class="bigbtn" data-a="pullnow">🔄<span>Uppdatera nu<small>Hämtar det senaste från kvällshämtningen</small></span></button>`:`<button class="bigbtn" data-a="imp">📥<span>Hämta data från Claude-appen<small>Uppdatera med nya uppgifter, schema, quiz och kort</small></span></button>`):`<button class="bigbtn" data-a="exp">📱<span>Flytta data till telefon-appen<small>Skicka allt till den fristående Studiekollen</small></span></button>`}
+  ${window.SK_STANDALONE?(window.SKDB.hasKey()?`<button class="bigbtn" data-a="pullnow">🔄<span>Uppdatera nu<small>Hämtar det senaste från kvällshämtningen</small></span></button>`:'')+`<button class="bigbtn" data-a="imp">📥<span>Hämta data med en fil<small>Om du skickat data direkt från Claude-appen</small></span></button>`:`<button class="bigbtn" data-a="exp">📱<span>Flytta data till telefon-appen<small>Koppla telefonen och få allt där, uppdaterat varje kväll</small></span></button>`}
   <button class="bigbtn" data-a="install">📲<span>Installera som app<small>På datorn eller på mobilens hemskärm</small></span></button>
   <div class="row2"><span><b>🔄 Automatiskt från Classroom</b><br><span style="color:var(--mut);font-size:15px">${window.SK_STANDALONE?syncTxt():''}Varje kväll kl 18.32 hämtar Claude nya uppgifter, ändringar från lärarna och schemat från Skola24. Kl 06.35 kommer en morgonnotis till telefonen med dagens steg.</span></span></div>
   <div class="row2"><span><b>❓ Så funkar appen</b><ol>
@@ -592,7 +592,20 @@ async function liaSave(x){if(!dbh)return;try{const {id,...d}=x;await dbh.collect
 function exportObj(){const strip=a=>a.map(x=>JSON.parse(JSON.stringify(x)));
   return{app:'studiekollen',v:1,exporterad:new Date().toISOString(),namn:myName(),coll:{uppgifter:strip(tasks),kalender:strip(events),quiz:strip(quiz),quizstat:Object.entries(qstat).map(([id,r])=>Object.assign({},r,{id})),kanslor:Object.entries(moods).map(([id,r])=>Object.assign({},r,{id})),kort:strip(cards),lia:strip(lia),kurser:strip(courses)}}}
 const expName=()=>'studiekollen-data-'+iso(today())+'.json';
-function showExport(){const n=tasks.length;openG(`<h3>📱 Flytta data till telefon-appen</h3><p class="hint">${n} uppgifter, ${events.length} lektioner, ${quiz.length} quizfrågor och ${cards.length} kort följer med.</p>
+let cfg={};
+const PHONE='https://fredriklofsten.github.io/studiekollen/';
+async function phoneLink(){if(!dbh)return'';let k=cfg.telefon&&cfg.telefon.key;
+  if(!k){const b=crypto.getRandomValues(new Uint8Array(32));k=btoa(String.fromCharCode(...b)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    await dbh.collection('config').doc('telefon').set({key:k,skapad:Date.now()});cfg.telefon={key:k}}
+  return PHONE+'#k='+k}
+async function showPhone(){const m=$('#xmsg');let u='';try{u=await phoneLink()}catch(e){}
+  if(!u){m.className='msg err';m.textContent='Det gick inte att skapa länken just nu.';return}
+  $('#plink').hidden=false;$('#purl').value=u;$('#popen').href=u;m.className='msg';m.textContent='Öppna länken på telefonen en gång. Sen uppdateras appen själv efter varje kvällshämtning.'}
+function showExport(){const n=tasks.length;openG(`<h3>📱 Telefon-appen</h3>
+  <p class="hint"><b>Koppla telefonen (en gång):</b> tryck på knappen, öppna länken på telefonen och lägg appen på hemskärmen. Efter det fyller kvällshämtningen på den varje kväll. Länken är din personliga nyckel, så dela den inte med någon.</p>
+  <div class="acts"><button class="btn pri" data-a="xphone">Visa min telefonlänk</button></div>
+  <div id="plink" hidden><input type="text" id="purl" readonly style="margin-top:10px"><div class="acts" style="margin-top:8px"><a class="btn pri" id="popen" target="_blank" rel="noopener">Öppna på den här enheten</a><button class="btn" data-a="pcopy">Kopiera länken</button></div></div>
+  <h3 style="margin-top:22px;font-size:18px">Skicka allt direkt (om du inte vill vänta till ikväll)</h3><p class="hint">${n} uppgifter, ${events.length} lektioner, ${quiz.length} quizfrågor och ${cards.length} kort följer med.</p>
   <ol class="hint" style="padding-left:20px"><li>Tryck <b>Dela fil</b> (telefon) eller <b>Ladda ner fil</b> (dator).</li><li>Öppna Studiekollen-appen → Mer → <b>Hämta data</b> och välj filen.</li></ol>
   <p class="hint">Går inte det? Tryck <b>Kopiera text</b> och klistra in texten i telefon-appen i stället.</p><p class="msg" id="xmsg"></p>
   <div class="acts"><button class="btn pri" data-a="xshare">Dela fil</button><button class="btn" data-a="xdl">Ladda ner fil</button><button class="btn" data-a="xcopy">Kopiera text</button><button class="btn ghost" data-a="gclose">Stäng</button></div>`)}
@@ -600,7 +613,8 @@ async function doExport(a){const txt=JSON.stringify(exportObj()),m=$('#xmsg');
   try{if(a==='xcopy'){await navigator.clipboard.writeText(txt);m.className='msg';m.textContent='Kopierat! Öppna telefon-appen → Mer → Hämta data → klistra in.';return}
     const f=new File([txt],expName(),{type:'application/json'});
     if(a==='xshare'){if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Studiekollen-data'});m.className='msg';m.textContent='Klart! Öppna filen i Studiekollen-appen.';return}a='xdl'}
-    const u=URL.createObjectURL(f),l=document.createElement('a');l.href=u;l.download=expName();document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);m.className='msg';m.textContent='Filen laddas ner. Hittar du den inte? Tryck Kopiera text.'}
+    const dl=window.claude&&!window.SK_STANDALONE?await claude.use('downloads'):null;if(!dl)throw new Error('nodl');
+    await dl.save({filename:expName(),data:txt});m.className='msg';m.textContent='Filen är sparad. Hittar du den inte? Tryck Kopiera text.'}
   catch(e){if(e&&e.name==='AbortError')return;m.className='msg err';m.textContent='Det gick inte. Prova Kopiera text.'}}
 function showImport(){openG(`<h3>📥 Hämta data från Claude-appen</h3><ol class="hint" style="padding-left:20px"><li>Öppna Studiekollen i Claude-appen → Mer → <b>Flytta data till telefon-appen</b>.</li><li>Välj filen här, eller klistra in texten du kopierade.</li></ol>
   <label class="f" for="ifile">Fil</label><input type="file" id="ifile" accept=".json,application/json,text/plain">
@@ -715,6 +729,8 @@ document.addEventListener('click',async e=>{
   if(a==='imp'){showImport();return}
   if(a==='pullnow'){b.disabled=true;await doPull(true);return}
   if(a==='xshare'||a==='xdl'||a==='xcopy'){doExport(a);return}
+  if(a==='xphone'){showPhone();return}
+  if(a==='pcopy'){try{await navigator.clipboard.writeText($('#purl').value);toast('Länken är kopierad')}catch(e){$('#purl').select()}return}
   if(a==='idoit'){doImport();return}
   if(a==='havetime'){showTimePick();return}
   if(a==='tm'){showTimeResult(+b.dataset.m);return}
@@ -761,7 +777,7 @@ document.addEventListener('change',async e=>{
 
 /* ---- start ---- */
 tasks=window.SK_STANDALONE?[]:lsLoad();render();
-if(window.SK_STANDALONE){setTimeout(async()=>{await doPull(false);if(!window.SKDB.info().tasks&&!window.SKDB.hasKey())showImport()},300);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')doPull(false)})}
+if(window.SK_STANDALONE){setTimeout(async()=>{await doPull(false);if(!window.SKDB.info().tasks)showImport()},300);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')doPull(false)})}
 (async()=>{
   if(!window.claude)return;const [db,smp,dk,tt]=await Promise.all([claude.use("db"),claude.use("sample"),claude.use("desktop"),claude.use("tts")]);desk=dk;tts=tt;dbh=db;
   sample=smp;
@@ -779,6 +795,7 @@ if(window.SK_STANDALONE){setTimeout(async()=>{await doPull(false);if(!window.SKD
     db.collection('kanslor').onSnapshot(s=>{moods={};for(const r of rows(s))moods[r.id]=r;if(view==='idag')render()},()=>{});
     db.collection('kort').onSnapshot(s=>{cards=rows(s).filter(c=>c.fram&&c.bak);if(view==='plugg')render()},()=>{});
     db.collection('lia').onSnapshot(s=>{lia=rows(s);if(view==='lia')renderLia()},()=>{});
+    db.collection('config').onSnapshot(s=>{cfg={};for(const r of rows(s))cfg[r.id]=r},()=>{});
     db.collection('kurser').onSnapshot(s=>{courses=rows(s);if(view!=='todo')render()},()=>{});
   }else render();
 })();
